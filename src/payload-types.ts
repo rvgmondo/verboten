@@ -63,10 +63,22 @@ export type SupportedTimezones =
 
 export interface Config {
   auth: {
+    customers: CustomerAuthOperations;
     users: UserAuthOperations;
   };
   blocks: {};
   collections: {
+    products: Product;
+    batches: Batch;
+    'discount-codes': DiscountCode;
+    orders: Order;
+    customers: Customer;
+    'journal-posts': JournalPost;
+    serves: Serve;
+    stockists: Stockist;
+    events: Event;
+    pages: Page;
+    subscribers: Subscriber;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -76,6 +88,17 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
+    products: ProductsSelect<false> | ProductsSelect<true>;
+    batches: BatchesSelect<false> | BatchesSelect<true>;
+    'discount-codes': DiscountCodesSelect<false> | DiscountCodesSelect<true>;
+    orders: OrdersSelect<false> | OrdersSelect<true>;
+    customers: CustomersSelect<false> | CustomersSelect<true>;
+    'journal-posts': JournalPostsSelect<false> | JournalPostsSelect<true>;
+    serves: ServesSelect<false> | ServesSelect<true>;
+    stockists: StockistsSelect<false> | StockistsSelect<true>;
+    events: EventsSelect<false> | EventsSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
+    subscribers: SubscribersSelect<false> | SubscribersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -87,16 +110,38 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'site-settings': SiteSetting;
+  };
+  globalsSelect: {
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
   };
-  user: User;
+  user: Customer | User;
   jobs: {
     tasks: unknown;
     workflows: unknown;
+  };
+}
+export interface CustomerAuthOperations {
+  forgotPassword: {
+    email: string;
+    password: string;
+  };
+  login: {
+    email: string;
+    password: string;
+  };
+  registerFirstUser: {
+    email: string;
+    password: string;
+  };
+  unlock: {
+    email: string;
+    password: string;
   };
 }
 export interface UserAuthOperations {
@@ -116,6 +161,114 @@ export interface UserAuthOperations {
     email: string;
     password: string;
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+  id: number;
+  name: string;
+  /**
+   * URL path under /shop/. Leave blank to derive from the name.
+   */
+  slug: string;
+  productType: 'bottle' | 'can' | 'bundle';
+  /**
+   * Internal stock code.
+   */
+  sku?: string | null;
+  /**
+   * Price in cents: R450 = 45000, R45 = 4500.
+   */
+  priceCents: number;
+  /**
+   * One or two sentences for cards and meta descriptions.
+   */
+  shortDescription?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  gallery?:
+    | {
+        image: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Shown as the spec table on the product page.
+   */
+  specs?: {
+    /**
+     * % alcohol by volume.
+     */
+    abv?: number | null;
+    /**
+     * Bottle or can volume in ml.
+     */
+    volumeMl?: number | null;
+    ageYears?: number | null;
+    caskFinish?: string | null;
+    origin?: string | null;
+  };
+  tastingNotes?: {
+    nose?: string | null;
+    palate?: string | null;
+    finish?: string | null;
+  };
+  servingSuggestion?: string | null;
+  /**
+   * The numbered release this product belongs to, if any.
+   */
+  batch?: (number | null) | Batch;
+  /**
+   * Bundles have no stock of their own; their availability comes from their components.
+   */
+  inventory?: {
+    /**
+     * "Draw from batch" uses the linked Batch's bottles remaining as this product's stock.
+     */
+    mode: 'own' | 'batch';
+    stockQty?: number | null;
+    /**
+     * At or below this, the front end shows a low-stock note.
+     */
+    lowStockThreshold?: number | null;
+  };
+  /**
+   * What one unit of this bundle contains.
+   */
+  bundleItems?:
+    | {
+        product: number | Product;
+        quantity: number;
+        id?: string | null;
+      }[]
+    | null;
+  relatedProducts?: (number | Product)[] | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -183,6 +336,409 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "batches".
+ */
+export interface Batch {
+  id: number;
+  /**
+   * Display name, e.g. "Batch No. 01".
+   */
+  name: string;
+  batchNumber: number;
+  /**
+   * The batch narrative shown on product pages.
+   */
+  story?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Size of the release, e.g. 500.
+   */
+  totalBottles: number;
+  /**
+   * Live stock for every product drawing from this batch. Decremented on paid orders.
+   */
+  bottlesRemaining: number;
+  releaseDate?: string | null;
+  /**
+   * Sold out batches stay visible with their story; archived ones leave the site.
+   */
+  status: 'available' | 'sold_out' | 'archived';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "discount-codes".
+ */
+export interface DiscountCode {
+  id: number;
+  /**
+   * Customers enter this at checkout. Stored uppercase.
+   */
+  code: string;
+  type: 'percentage' | 'fixed';
+  /**
+   * Percentage (e.g. 10) or amount in cents (R50 = 5000).
+   */
+  value: number;
+  /**
+   * Only valid on carts at or above this subtotal (cents).
+   */
+  minSubtotalCents?: number | null;
+  /**
+   * Leave empty for unlimited. 1 makes it single-use.
+   */
+  maxUses?: number | null;
+  usedCount: number;
+  startsAt?: string | null;
+  expiresAt?: string | null;
+  active: boolean;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "orders".
+ */
+export interface Order {
+  id: number;
+  orderNumber: string;
+  /**
+   * Changing this emails the customer the matching update.
+   */
+  status: 'pending_payment' | 'paid' | 'packed' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
+  /**
+   * Empty for guest checkouts.
+   */
+  customer?: (number | null) | Customer;
+  email: string;
+  customerName: string;
+  phone?: string | null;
+  items: {
+    product: number | Product;
+    /**
+     * Product name at the time of purchase.
+     */
+    nameSnapshot: string;
+    unitPriceCents: number;
+    quantity: number;
+    id?: string | null;
+  }[];
+  subtotalCents: number;
+  shippingCents: number;
+  discountCents: number;
+  /**
+   * The code applied at checkout, if any.
+   */
+  discountCode?: string | null;
+  totalCents: number;
+  currency: string;
+  shippingAddress: {
+    line1: string;
+    line2?: string | null;
+    suburb?: string | null;
+    city: string;
+    province:
+      | 'Eastern Cape'
+      | 'Free State'
+      | 'Gauteng'
+      | 'KwaZulu-Natal'
+      | 'Limpopo'
+      | 'Mpumalanga'
+      | 'North West'
+      | 'Northern Cape'
+      | 'Western Cape';
+    postalCode: string;
+    country: string;
+  };
+  /**
+   * Second compliance layer captured at checkout (first is the age gate).
+   */
+  ageVerification?: {
+    dateOfBirth?: string | null;
+    confirmedAt?: string | null;
+  };
+  payment?: {
+    provider?: 'payfast' | null;
+    /**
+     * Gateway payment id (PayFast pf_payment_id).
+     */
+    reference?: string | null;
+    /**
+     * Verified webhook payload, stored for reconciliation.
+     */
+    raw?:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+  };
+  trackingNumber?: string | null;
+  customerNote?: string | null;
+  /**
+   * Staff only; never shown to the customer.
+   */
+  internalNotes?: string | null;
+  /**
+   * Automatic audit trail of status changes.
+   */
+  statusLog?:
+    | {
+        status: string;
+        at: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "customers".
+ */
+export interface Customer {
+  id: number;
+  name?: string | null;
+  phone?: string | null;
+  defaultAddress?: {
+    line1?: string | null;
+    line2?: string | null;
+    suburb?: string | null;
+    city?: string | null;
+    province?:
+      | (
+          | 'Eastern Cape'
+          | 'Free State'
+          | 'Gauteng'
+          | 'KwaZulu-Natal'
+          | 'Limpopo'
+          | 'Mpumalanga'
+          | 'North West'
+          | 'Northern Cape'
+          | 'Western Cape'
+        )
+      | null;
+    postalCode?: string | null;
+    country?: string | null;
+  };
+  /**
+   * POPIA: explicit opt-in only, never pre-ticked.
+   */
+  marketingOptIn?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'customers';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "journal-posts".
+ */
+export interface JournalPost {
+  id: number;
+  title: string;
+  slug: string;
+  category: 'stories' | 'releases' | 'events';
+  /**
+   * Shown on cards and used as the meta description.
+   */
+  excerpt?: string | null;
+  hero?: (number | null) | Media;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  publishedAt?: string | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "serves".
+ */
+export interface Serve {
+  id: number;
+  name: string;
+  /**
+   * The Verboten product this serve is built on.
+   */
+  product?: (number | null) | Product;
+  description?: string | null;
+  ingredients?:
+    | {
+        /**
+         * e.g. "50ml", "1 wedge".
+         */
+        amount?: string | null;
+        item: string;
+        id?: string | null;
+      }[]
+    | null;
+  method?: string | null;
+  image?: (number | null) | Media;
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "stockists".
+ */
+export interface Stockist {
+  id: number;
+  name: string;
+  /**
+   * Suburb or city, e.g. "Menlyn, Pretoria".
+   */
+  area: string;
+  type: 'bar' | 'restaurant' | 'bottle_store' | 'venue' | 'market';
+  /**
+   * Optional website or maps link.
+   */
+  url?: string | null;
+  active: boolean;
+  /**
+   * Lower numbers list first.
+   */
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events".
+ */
+export interface Event {
+  id: number;
+  title: string;
+  startDate: string;
+  endDate?: string | null;
+  location: string;
+  description?: string | null;
+  /**
+   * Tickets or event page link.
+   */
+  url?: string | null;
+  image?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  title: string;
+  slug: string;
+  /**
+   * Optional lead paragraph under the page title.
+   */
+  intro?: string | null;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * For legal pages: e.g. "Last updated August 2026".
+   */
+  updatedNote?: string | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subscribers".
+ */
+export interface Subscriber {
+  id: number;
+  email: string;
+  status: 'pending' | 'confirmed' | 'unsubscribed';
+  /**
+   * Where they signed up, e.g. "footer", "journal".
+   */
+  source?: string | null;
+  /**
+   * POPIA: when consent was given.
+   */
+  consentAt?: string | null;
+  confirmToken?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -236,6 +792,50 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
+        relationTo: 'products';
+        value: number | Product;
+      } | null)
+    | ({
+        relationTo: 'batches';
+        value: number | Batch;
+      } | null)
+    | ({
+        relationTo: 'discount-codes';
+        value: number | DiscountCode;
+      } | null)
+    | ({
+        relationTo: 'orders';
+        value: number | Order;
+      } | null)
+    | ({
+        relationTo: 'customers';
+        value: number | Customer;
+      } | null)
+    | ({
+        relationTo: 'journal-posts';
+        value: number | JournalPost;
+      } | null)
+    | ({
+        relationTo: 'serves';
+        value: number | Serve;
+      } | null)
+    | ({
+        relationTo: 'stockists';
+        value: number | Stockist;
+      } | null)
+    | ({
+        relationTo: 'events';
+        value: number | Event;
+      } | null)
+    | ({
+        relationTo: 'pages';
+        value: number | Page;
+      } | null)
+    | ({
+        relationTo: 'subscribers';
+        value: number | Subscriber;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
@@ -244,10 +844,15 @@ export interface PayloadLockedDocument {
         value: number | User;
       } | null);
   globalSlug?: string | null;
-  user: {
-    relationTo: 'users';
-    value: number | User;
-  };
+  user:
+    | {
+        relationTo: 'customers';
+        value: number | Customer;
+      }
+    | {
+        relationTo: 'users';
+        value: number | User;
+      };
   updatedAt: string;
   createdAt: string;
 }
@@ -257,10 +862,15 @@ export interface PayloadLockedDocument {
  */
 export interface PayloadPreference {
   id: number;
-  user: {
-    relationTo: 'users';
-    value: number | User;
-  };
+  user:
+    | {
+        relationTo: 'customers';
+        value: number | Customer;
+      }
+    | {
+        relationTo: 'users';
+        value: number | User;
+      };
   key?: string | null;
   value?:
     | {
@@ -284,6 +894,306 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products_select".
+ */
+export interface ProductsSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  productType?: T;
+  sku?: T;
+  priceCents?: T;
+  shortDescription?: T;
+  description?: T;
+  gallery?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  specs?:
+    | T
+    | {
+        abv?: T;
+        volumeMl?: T;
+        ageYears?: T;
+        caskFinish?: T;
+        origin?: T;
+      };
+  tastingNotes?:
+    | T
+    | {
+        nose?: T;
+        palate?: T;
+        finish?: T;
+      };
+  servingSuggestion?: T;
+  batch?: T;
+  inventory?:
+    | T
+    | {
+        mode?: T;
+        stockQty?: T;
+        lowStockThreshold?: T;
+      };
+  bundleItems?:
+    | T
+    | {
+        product?: T;
+        quantity?: T;
+        id?: T;
+      };
+  relatedProducts?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "batches_select".
+ */
+export interface BatchesSelect<T extends boolean = true> {
+  name?: T;
+  batchNumber?: T;
+  story?: T;
+  totalBottles?: T;
+  bottlesRemaining?: T;
+  releaseDate?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "discount-codes_select".
+ */
+export interface DiscountCodesSelect<T extends boolean = true> {
+  code?: T;
+  type?: T;
+  value?: T;
+  minSubtotalCents?: T;
+  maxUses?: T;
+  usedCount?: T;
+  startsAt?: T;
+  expiresAt?: T;
+  active?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "orders_select".
+ */
+export interface OrdersSelect<T extends boolean = true> {
+  orderNumber?: T;
+  status?: T;
+  customer?: T;
+  email?: T;
+  customerName?: T;
+  phone?: T;
+  items?:
+    | T
+    | {
+        product?: T;
+        nameSnapshot?: T;
+        unitPriceCents?: T;
+        quantity?: T;
+        id?: T;
+      };
+  subtotalCents?: T;
+  shippingCents?: T;
+  discountCents?: T;
+  discountCode?: T;
+  totalCents?: T;
+  currency?: T;
+  shippingAddress?:
+    | T
+    | {
+        line1?: T;
+        line2?: T;
+        suburb?: T;
+        city?: T;
+        province?: T;
+        postalCode?: T;
+        country?: T;
+      };
+  ageVerification?:
+    | T
+    | {
+        dateOfBirth?: T;
+        confirmedAt?: T;
+      };
+  payment?:
+    | T
+    | {
+        provider?: T;
+        reference?: T;
+        raw?: T;
+      };
+  trackingNumber?: T;
+  customerNote?: T;
+  internalNotes?: T;
+  statusLog?:
+    | T
+    | {
+        status?: T;
+        at?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "customers_select".
+ */
+export interface CustomersSelect<T extends boolean = true> {
+  name?: T;
+  phone?: T;
+  defaultAddress?:
+    | T
+    | {
+        line1?: T;
+        line2?: T;
+        suburb?: T;
+        city?: T;
+        province?: T;
+        postalCode?: T;
+        country?: T;
+      };
+  marketingOptIn?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "journal-posts_select".
+ */
+export interface JournalPostsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  category?: T;
+  excerpt?: T;
+  hero?: T;
+  content?: T;
+  publishedAt?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "serves_select".
+ */
+export interface ServesSelect<T extends boolean = true> {
+  name?: T;
+  product?: T;
+  description?: T;
+  ingredients?:
+    | T
+    | {
+        amount?: T;
+        item?: T;
+        id?: T;
+      };
+  method?: T;
+  image?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "stockists_select".
+ */
+export interface StockistsSelect<T extends boolean = true> {
+  name?: T;
+  area?: T;
+  type?: T;
+  url?: T;
+  active?: T;
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events_select".
+ */
+export interface EventsSelect<T extends boolean = true> {
+  title?: T;
+  startDate?: T;
+  endDate?: T;
+  location?: T;
+  description?: T;
+  url?: T;
+  image?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  intro?: T;
+  content?: T;
+  updatedNote?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "subscribers_select".
+ */
+export interface SubscribersSelect<T extends boolean = true> {
+  email?: T;
+  status?: T;
+  source?: T;
+  consentAt?: T;
+  confirmToken?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -420,6 +1330,93 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: number;
+  /**
+   * The thin bar above the header.
+   */
+  announcement: {
+    enabled: boolean;
+    text?: string | null;
+  };
+  /**
+   * Shown on product pages and at checkout. Keep it honest.
+   */
+  dispatchTimeText: string;
+  shipping: {
+    /**
+     * Flat delivery fee in cents (R150 = 15000).
+     */
+    flatRateCents: number;
+    /**
+     * Orders at or above this ship free (R2500 = 250000). 0 disables.
+     */
+    freeThresholdCents: number;
+    /**
+     * Where the shop ships. South Africa only for now; NL and DE are staged for expansion.
+     */
+    countries: ('ZA' | 'NL' | 'DE')[];
+  };
+  contact?: {
+    phone?: string | null;
+    whatsapp?: string | null;
+    email?: string | null;
+    ordersEmail?: string | null;
+    address?: string | null;
+    supportHours?: string | null;
+  };
+  socials?: {
+    facebook?: string | null;
+    instagram?: string | null;
+    tiktok?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  announcement?:
+    | T
+    | {
+        enabled?: T;
+        text?: T;
+      };
+  dispatchTimeText?: T;
+  shipping?:
+    | T
+    | {
+        flatRateCents?: T;
+        freeThresholdCents?: T;
+        countries?: T;
+      };
+  contact?:
+    | T
+    | {
+        phone?: T;
+        whatsapp?: T;
+        email?: T;
+        ordersEmail?: T;
+        address?: T;
+        supportHours?: T;
+      };
+  socials?:
+    | T
+    | {
+        facebook?: T;
+        instagram?: T;
+        tiktok?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

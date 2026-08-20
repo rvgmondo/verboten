@@ -40,6 +40,32 @@ export const publishedOrEditor: Access = ({ req: { user } }) => {
   return { _status: { equals: "published" } };
 };
 
+/** Staff see everything; a signed-in customer sees only their own orders. */
+export const staffOrOwnCustomer: Access = ({ req: { user } }) => {
+  if (!user) return false;
+  const roles = rolesOf(user);
+  if (roles.includes("admin") || roles.includes("editor")) return true;
+  if ((user as { collection?: string }).collection === "customers") {
+    return { customer: { equals: user.id } };
+  }
+  return false;
+};
+
+/** Staff see all customers; a customer may only read/update their own record. */
+export const staffOrSelfCustomer: Access = ({ req: { user } }) => {
+  if (!user) return false;
+  const roles = rolesOf(user);
+  if (roles.includes("admin") || roles.includes("editor")) return true;
+  if ((user as { collection?: string }).collection === "customers") {
+    return { id: { equals: user.id } };
+  }
+  return false;
+};
+
+/** Server-side only: no one may create through the public REST/GraphQL API.
+ *  Checkout and forms use the local API with overrideAccess. */
+export const serverOnly: Access = () => false;
+
 // --- Field-level ---
 
 export const isAdminFieldLevel: FieldAccess = ({ req: { user } }) =>
