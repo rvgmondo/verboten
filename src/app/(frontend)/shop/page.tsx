@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Shop",
   description:
     "Verboten Premium Brandy Batch No. 01, the two bottle set, and Brandy & Cola ready to drink. Shipped across South Africa. Not for sale under 18.",
+  alternates: { canonical: "/shop" },
 };
 
 /**

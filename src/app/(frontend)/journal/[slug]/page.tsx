@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { JsonLd } from "@/components/json-ld";
 import { CmsImage } from "@/components/media/cms-image";
 import { RichText } from "@/components/rich-text";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getJournalPostBySlug, getJournalPosts } from "@/lib/data";
+import { articleLd, breadcrumbLd } from "@/lib/seo";
 import type { Media } from "@/payload-types";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -29,6 +31,7 @@ export const generateMetadata = async ({ params }: Params): Promise<Metadata> =>
   return {
     title: post.title,
     description: post.excerpt ?? undefined,
+    alternates: { canonical: `/journal/${post.slug}` },
   };
 };
 
@@ -48,6 +51,14 @@ export default async function JournalPostPage({ params }: Params) {
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-16 lg:py-24">
+      <JsonLd data={articleLd(post)} />
+      <JsonLd
+        data={breadcrumbLd([
+          { name: "Home", path: "/" },
+          { name: "Journal", path: "/journal" },
+          { name: post.title, path: `/journal/${post.slug}` },
+        ])}
+      />
       <header className="space-y-5">
         <div className="flex items-center gap-3">
           <Badge variant="gold">{CATEGORY_LABELS[post.category] ?? post.category}</Badge>

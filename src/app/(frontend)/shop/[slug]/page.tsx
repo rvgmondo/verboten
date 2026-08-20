@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { Price } from "@/components/brand/price";
 import { StockBadge } from "@/components/brand/stock-badge";
+import { JsonLd } from "@/components/json-ld";
 import { PlaceholderFrame } from "@/components/media/placeholder-frame";
 import { RichText } from "@/components/rich-text";
 import { AddToCart } from "@/components/shop/add-to-cart";
@@ -14,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { getProductBySlug, getProducts, getSiteSettings } from "@/lib/data";
 import { getAvailability } from "@/lib/inventory";
 import { mediaSrc } from "@/lib/media";
+import { breadcrumbLd, productLd } from "@/lib/seo";
 import type { Batch, Media, Product } from "@/payload-types";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -30,6 +32,7 @@ export const generateMetadata = async ({ params }: Params): Promise<Metadata> =>
   return {
     title: product.name,
     description: product.shortDescription ?? undefined,
+    alternates: { canonical: `/shop/${product.slug}` },
   };
 };
 
@@ -70,6 +73,14 @@ export default async function ProductPage({ params }: Params) {
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-12 lg:py-20">
+      <JsonLd data={productLd(product)} />
+      <JsonLd
+        data={breadcrumbLd([
+          { name: "Home", path: "/" },
+          { name: "Shop", path: "/shop" },
+          { name: product.name, path: `/shop/${product.slug}` },
+        ])}
+      />
       <nav aria-label="Breadcrumb" className="mb-10 text-xs text-parch">
         <ol className="flex gap-2">
           <li>

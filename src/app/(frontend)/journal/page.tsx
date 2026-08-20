@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: "Journal",
   description:
     "Release announcements, event recaps and stories from the Verboten house in Pretoria.",
+  alternates: { canonical: "/journal" },
 };
 
 const CATEGORY_LABELS: Record<string, string> = {

@@ -2,14 +2,17 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { SectionHeading } from "@/components/brand/section-heading";
+import { JsonLd } from "@/components/json-ld";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getSiteSettings, getStockists, getUpcomingEvents } from "@/lib/data";
+import { eventLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Where to Find Us",
   description:
     "Stockists, bars and venues that pour Verboten, and the markets and events where the house sets up. Or order direct; we ship across South Africa.",
+  alternates: { canonical: "/find-us" },
 };
 
 const TYPE_LABELS: Record<string, string> = {
@@ -37,6 +40,9 @@ export default async function FindUsPage() {
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-16 lg:py-24">
+      {events.map((event) => (
+        <JsonLd key={event.id} data={eventLd(event)} />
+      ))}
       <SectionHeading
         as="h1"
         eyebrow="Out in the world"

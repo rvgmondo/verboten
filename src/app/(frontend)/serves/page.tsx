@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: "Serves",
   description:
     "Signature serves and simple builds for Verboten brandy and Brandy & Cola. Nothing that needs a cocktail kit; everything worth doing properly.",
+  alternates: { canonical: "/serves" },
 };
 
 export default async function ServesPage() {

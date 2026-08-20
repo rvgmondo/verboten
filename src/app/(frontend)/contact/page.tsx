@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Contact",
   description:
     "Questions about an order, stocking Verboten at your venue, or anything else. Pretoria based, replies within one business day.",
+  alternates: { canonical: "/contact" },
 };
 
 export default async function ContactPage() {

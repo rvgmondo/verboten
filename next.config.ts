@@ -45,6 +45,7 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   images: {
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       { protocol: "https", hostname: "verboten.co.za" },
       { protocol: "https", hostname: "**.verboten.co.za" },
@@ -55,6 +56,19 @@ const nextConfig: NextConfig = {
   eslint: { ignoreDuringBuilds: true },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
+  },
+  // 301s preserving the old WordPress site's indexed URLs.
+  // The full mapping rationale lives in docs/redirect-map.md.
+  async redirects() {
+    return [
+      { source: "/product/:slug", destination: "/shop/:slug", permanent: true },
+      { source: "/product-category/:path*", destination: "/shop", permanent: true },
+      { source: "/about-us", destination: "/story", permanent: true },
+      { source: "/contact-us", destination: "/contact", permanent: true },
+      { source: "/verboten-event-hub", destination: "/find-us", permanent: true },
+      { source: "/my-account", destination: "/account", permanent: true },
+      { source: "/wishlist", destination: "/shop", permanent: true },
+    ];
   },
 };
 

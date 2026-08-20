@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: "Our Story",
   description:
     "Verboten is an independent beverage house in Pretoria. Founded in 2020, releasing brandy in numbered batches, and building toward shelves in Amsterdam and Berlin.",
+  alternates: { canonical: "/story" },
 };
 
 export default async function StoryPage() {

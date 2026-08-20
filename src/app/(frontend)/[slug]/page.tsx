@@ -19,6 +19,7 @@ export const generateMetadata = async ({ params }: Params): Promise<Metadata> =>
   return {
     title: page.title,
     description: page.intro ?? undefined,
+    alternates: { canonical: `/${page.slug}` },
   };
 };
 

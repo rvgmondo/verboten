@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   title: "Verboten Spirits | Premium South African Brandy",
   description:
     "Independent beverage house in Pretoria. Batch No. 01: a three year brandy finished in French oak, limited to 500 numbered bottles. Brandy & cola, ready to drink.",
+  alternates: { canonical: "/" },
 };
 
 export default async function HomePage() {

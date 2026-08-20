@@ -6,6 +6,8 @@ import { CartDrawer } from "@/components/chrome/cart-drawer";
 import { Footer } from "@/components/chrome/footer";
 import { Header } from "@/components/chrome/header";
 import { AgeGate } from "@/components/compliance/age-gate";
+import { JsonLd } from "@/components/json-ld";
+import { organizationLd } from "@/lib/seo";
 import { CartProvider } from "@/lib/cart";
 import { getSiteSettings } from "@/lib/data";
 import { archivo, fraunces } from "@/lib/fonts";
@@ -48,6 +50,7 @@ export default async function FrontendLayout({ children }: { children: React.Rea
           <Footer />
           <CartDrawer />
           <AgeGate />
+          <JsonLd data={organizationLd()} />
         </CartProvider>
       </body>
     </html>
