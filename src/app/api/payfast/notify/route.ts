@@ -41,9 +41,29 @@ export async function POST(request: Request): Promise<Response> {
     return new Response("unknown order", { status: 400 });
   }
 
-  // Idempotency: PayFast retries notifications; only the first COMPLETE for a
-  // pending order moves stock and sends mail.
+  // PayFast retries notifications and may deliver concurrently. Only a
+  // pending order is processed; anything else is already handled.
   if (order.status !== "pending_payment") {
+    // A COMPLETE payment against an order that is not payable (e.g. the buyer
+    // retried after an earlier failure cancelled it) means money was taken
+    // with nothing on the order to reconcile against. Record it for staff
+    // rather than swallowing it silently.
+    const nonPayable = order.status === "cancelled" || order.status === "refunded";
+    if (verified.status === "complete" && nonPayable) {
+      payload.logger.error(
+        { order: order.orderNumber, status: order.status, ref: verified.reference },
+        "COMPLETE ITN for a non-payable order; flagged for manual reconciliation",
+      );
+      await payload.update({
+        collection: "orders",
+        id: order.id,
+        overrideAccess: true,
+        data: {
+          internalNotes: `${order.internalNotes ? order.internalNotes + "\n" : ""}PAYMENT RECEIVED on a ${order.status} order (PayFast ref ${verified.reference}, ${verified.amountCents} cents). Reconcile manually.`,
+          payment: { ...order.payment, reference: verified.reference, raw: verified.raw },
+        },
+      });
+    }
     return new Response("ok", { status: 200 });
   }
 
@@ -65,15 +85,26 @@ export async function POST(request: Request): Promise<Response> {
       return new Response("amount mismatch", { status: 400 });
     }
 
-    const updated = await payload.update({
+    // Atomic claim: a single UPDATE ... WHERE status = 'pending_payment'.
+    // If a concurrent delivery already flipped it, zero rows match and this
+    // request does no side effects, so stock and discounts move exactly once
+    // even under simultaneous ITN retries.
+    const claim = await payload.update({
       collection: "orders",
-      id: order.id,
       overrideAccess: true,
+      where: {
+        and: [{ id: { equals: order.id } }, { status: { equals: "pending_payment" } }],
+      },
       data: {
         status: "paid",
         payment: { provider: "payfast", reference: verified.reference, raw: verified.raw },
       },
     });
+    const updated = claim.docs[0];
+    if (!updated) {
+      // Another concurrent delivery won the claim; nothing more to do.
+      return new Response("ok", { status: 200 });
+    }
 
     await decrementStockForOrder(payload, updated);
     if (updated.discountCode) {

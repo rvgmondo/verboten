@@ -1,21 +1,20 @@
-import { Archivo, Fraunces } from "next/font/google";
+import { Lato, League_Spartan } from "next/font/google";
 
 /**
  * Self-hosted at build time by next/font: zero layout shift, no runtime
- * requests to Google. Fraunces carries the label voice (high-contrast serif
- * with an optical size axis, so display sizes sharpen automatically);
- * Archivo is the quiet grotesque for body and UI.
+ * requests to Google. League Spartan carries the headline voice (geometric,
+ * confident, built for tracked-out caps); Lato is the quiet humanist sans
+ * for body and UI.
  */
-export const fraunces = Fraunces({
+export const leagueSpartan = League_Spartan({
   subsets: ["latin"],
-  variable: "--font-fraunces",
-  style: ["normal", "italic"],
-  axes: ["opsz"],
+  variable: "--font-league-spartan",
   display: "swap",
 });
 
-export const archivo = Archivo({
+export const lato = Lato({
   subsets: ["latin"],
-  variable: "--font-archivo",
+  weight: ["300", "400", "700"],
+  variable: "--font-lato",
   display: "swap",
 });

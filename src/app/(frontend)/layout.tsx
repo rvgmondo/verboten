@@ -10,7 +10,7 @@ import { JsonLd } from "@/components/json-ld";
 import { organizationLd } from "@/lib/seo";
 import { CartProvider } from "@/lib/cart";
 import { getSiteSettings } from "@/lib/data";
-import { archivo, fraunces } from "@/lib/fonts";
+import { lato, leagueSpartan } from "@/lib/fonts";
 
 import "../globals.css";
 
@@ -31,7 +31,7 @@ export default async function FrontendLayout({ children }: { children: React.Rea
   const settings = await getSiteSettings();
 
   return (
-    <html lang="en" className={`${fraunces.variable} ${archivo.variable}`}>
+    <html lang="en" className={`${leagueSpartan.variable} ${lato.variable}`}>
       <body className="flex min-h-screen flex-col">
         <CartProvider>
           <a

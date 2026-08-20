@@ -22,9 +22,20 @@ export const isAdminOrEditor: Access = ({ req: { user } }) => {
   return roles.includes("admin") || roles.includes("editor");
 };
 
-/** Admins see all users; a signed-in user may only read/update their own record. */
+const isStaff = (user: unknown): boolean =>
+  (user as { collection?: string } | null)?.collection === "users";
+
+/**
+ * Admins see all staff users; a signed-in staff member may read/update only
+ * their own record.
+ *
+ * The `collection` guard is load-bearing: customers are a separate auth
+ * collection but share the integer PK space, so without it a customer with
+ * id N would match the staff user with id N (account takeover). Non-staff
+ * get no access to the users collection at all.
+ */
 export const isAdminOrSelf: Access = ({ req: { user } }) => {
-  if (!user) return false;
+  if (!user || !isStaff(user)) return false;
   if (rolesOf(user).includes("admin")) return true;
   return { id: { equals: user.id } };
 };

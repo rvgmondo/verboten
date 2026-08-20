@@ -62,6 +62,12 @@ export const payfastProvider: PaymentProvider = {
     if (!cfg.merchantId || !cfg.merchantKey) {
       throw new Error("PayFast is not configured (PAYFAST_MERCHANT_ID / PAYFAST_MERCHANT_KEY).");
     }
+    // A passphrase is required: without it the ITN signature check degrades to
+    // an unkeyed MD5 of attacker-controlled data. Set the same value here and
+    // in the PayFast dashboard.
+    if (!cfg.passphrase) {
+      throw new Error("PayFast passphrase is required (set PAYFAST_PASSPHRASE and match it in the PayFast dashboard).");
+    }
 
     const [firstName, ...rest] = (order.customerName ?? "").trim().split(/\s+/);
 
@@ -90,6 +96,13 @@ export const payfastProvider: PaymentProvider = {
 
   async verifyWebhook(rawBody: string): Promise<VerifiedPayment | null> {
     const cfg = config();
+
+    // Fail closed: an unset passphrase would make the signature check an
+    // unkeyed MD5 that any attacker can satisfy. Never verify without it.
+    if (!cfg.passphrase) {
+      return null;
+    }
+
     const params = new URLSearchParams(rawBody);
     const posted = Object.fromEntries(params.entries());
 

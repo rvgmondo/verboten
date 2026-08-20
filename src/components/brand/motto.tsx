@@ -14,7 +14,7 @@ export const Motto = ({
   <p
     lang={line === "VIR DIÉ WAT WEET" ? "af" : "en"}
     className={cn(
-      "font-display text-sm uppercase tracking-motto text-gold-dim",
+      "font-display text-sm uppercase tracking-motto text-gold",
       className,
     )}
   >

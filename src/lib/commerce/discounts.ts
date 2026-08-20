@@ -1,5 +1,6 @@
 import type { Payload } from "payload";
 
+import { incrementDiscountUse } from "@/lib/commerce/atomic";
 import type { DiscountCode } from "@/payload-types";
 
 export type DiscountCheck =
@@ -61,9 +62,5 @@ export const redeemDiscount = async (payload: Payload, code: string): Promise<vo
     })
   ).docs[0];
   if (!doc) return;
-  await payload.update({
-    collection: "discount-codes",
-    id: doc.id,
-    data: { usedCount: doc.usedCount + 1 },
-  });
+  await incrementDiscountUse(payload, doc.id);
 };

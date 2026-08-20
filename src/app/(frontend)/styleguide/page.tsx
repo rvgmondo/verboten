@@ -35,11 +35,11 @@ export default function StyleguidePage() {
         <SectionHeading eyebrow="Typography" title="The label voice" />
         <div className="space-y-3">
           <p className="font-display text-7xl leading-none">Batch No. 01</p>
-          <p className="font-display text-4xl italic text-gold">
+          <p className="font-display text-4xl text-gold">
             Three years in oak. Finished in French casks.
           </p>
           <p className="max-w-xl text-base leading-relaxed text-parch">
-            Body copy sits in Archivo at a quiet size. It carries specification,
+            Body copy sits in Lato at a quiet size. It carries specification,
             provenance and instruction without raising its voice. Statements,
             not sales pleading.
           </p>

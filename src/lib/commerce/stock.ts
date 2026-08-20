@@ -1,5 +1,6 @@
 import type { Payload } from "payload";
 
+import { decrementBatch, decrementProductStock } from "@/lib/commerce/atomic";
 import { getAvailability } from "@/lib/inventory";
 import type { Order, Product } from "@/payload-types";
 
@@ -50,25 +51,26 @@ export const decrementStockForOrder = async (payload: Payload, order: Order): Pr
     else merged.set(key, { ...d });
   }
 
+  // Atomic SQL decrements (see atomic.ts): safe when two paid orders touch the
+  // same batch concurrently, where a read-modify-write would lose an update
+  // and oversell a numbered batch.
   for (const d of merged.values()) {
     if (d.kind === "batch") {
-      const batch = await payload.findByID({ collection: "batches", id: d.id });
+      await decrementBatch(payload, d.id, d.units);
+    } else {
+      await decrementProductStock(payload, d.id, d.units);
+    }
+  }
+
+  // Reflect a now-empty batch as sold out (a status the SQL update cannot set).
+  for (const d of merged.values()) {
+    if (d.kind !== "batch") continue;
+    const batch = await payload.findByID({ collection: "batches", id: d.id });
+    if (batch.bottlesRemaining <= 0 && batch.status === "available") {
       await payload.update({
         collection: "batches",
         id: d.id,
-        data: { bottlesRemaining: Math.max(0, batch.bottlesRemaining - d.units) },
-      });
-    } else {
-      const product = await payload.findByID({ collection: "products", id: d.id });
-      await payload.update({
-        collection: "products",
-        id: d.id,
-        data: {
-          inventory: {
-            ...product.inventory,
-            stockQty: Math.max(0, (product.inventory?.stockQty ?? 0) - d.units),
-          },
-        },
+        data: { status: "sold_out" },
       });
     }
   }

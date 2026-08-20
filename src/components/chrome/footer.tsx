@@ -121,7 +121,7 @@ export const Footer = async () => {
           <p className="text-xs leading-relaxed text-parch/70">
             Drink responsibly. Not for sale to persons under 18.
           </p>
-          <p className="text-xs text-parch/50">
+          <p className="text-xs text-parch/80">
             © {year} Verboten Pty Ltd. {settings.contact?.address ?? "Silverton, Pretoria"}.
           </p>
         </div>

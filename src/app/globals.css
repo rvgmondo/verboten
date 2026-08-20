@@ -64,8 +64,8 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-archivo), system-ui, sans-serif;
-  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-lato), system-ui, sans-serif;
+  --font-display: var(--font-league-spartan), "Segoe UI", system-ui, sans-serif;
 }
 
 /* ------------------------------------------------------------------ */

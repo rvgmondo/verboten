@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { getPayload } from "payload";
 import { z } from "zod";
 
+import { nextOrderNumber } from "@/lib/commerce/atomic";
 import { checkDiscount } from "@/lib/commerce/discounts";
 import { findStockProblems } from "@/lib/commerce/stock";
 import { getPaymentProvider } from "@/lib/payments";
@@ -184,9 +185,9 @@ export async function createCheckout(
 
   const totalCents = subtotalCents - discountCents + shippingCents;
 
-  const year = new Date().getFullYear();
-  const { totalDocs } = await payload.count({ collection: "orders", overrideAccess: true });
-  const orderNumber = `VB-${year}-${String(totalDocs + 1).padStart(4, "0")}`;
+  // Sequence-backed, collision-free even under concurrent checkouts or after
+  // an admin deletes an order (count()+1 would reuse a live number).
+  const orderNumber = await nextOrderNumber(payload, new Date().getFullYear());
 
   // Signed-in customers get the order on their account; guests stay guests.
   const { user } = await payload.auth({ headers: hdrs });
