@@ -1,7 +1,10 @@
 "use server";
 
+import { headers } from "next/headers";
 import { getPayload } from "payload";
 import { z } from "zod";
+
+import { clientKey, rateLimit } from "@/lib/rate-limit";
 
 import config from "../../payload.config";
 
@@ -25,6 +28,10 @@ export async function submitContact(
   _prev: ContactResult | null,
   formData: FormData,
 ): Promise<ContactResult> {
+  if (!rateLimit(clientKey(await headers(), "contact"), { limit: 5, windowMs: 10 * 60 * 1000 })) {
+    return { ok: false, message: "Too many messages in a short time. Try again in a few minutes." };
+  }
+
   const parsed = schema.safeParse({
     name: formData.get("name"),
     email: formData.get("email"),

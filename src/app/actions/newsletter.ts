@@ -1,8 +1,11 @@
 "use server";
 
 import { randomBytes } from "crypto";
+import { headers } from "next/headers";
 import { getPayload } from "payload";
 import { z } from "zod";
+
+import { clientKey, rateLimit } from "@/lib/rate-limit";
 
 import config from "../../payload.config";
 
@@ -24,6 +27,10 @@ export async function subscribeToNewsletter(
   _prev: NewsletterResult | null,
   formData: FormData,
 ): Promise<NewsletterResult> {
+  if (!rateLimit(clientKey(await headers(), "newsletter"), { limit: 6, windowMs: 10 * 60 * 1000 })) {
+    return { ok: false, message: "Too many attempts. Try again in a few minutes." };
+  }
+
   const parsed = schema.safeParse({
     email: formData.get("email"),
     company: formData.get("company") ?? "",

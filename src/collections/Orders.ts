@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
 import { isAdmin, isAdminOrEditor, serverOnly, staffOrOwnCustomer } from "../access/access";
+import { sendOrderStatusEmail } from "../lib/emails";
 
 export const ORDER_STATUSES = [
   { label: "Pending payment", value: "pending_payment" },
@@ -244,6 +245,17 @@ export const Orders: CollectionConfig = {
           ];
         }
         return data;
+      },
+    ],
+    afterChange: [
+      // Every status transition emails the customer the matching update,
+      // whether the change came from the payment webhook or a staff member
+      // in the admin. Creation (pending_payment) sends nothing.
+      async ({ doc, previousDoc, operation, req }) => {
+        if (operation === "update" && previousDoc && doc.status !== previousDoc.status) {
+          await sendOrderStatusEmail(req.payload, doc);
+        }
+        return doc;
       },
     ],
   },
