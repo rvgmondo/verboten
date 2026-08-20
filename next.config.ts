@@ -1,0 +1,61 @@
+import { withPayload } from "@payloadcms/next/withPayload";
+import type { NextConfig } from "next";
+
+const isDev = process.env.NODE_ENV !== "production";
+
+// CSP compatible with the public site (next/image, self-hosted next/font) and
+// the Payload admin (which needs eval + blob workers).
+// 'unsafe-eval' is a known trade-off for the CMS admin; tighten with nonces later.
+// form-action allows the PayFast checkout redirect (live + sandbox hosts).
+const csp = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline' 'unsafe-eval'`,
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob: https:",
+  "font-src 'self' data:",
+  "worker-src 'self' blob:",
+  "frame-src 'self'",
+  `connect-src 'self'${isDev ? " ws: http://localhost:*" : ""}`,
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self' https://www.payfast.co.za https://sandbox.payfast.co.za",
+  "frame-ancestors 'self'",
+]
+  .concat(isDev ? [] : ["upgrade-insecure-requests"])
+  .join("; ");
+
+const securityHeaders = [
+  { key: "Content-Security-Policy", value: csp },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  {
+    key: "Permissions-Policy",
+    value: "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+  },
+  ...(isDev
+    ? []
+    : [
+        {
+          key: "Strict-Transport-Security",
+          value: "max-age=63072000; includeSubDomains; preload",
+        },
+      ]),
+];
+
+const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "verboten.co.za" },
+      { protocol: "https", hostname: "**.verboten.co.za" },
+    ],
+  },
+  reactStrictMode: true,
+  // TypeScript is the build-time quality gate; run ESLint separately via `npm run lint`.
+  eslint: { ignoreDuringBuilds: true },
+  async headers() {
+    return [{ source: "/:path*", headers: securityHeaders }];
+  },
+};
+
+export default withPayload(nextConfig);

@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+/* Phase 1 placeholder tokens. The full design-token layer (brand palette,
+   typography scale, spacing rhythm) lands in Phase 3. */
+:root {
+  --color-ink: #0a0a08;
+  --color-bone: #e8e2d6;
+  --color-gold: #c9a227;
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-bone);
+}
