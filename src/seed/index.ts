@@ -2,6 +2,7 @@ import type { RequiredDataFromCollectionSlug } from "payload";
 import { getPayload } from "payload";
 
 import config from "../payload.config";
+import { JOURNAL_POSTS, PAGES, SERVES } from "./content";
 import { paragraphs } from "./lexical";
 
 /**
@@ -128,6 +129,78 @@ const run = async () => {
     relatedProducts: [brandy.id, rtd.id],
     _status: "published",
   });
+
+  // --- Marketing and legal pages (the copy rewrite; see src/seed/content.ts) ---
+  for (const page of PAGES) {
+    const existing = (
+      await payload.find({ collection: "pages", where: { slug: { equals: page.slug } }, limit: 1 })
+    ).docs[0];
+    if (existing) {
+      log(`Page ${page.slug} exists; skipping`);
+      continue;
+    }
+    await payload.create({
+      collection: "pages",
+      data: {
+        title: page.title,
+        slug: page.slug,
+        intro: page.intro,
+        updatedNote: "updatedNote" in page ? page.updatedNote : undefined,
+        content: page.content,
+        _status: "published",
+      },
+    });
+    log(`Created page ${page.slug}`);
+  }
+
+  // --- Serves ---
+  const existingServes = await payload.count({ collection: "serves" });
+  if (existingServes.totalDocs === 0) {
+    for (const serve of SERVES) {
+      await payload.create({
+        collection: "serves",
+        data: {
+          name: serve.name,
+          description: serve.description,
+          ingredients: serve.ingredients.map((i) => ({ amount: i.amount, item: i.item })),
+          method: serve.method,
+          product: brandy.id,
+          sortOrder: serve.sortOrder,
+        },
+      });
+    }
+    log(`Created ${SERVES.length} serves`);
+  } else {
+    log("Serves exist; skipping");
+  }
+
+  // --- Journal ---
+  for (const post of JOURNAL_POSTS) {
+    const existing = (
+      await payload.find({
+        collection: "journal-posts",
+        where: { slug: { equals: post.slug } },
+        limit: 1,
+      })
+    ).docs[0];
+    if (existing) {
+      log(`Journal post ${post.slug} exists; skipping`);
+      continue;
+    }
+    await payload.create({
+      collection: "journal-posts",
+      data: {
+        title: post.title,
+        slug: post.slug,
+        category: post.category,
+        excerpt: post.excerpt,
+        content: post.content,
+        publishedAt: post.publishedAt,
+        _status: "published",
+      },
+    });
+    log(`Created journal post ${post.slug}`);
+  }
 
   // --- Site settings (field defaults hold the real values; touching the
   //     global once materialises it) ---

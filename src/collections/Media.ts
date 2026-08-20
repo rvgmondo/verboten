@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import type { CollectionConfig } from "payload";
 
 import { anyone, isAdminOrEditor } from "../access/access";
+import { revalidateHooks } from "../lib/revalidate";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -17,6 +18,8 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
  */
 export const Media: CollectionConfig = {
   slug: "media",
+  // Media appears inside products, journal and pages; bust them all on change.
+  hooks: { ...revalidateHooks("products", "journal", "pages", "serves", "events") },
   access: {
     read: anyone,
     create: isAdminOrEditor,

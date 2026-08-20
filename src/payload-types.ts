@@ -73,6 +73,7 @@ export interface Config {
     'discount-codes': DiscountCode;
     orders: Order;
     customers: Customer;
+    enquiries: Enquiry;
     'journal-posts': JournalPost;
     serves: Serve;
     stockists: Stockist;
@@ -93,6 +94,7 @@ export interface Config {
     'discount-codes': DiscountCodesSelect<false> | DiscountCodesSelect<true>;
     orders: OrdersSelect<false> | OrdersSelect<true>;
     customers: CustomersSelect<false> | CustomersSelect<true>;
+    enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
     'journal-posts': JournalPostsSelect<false> | JournalPostsSelect<true>;
     serves: ServesSelect<false> | ServesSelect<true>;
     stockists: StockistsSelect<false> | StockistsSelect<true>;
@@ -563,6 +565,20 @@ export interface Customer {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiries".
+ */
+export interface Enquiry {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string | null;
+  message: string;
+  status: 'new' | 'handled';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "journal-posts".
  */
 export interface JournalPost {
@@ -810,6 +826,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'customers';
         value: number | Customer;
+      } | null)
+    | ({
+        relationTo: 'enquiries';
+        value: number | Enquiry;
       } | null)
     | ({
         relationTo: 'journal-posts';
@@ -1087,6 +1107,19 @@ export interface CustomersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiries_select".
+ */
+export interface EnquiriesSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  phone?: T;
+  message?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

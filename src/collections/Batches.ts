@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
 import { anyone, isAdminOrEditor } from "../access/access";
+import { revalidateHooks } from "../lib/revalidate";
 
 /**
  * Numbered releases. Verboten sells in batches (Batch No. 01 is 500 bottles),
@@ -82,6 +83,8 @@ export const Batches: CollectionConfig = {
     },
   ],
   hooks: {
+    // Batch stock backs product availability, so bust products too.
+    ...revalidateHooks("batches", "products"),
     beforeChange: [
       ({ data }) => {
         // Stock can never go negative, and an empty batch flags itself sold out.

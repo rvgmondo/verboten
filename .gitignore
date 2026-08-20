@@ -41,5 +41,8 @@ next-env.d.ts
 # Payload uploaded media (local disk storage)
 /media/
 
+# Local image cache used by the media harvest
+/.imgcache/
+
 # OS / editor
 Thumbs.db

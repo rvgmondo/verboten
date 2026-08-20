@@ -12,6 +12,7 @@ import sharp from "sharp";
 import { Batches } from "./collections/Batches";
 import { Customers } from "./collections/Customers";
 import { DiscountCodes } from "./collections/DiscountCodes";
+import { Enquiries } from "./collections/Enquiries";
 import { Events } from "./collections/Events";
 import { JournalPosts } from "./collections/JournalPosts";
 import { Media } from "./collections/Media";
@@ -49,6 +50,7 @@ export default buildConfig({
     DiscountCodes,
     Orders,
     Customers,
+    Enquiries,
     JournalPosts,
     Serves,
     Stockists,

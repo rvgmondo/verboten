@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
 import { anyone, isAdminOrEditor } from "../access/access";
+import { revalidateHooks } from "../lib/revalidate";
 
 /** Bars, restaurants, bottle stores and venues that carry Verboten. */
 export const Stockists: CollectionConfig = {
@@ -10,6 +11,7 @@ export const Stockists: CollectionConfig = {
     defaultColumns: ["name", "area", "type", "active"],
     group: "Content",
   },
+  hooks: { ...revalidateHooks("stockists") },
   access: {
     read: anyone,
     create: isAdminOrEditor,

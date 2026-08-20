@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
 import { isAdminOrEditor, publishedOrEditor } from "../access/access";
+import { revalidateHooks } from "../lib/revalidate";
 import { formatSlug } from "../lib/slug";
 
 /**
@@ -18,6 +19,7 @@ export const JournalPosts: CollectionConfig = {
   versions: {
     drafts: true,
   },
+  hooks: { ...revalidateHooks("journal") },
   access: {
     read: publishedOrEditor,
     create: isAdminOrEditor,

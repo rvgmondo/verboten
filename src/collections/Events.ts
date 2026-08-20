@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
 import { anyone, isAdminOrEditor } from "../access/access";
+import { revalidateHooks } from "../lib/revalidate";
 
 /** Markets, festivals and tastings where Verboten pours. */
 export const Events: CollectionConfig = {
@@ -10,6 +11,7 @@ export const Events: CollectionConfig = {
     defaultColumns: ["title", "startDate", "location"],
     group: "Content",
   },
+  hooks: { ...revalidateHooks("events") },
   access: {
     read: anyone,
     create: isAdminOrEditor,

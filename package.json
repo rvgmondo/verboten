@@ -21,7 +21,8 @@
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "seed": "cross-env NODE_OPTIONS=--no-deprecation node --env-file=.env --import tsx src/seed/index.ts",
-    "seed:admin": "cross-env NODE_OPTIONS=--no-deprecation node --env-file=.env --import tsx src/seed/create-admin.ts"
+    "seed:admin": "cross-env NODE_OPTIONS=--no-deprecation node --env-file=.env --import tsx src/seed/create-admin.ts",
+    "seed:media": "cross-env NODE_OPTIONS=--no-deprecation node --env-file=.env --import tsx src/seed/harvest-media.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

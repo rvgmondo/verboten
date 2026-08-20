@@ -1,6 +1,7 @@
 import type { GlobalConfig } from "payload";
 
 import { anyone, isAdmin } from "../access/access";
+import { revalidateGlobalHooks } from "../lib/revalidate";
 
 /**
  * Site-wide switches staff should never need code for. Admin-only by design:
@@ -11,6 +12,7 @@ export const SiteSettings: GlobalConfig = {
   admin: {
     group: "Admin",
   },
+  hooks: { ...revalidateGlobalHooks("settings") },
   access: {
     read: anyone,
     update: isAdmin,

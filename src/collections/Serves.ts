@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
 import { anyone, isAdminOrEditor } from "../access/access";
+import { revalidateHooks } from "../lib/revalidate";
 
 /** Signature serves and simple cocktails built on Verboten products. */
 export const Serves: CollectionConfig = {
@@ -10,6 +11,7 @@ export const Serves: CollectionConfig = {
     defaultColumns: ["name", "product"],
     group: "Content",
   },
+  hooks: { ...revalidateHooks("serves") },
   access: {
     read: anyone,
     create: isAdminOrEditor,
