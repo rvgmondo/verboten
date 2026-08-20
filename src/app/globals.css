@@ -1,14 +1,135 @@
 @import "tailwindcss";
 
-/* Phase 1 placeholder tokens. The full design-token layer (brand palette,
-   typography scale, spacing rhythm) lands in Phase 3. */
-:root {
-  --color-ink: #0a0a08;
-  --color-bone: #e8e2d6;
+/* ------------------------------------------------------------------ */
+/* Verboten design tokens.                                             */
+/* Contrast ratios verified against WCAG 2.2 AA (see Phase 3 notes):   */
+/*   gold on ink 8.18:1, bone on ink 16.35:1, parch on ink 8.79:1,     */
+/*   ink on gold (buttons) 8.18:1. gold-dim is 4.04:1 and is reserved  */
+/*   for borders, hairlines and large display type only.               */
+/* ------------------------------------------------------------------ */
+
+@theme {
+  /* Base surfaces: warm blacks, never pure #000 */
+  --color-ink: #0b0a08;
+  --color-coal: #14120e;
+  --color-smoke: #1d1a14;
+  --color-line: #2a2620;
+
+  /* Text */
+  --color-bone: #efe9db;
+  --color-parch: #b5ac99;
+
+  /* The gold, used with restraint */
   --color-gold: #c9a227;
+  --color-gold-bright: #e8c766;
+  --color-gold-dim: #8a6d1f;
+
+  /* Rare deep accent, backgrounds only */
+  --color-oxblood: #3e1219;
+
+  /* Semantic states */
+  --color-danger: #e0655a;
+
+  --radius-xs: 2px;
+
+  --tracking-eyebrow: 0.32em;
+  --tracking-motto: 0.18em;
+
+  --shadow-panel: 0 24px 64px -32px rgb(0 0 0 / 0.85);
+
+  --ease-out-quiet: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-fade-up: fade-up 0.7s var(--ease-out-quiet) both;
+  --animate-fade-in: fade-in 0.9s ease-out both;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 }
 
-body {
-  background: var(--color-ink);
-  color: var(--color-bone);
+@theme inline {
+  --font-sans: var(--font-archivo), system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, serif;
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-ink);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--color-gold);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold-bright);
+    outline-offset: 3px;
+  }
+
+  /* Quiet scrollbar that matches the surface */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line) transparent;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Brand utilities                                                     */
+/* ------------------------------------------------------------------ */
+
+/* Small caps label above headings: THE HOUSE STANDARD */
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+
+/* Hairline rule in dim gold */
+@utility hairline {
+  border-color: color-mix(in srgb, var(--color-gold-dim) 55%, transparent);
 }

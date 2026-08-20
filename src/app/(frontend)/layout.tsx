@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import React from "react";
 
+import { archivo, fraunces } from "@/lib/fonts";
+
 import "../globals.css";
 
 /* Root layout for the public site. The (payload) route group renders its own
@@ -14,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function FrontendLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${fraunces.variable} ${archivo.variable}`}>
       <body>{children}</body>
     </html>
   );
