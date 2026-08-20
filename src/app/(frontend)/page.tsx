@@ -8,6 +8,7 @@ import { StockBadge } from "@/components/brand/stock-badge";
 import { NewsletterForm } from "@/components/chrome/newsletter-form";
 import { CmsImage } from "@/components/media/cms-image";
 import { PlaceholderFrame } from "@/components/media/placeholder-frame";
+import { Reveal } from "@/components/motion/reveal";
 import { productImage } from "@/components/shop/product-helpers";
 import { Button } from "@/components/ui/button";
 import { CrestDivider } from "@/components/ui/separator";
@@ -90,7 +91,7 @@ export default async function HomePage() {
       {/* Flagship */}
       {flagship && (
         <section className="border-b border-line">
-          <div className="mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-2 lg:items-center">
+          <Reveal className="mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-2 lg:items-center">
             <div className="order-2 lg:order-1">
               {flagshipImage ? (
                 <CmsImage
@@ -137,14 +138,14 @@ export default async function HomePage() {
                 <Link href={`/shop/${flagship.slug}`}>View the bottle</Link>
               </Button>
             </div>
-          </div>
+          </Reveal>
         </section>
       )}
 
       {/* Brandy & Cola */}
       {rtd && (
         <section className="border-b border-line bg-coal">
-          <div className="mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-2 lg:items-center">
+          <Reveal className="mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-2 lg:items-center">
             <div className="space-y-6">
               <SectionHeading
                 eyebrow="Ready to drink"
@@ -173,14 +174,14 @@ export default async function HomePage() {
                 />
               )}
             </div>
-          </div>
+          </Reveal>
         </section>
       )}
 
       {/* Story teaser */}
       <section className="border-b border-line">
         <div className="mx-auto max-w-6xl px-6 py-20">
-          <div className="mx-auto max-w-2xl space-y-6 text-center">
+          <Reveal className="mx-auto max-w-2xl space-y-6 text-center">
             <SectionHeading
               align="center"
               eyebrow="The house"
@@ -190,13 +191,13 @@ export default async function HomePage() {
             <Button variant="outline" asChild>
               <Link href="/story">The whole story</Link>
             </Button>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* Find us / Journal strip */}
       <section className="border-b border-line">
-        <div className="mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-2">
+        <Reveal className="mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-2">
           <div className="space-y-5">
             <SectionHeading eyebrow="Out in the world" title="Where to find us" />
             <p className="text-sm leading-relaxed text-parch">
@@ -240,14 +241,14 @@ export default async function HomePage() {
               <Link href="/journal">Read the journal</Link>
             </Button>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* Newsletter */}
       <section>
         <div className="mx-auto max-w-6xl px-6 py-20">
           <CrestDivider className="mb-14" />
-          <div className="mx-auto max-w-md text-center">
+          <Reveal className="mx-auto max-w-md text-center">
             <SectionHeading
               align="center"
               eyebrow="First pour"
@@ -257,7 +258,7 @@ export default async function HomePage() {
             <div className="mt-8 text-left">
               <NewsletterForm source="home" />
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
     </main>

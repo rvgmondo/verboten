@@ -11,13 +11,17 @@ import config from "../payload.config";
 
 const payloadClient = async () => getPayload({ config });
 
+/* Tags give instant invalidation for in-process edits (admin, webhook); the
+ * revalidate windows are a safety net for out-of-process writes (seed and
+ * harvest scripts), which cannot reach Next's cache store. */
+
 export const getSiteSettings = unstable_cache(
   async () => {
     const payload = await payloadClient();
     return payload.findGlobal({ slug: "site-settings" });
   },
   ["site-settings"],
-  { tags: ["settings"] },
+  { tags: ["settings"], revalidate: 3600 },
 );
 
 export const getProducts = unstable_cache(
@@ -33,7 +37,7 @@ export const getProducts = unstable_cache(
     return res.docs;
   },
   ["products-list"],
-  { tags: ["products", "batches"] },
+  { tags: ["products", "batches"], revalidate: 300 },
 );
 
 export const getProductBySlug = async (slug: string) => {
@@ -53,7 +57,7 @@ export const getStockists = unstable_cache(
     return res.docs;
   },
   ["stockists-list"],
-  { tags: ["stockists"] },
+  { tags: ["stockists"], revalidate: 3600 },
 );
 
 export const getUpcomingEvents = unstable_cache(
@@ -85,7 +89,7 @@ export const getJournalPosts = unstable_cache(
     return res.docs;
   },
   ["journal-list"],
-  { tags: ["journal"] },
+  { tags: ["journal"], revalidate: 3600 },
 );
 
 export const getJournalPostBySlug = unstable_cache(
@@ -100,7 +104,7 @@ export const getJournalPostBySlug = unstable_cache(
     return res.docs[0] ?? null;
   },
   ["journal-post"],
-  { tags: ["journal"] },
+  { tags: ["journal"], revalidate: 3600 },
 );
 
 export const getServes = unstable_cache(
@@ -115,7 +119,7 @@ export const getServes = unstable_cache(
     return res.docs;
   },
   ["serves-list"],
-  { tags: ["serves", "products"] },
+  { tags: ["serves", "products"], revalidate: 3600 },
 );
 
 export const getPageBySlug = unstable_cache(
@@ -130,5 +134,5 @@ export const getPageBySlug = unstable_cache(
     return res.docs[0] ?? null;
   },
   ["page-by-slug"],
-  { tags: ["pages"] },
+  { tags: ["pages"], revalidate: 3600 },
 );

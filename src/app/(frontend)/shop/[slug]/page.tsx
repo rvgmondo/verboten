@@ -4,15 +4,16 @@ import { notFound } from "next/navigation";
 
 import { Price } from "@/components/brand/price";
 import { StockBadge } from "@/components/brand/stock-badge";
-import { CmsImage } from "@/components/media/cms-image";
 import { PlaceholderFrame } from "@/components/media/placeholder-frame";
 import { RichText } from "@/components/rich-text";
 import { AddToCart } from "@/components/shop/add-to-cart";
+import { ProductGallery } from "@/components/shop/gallery";
 import { ProductCard } from "@/components/shop/product-card";
 import { productImage } from "@/components/shop/product-helpers";
 import { Badge } from "@/components/ui/badge";
 import { getProductBySlug, getProducts, getSiteSettings } from "@/lib/data";
 import { getAvailability } from "@/lib/inventory";
+import { mediaSrc } from "@/lib/media";
 import type { Batch, Media, Product } from "@/payload-types";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -91,28 +92,13 @@ export default async function ProductPage({ params }: Params) {
 
       <div className="grid gap-12 lg:grid-cols-[1fr_0.9fr]">
         {/* Gallery */}
-        <div className="space-y-4">
+        <div>
           {gallery.length > 0 ? (
-            <>
-              <CmsImage
-                media={gallery[0]}
-                aspect="aspect-[4/5]"
-                sizes="(min-width: 1024px) 600px, 100vw"
-                priority
-              />
-              {gallery.length > 1 && (
-                <div className="grid grid-cols-3 gap-4">
-                  {gallery.slice(1, 4).map((m) => (
-                    <CmsImage
-                      key={m.id}
-                      media={m}
-                      aspect="aspect-square"
-                      sizes="200px"
-                    />
-                  ))}
-                </div>
-              )}
-            </>
+            <ProductGallery
+              images={gallery
+                .map((m) => ({ url: mediaSrc(m.url), alt: m.alt }))
+                .filter((m): m is { url: string; alt: string } => Boolean(m.url))}
+            />
           ) : (
             <PlaceholderFrame
               label={`${product.name}: primary product photography`}
@@ -144,7 +130,7 @@ export default async function ProductPage({ params }: Params) {
             priceCents={product.priceCents}
             maxAvailable={availability.available}
             soldOut={availability.soldOut}
-            imageUrl={image?.url ?? undefined}
+            imageUrl={mediaSrc(image?.url) ?? undefined}
             imageAlt={image?.alt}
           />
 

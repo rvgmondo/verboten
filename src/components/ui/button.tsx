@@ -12,7 +12,8 @@ const buttonVariants = cva(
   [
     "inline-flex items-center justify-center gap-2 select-none",
     "rounded-xs font-sans font-medium uppercase tracking-[0.14em]",
-    "transition-colors duration-200",
+    "transition-[color,background-color,border-color,transform] duration-200",
+    "active:translate-y-px",
     "disabled:pointer-events-none disabled:opacity-40",
   ].join(" "),
   {

@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import { mediaSrc } from "@/lib/media";
 import type { Media } from "@/payload-types";
 import { cn } from "@/lib/utils";
 
@@ -21,11 +22,12 @@ export const CmsImage = ({
   /** Tailwind aspect class for the frame, e.g. "aspect-[3/4]". */
   aspect?: string;
 }) => {
-  if (!media.url) return null;
+  const src = mediaSrc(media.url);
+  if (!src) return null;
   return (
     <div className={cn("relative overflow-hidden bg-coal", aspect, className)}>
       <Image
-        src={media.url}
+        src={src}
         alt={media.alt}
         fill
         sizes={sizes}
