@@ -7,12 +7,13 @@
     "node": ">=20.9.0"
   },
   "scripts": {
-    "predev": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/db-start.ps1",
+    "predev": "node scripts/predb.mjs",
     "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev -p 3001",
     "devsafe": "cross-env NODE_OPTIONS=--no-deprecation rimraf .next && next dev -p 3001",
-    "prebuild": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/db-start.ps1",
+    "prebuild": "node scripts/predb.mjs",
     "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start -p 3001",
+    "start:cpanel": "cross-env NODE_OPTIONS=--no-deprecation node server.cjs",
     "lint": "eslint",
     "db:setup": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/db-setup.ps1",
     "db:start": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/db-start.ps1",
@@ -20,9 +21,9 @@
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
-    "seed": "cross-env NODE_OPTIONS=--no-deprecation node --env-file=.env --import tsx src/seed/index.ts",
-    "seed:admin": "cross-env NODE_OPTIONS=--no-deprecation node --env-file=.env --import tsx src/seed/create-admin.ts",
-    "seed:media": "cross-env NODE_OPTIONS=--no-deprecation node --env-file=.env --import tsx src/seed/harvest-media.ts"
+    "seed": "cross-env NODE_OPTIONS=--no-deprecation node --env-file-if-exists=.env --import tsx src/seed/index.ts",
+    "seed:admin": "cross-env NODE_OPTIONS=--no-deprecation node --env-file-if-exists=.env --import tsx src/seed/create-admin.ts",
+    "seed:media": "cross-env NODE_OPTIONS=--no-deprecation node --env-file-if-exists=.env --import tsx src/seed/harvest-media.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
