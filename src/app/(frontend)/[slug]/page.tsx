@@ -36,7 +36,7 @@ export default async function CmsPage({ params }: Params) {
         </h1>
         {page.intro && <p className="text-base leading-relaxed text-parch">{page.intro}</p>}
         {page.updatedNote && (
-          <p className="text-xs uppercase tracking-[0.18em] text-parch/70">{page.updatedNote}</p>
+          <p className="text-xs uppercase tracking-[0.18em] text-parch/80">{page.updatedNote}</p>
         )}
       </header>
       <RichText data={page.content} className="mt-10" />

@@ -16,8 +16,8 @@ export default function OgImage() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#0b0a08",
-          border: "24px solid #14120e",
+          backgroundColor: "#141414",
+          border: "24px solid #1b1b19",
         }}
       >
         <div
@@ -26,10 +26,10 @@ export default function OgImage() {
             width: 110,
             height: 110,
             borderRadius: 999,
-            border: "3px solid #c9a227",
+            border: "3px solid #cdb88d",
             alignItems: "center",
             justifyContent: "center",
-            color: "#c9a227",
+            color: "#cdb88d",
             fontSize: 64,
             fontWeight: 700,
             marginBottom: 42,
@@ -39,7 +39,7 @@ export default function OgImage() {
         </div>
         <div
           style={{
-            color: "#efe9db",
+            color: "#f5f1e6",
             fontSize: 92,
             fontWeight: 700,
             letterSpacing: 10,
@@ -50,7 +50,7 @@ export default function OgImage() {
         <div
           style={{
             marginTop: 22,
-            color: "#c9a227",
+            color: "#cdb88d",
             fontSize: 30,
             letterSpacing: 8,
           }}
@@ -60,7 +60,7 @@ export default function OgImage() {
         <div
           style={{
             marginTop: 44,
-            color: "#8a6d1f",
+            color: "#8a784f",
             fontSize: 22,
             letterSpacing: 6,
           }}

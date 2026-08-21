@@ -9,20 +9,27 @@
 /* ------------------------------------------------------------------ */
 
 @theme {
-  /* Base surfaces: warm blacks, never pure #000 */
-  --color-ink: #0b0a08;
-  --color-coal: #14120e;
-  --color-smoke: #1d1a14;
-  --color-line: #2a2620;
+  /* Brand palette. Verified WCAG 2.2 AA: gold on ink 9.51:1, bone on ink
+     16.3:1, ink on gold (buttons) 9.51:1. gold-dim is 4.28:1, reserved for
+     borders, hairlines and large display type only. */
+
+  /* Base surfaces: the brand near-black (#141414) and neutral-dark steps. */
+  --color-ink: #141414;
+  --color-coal: #1b1b19;
+  --color-smoke: #252420;
+  --color-line: #33312b;
 
   /* Text */
-  --color-bone: #efe9db;
-  --color-parch: #b5ac99;
+  --color-bone: #f5f1e6;
+  --color-parch: #b0a891;
 
-  /* The gold, used with restraint */
-  --color-gold: #c9a227;
-  --color-gold-bright: #e8c766;
-  --color-gold-dim: #8a6d1f;
+  /* The brand champagne gold, used with restraint. */
+  --color-gold: #cdb88d;
+  --color-gold-bright: #e6d8b4;
+  --color-gold-dim: #8a784f;
+
+  /* Cream surface for light sections (black text sits at 16.3:1). */
+  --color-cream: #f5f1e6;
 
   /* Rare deep accent, backgrounds only */
   --color-oxblood: #3e1219;

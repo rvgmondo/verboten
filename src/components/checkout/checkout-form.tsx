@@ -178,7 +178,7 @@ export const CheckoutForm = ({
                 aria-invalid={errors?.dateOfBirth ? true : undefined}
                 aria-describedby="co-dob-why"
               />
-              <p id="co-dob-why" className="text-[0.6875rem] text-parch/70">
+              <p id="co-dob-why" className="text-[0.6875rem] text-parch/80">
                 Alcohol law: we confirm you are 18 or older.
               </p>
             </Field>
@@ -322,7 +322,7 @@ export const CheckoutForm = ({
         )}
 
         <Submit totalCents={totalCents} />
-        <p className="text-[0.6875rem] leading-relaxed text-parch/70">
+        <p className="text-[0.6875rem] leading-relaxed text-parch/80">
           Drink responsibly. Not for sale to persons under 18. Someone 18 or
           older must receive the delivery.
         </p>

@@ -28,7 +28,7 @@ export const PlaceholderFrame = ({
     <div className="absolute inset-3 border border-line" aria-hidden="true" />
     <div className="relative flex flex-col items-center gap-4 px-6 text-center">
       <Crest className="h-12 w-12 text-line" />
-      <p className="text-[0.625rem] uppercase tracking-[0.25em] text-parch/70">{label}</p>
+      <p className="text-[0.625rem] uppercase tracking-[0.25em] text-parch/80">{label}</p>
     </div>
   </div>
 );

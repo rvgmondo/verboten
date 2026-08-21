@@ -19,17 +19,17 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          backgroundColor: "#0b0a08",
-          border: "24px solid #14120e",
+          backgroundColor: "#141414",
+          border: "24px solid #1b1b19",
           padding: 72,
         }}
       >
-        <div style={{ color: "#c9a227", fontSize: 26, letterSpacing: 8 }}>
+        <div style={{ color: "#cdb88d", fontSize: 26, letterSpacing: 8 }}>
           THE VERBOTEN JOURNAL
         </div>
         <div
           style={{
-            color: "#efe9db",
+            color: "#f5f1e6",
             fontSize: 64,
             fontWeight: 700,
             lineHeight: 1.15,
@@ -45,17 +45,17 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
               width: 52,
               height: 52,
               borderRadius: 999,
-              border: "2px solid #c9a227",
+              border: "2px solid #cdb88d",
               alignItems: "center",
               justifyContent: "center",
-              color: "#c9a227",
+              color: "#cdb88d",
               fontSize: 28,
               fontWeight: 700,
             }}
           >
             V
           </div>
-          <div style={{ color: "#efe9db", fontSize: 28, letterSpacing: 6, fontWeight: 700 }}>
+          <div style={{ color: "#f5f1e6", fontSize: 28, letterSpacing: 6, fontWeight: 700 }}>
             VERBOTEN
           </div>
         </div>

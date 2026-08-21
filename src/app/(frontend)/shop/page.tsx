@@ -40,7 +40,7 @@ export default async function ShopPage() {
         </div>
       </div>
 
-      <p className="mt-14 border-t border-line pt-6 text-xs leading-relaxed text-parch/70">
+      <p className="mt-14 border-t border-line pt-6 text-xs leading-relaxed text-parch/80">
         Drink responsibly. Not for sale to persons under 18. Age is verified at
         checkout and on delivery.
       </p>

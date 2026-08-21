@@ -118,7 +118,7 @@ export const Footer = async () => {
               ))}
             </ul>
           </nav>
-          <p className="text-xs leading-relaxed text-parch/70">
+          <p className="text-xs leading-relaxed text-parch/80">
             Drink responsibly. Not for sale to persons under 18.
           </p>
           <p className="text-xs text-parch/80">
