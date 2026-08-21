@@ -18,7 +18,7 @@ import { getAvailability } from "@/lib/inventory";
 export const metadata: Metadata = {
   title: "Verboten Spirits | Premium South African Brandy",
   description:
-    "Independent beverage house in Pretoria. Batch No. 01: a three year brandy finished in French oak, limited to 500 numbered bottles. Brandy & cola, ready to drink.",
+    "Independent beverage house in Pretoria. Batch No. 01: a limited edition three year brandy finished in French oak, 43% ABV. Brandy & cola, ready to drink.",
   alternates: { canonical: "/" },
 };
 
@@ -53,7 +53,7 @@ export default async function HomePage() {
               style={{ animationDelay: "160ms" }}
             >
               Verboten is an independent South African beverage house. Premium
-              brandy in numbered batches, made in Pretoria and built to stand on
+              brandy in limited editions, made in Pretoria and built to stand on
               any good back bar in the world.
             </p>
             <div
@@ -111,7 +111,7 @@ export default async function HomePage() {
               <SectionHeading
                 eyebrow="The flagship"
                 title="Batch No. 01"
-                lead="Three years in oak, finished in French casks, bottled at 43%. Five hundred numbered bottles. When they are gone, the batch is closed."
+                lead="Three years in oak, finished in French casks, bottled at 43%. A limited edition, made to a standard we refuse to move."
               />
               <dl className="grid grid-cols-2 gap-x-8 gap-y-3 border-y border-line py-5 text-sm sm:grid-cols-4">
                 <div>
@@ -127,8 +127,8 @@ export default async function HomePage() {
                   <dd className="mt-1 text-bone">43%</dd>
                 </div>
                 <div>
-                  <dt className="text-[0.625rem] uppercase tracking-[0.2em] text-parch">Bottles</dt>
-                  <dd className="mt-1 text-bone">500</dd>
+                  <dt className="text-[0.625rem] uppercase tracking-[0.2em] text-parch">Size</dt>
+                  <dd className="mt-1 text-bone">750ml</dd>
                 </div>
               </dl>
               <div className="flex flex-wrap items-center gap-5">
@@ -253,8 +253,8 @@ export default async function HomePage() {
             <SectionHeading
               align="center"
               eyebrow="First pour"
-              title="Hear about the next batch before it exists"
-              lead="Batch No. 01 is five hundred bottles and will not be repeated. Release news goes to this list first."
+              title="Hear about the next release before it lands"
+              lead="New editions, serves and where to find us. Release news goes to this list first."
             />
             <div className="mt-8 text-left">
               <NewsletterForm source="home" />

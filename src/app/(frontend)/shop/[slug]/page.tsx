@@ -203,38 +203,18 @@ export default async function ProductPage({ params }: Params) {
         </div>
       </div>
 
-      {/* Batch story */}
-      {batch && (
+      {/* Edition story */}
+      {batch && batch.story && (
         <section
           aria-labelledby="batch-story"
           className="mt-20 border border-gold-dim/40 bg-coal p-8 sm:p-12"
         >
-          <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-start">
-            <div className="max-w-2xl space-y-5">
-              <p className="eyebrow">The release</p>
-              <h2 id="batch-story" className="font-display text-3xl tracking-tight text-bone">
-                {batch.name}
-              </h2>
-              {batch.story && <RichText data={batch.story} />}
-            </div>
-            <dl className="flex gap-10 lg:flex-col lg:gap-6 lg:text-right">
-              <div>
-                <dt className="text-[0.625rem] uppercase tracking-[0.2em] text-parch">Release</dt>
-                <dd className="mt-1 font-display text-3xl text-gold">{batch.totalBottles}</dd>
-                <dd className="text-xs text-parch">bottles</dd>
-              </div>
-              {batch.status !== "sold_out" && (
-                <div>
-                  <dt className="text-[0.625rem] uppercase tracking-[0.2em] text-parch">
-                    Remaining
-                  </dt>
-                  <dd className="mt-1 font-display text-3xl text-bone">
-                    {batch.bottlesRemaining}
-                  </dd>
-                  <dd className="text-xs text-parch">and counting down</dd>
-                </div>
-              )}
-            </dl>
+          <div className="max-w-2xl space-y-5">
+            <p className="eyebrow">Limited edition</p>
+            <h2 id="batch-story" className="font-display text-3xl tracking-tight text-bone">
+              {batch.name}
+            </h2>
+            <RichText data={batch.story} />
           </div>
         </section>
       )}

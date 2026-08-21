@@ -2,18 +2,16 @@ import { Badge } from "@/components/ui/badge";
 import type { Availability } from "@/lib/inventory";
 
 /**
- * Sold-out and low-stock states, rendered elegantly instead of hiding the
- * product. Batch products show the release they draw from.
+ * Sold-out state and the limited-edition marker. Stock counts are never shown
+ * to the shopper (no numbered-bottle or "X left" scarcity language); products
+ * tied to a limited edition simply carry the Limited edition badge.
  */
 export const StockBadge = ({ availability }: { availability: Availability }) => {
   if (availability.soldOut) {
     return <Badge variant="soldOut">Sold out</Badge>;
   }
-  if (availability.lowStock && availability.available !== null) {
-    return <Badge variant="low">{availability.available} left</Badge>;
-  }
   if (availability.batch) {
-    return <Badge variant="gold">{availability.batch.name}</Badge>;
+    return <Badge variant="gold">Limited edition</Badge>;
   }
   return null;
 };

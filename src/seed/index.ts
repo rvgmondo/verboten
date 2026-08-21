@@ -36,8 +36,8 @@ const run = async () => {
         bottlesRemaining: 500,
         status: "available",
         story: paragraphs(
-          "Batch No. 01 is the first Verboten release. Five hundred bottles, each batch-coded, matured for a minimum of three years in oak and finished in French oak casks.",
-          "When this batch is gone, it is gone. The next release will carry its own number.",
+          "Batch No. 01 is the first Verboten release. A limited edition, matured for a minimum of three years in oak and finished in French oak casks.",
+          "Made to a standard, not to a schedule. When an edition is gone, the next one earns its own name.",
         ),
       },
     });
@@ -70,10 +70,10 @@ const run = async () => {
     sku: "VB-B01-750",
     priceCents: 45000,
     shortDescription:
-      "A three year South African brandy, finished in French oak and bottled at 43% ABV. One of 500 numbered bottles.",
+      "A three year South African brandy, finished in French oak and bottled at 43% ABV. A limited edition from Pretoria.",
     description: paragraphs(
       "Matured for a minimum of three years in oak, then finished in French oak casks. Bottled at 43% ABV in Pretoria.",
-      "Batch No. 01 is limited to 500 bottles. Every bottle is batch-coded.",
+      "Batch No. 01 is a limited edition. When it is gone, the next edition takes its place.",
     ),
     specs: {
       abv: 43,
@@ -123,7 +123,7 @@ const run = async () => {
     shortDescription:
       "Two bottles of Verboten Premium Brandy Batch No. 01. One to open, one for the shelf.",
     description: paragraphs(
-      "Two bottles from the same numbered release of 500. Open one now; keep the second for a night that deserves it.",
+      "Two bottles from the same limited edition. Open one now; keep the second for a night that deserves it.",
     ),
     bundleItems: [{ product: brandy.id, quantity: 2 }],
     relatedProducts: [brandy.id, rtd.id],

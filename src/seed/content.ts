@@ -13,7 +13,7 @@ export const PAGES = [
     slug: "story",
     title: "A house with its name on the door",
     intro:
-      "Verboten is an independent beverage house in Pretoria. We make premium brandy in numbered batches, and we intend to be poured in places that have never heard an accent like ours.",
+      "Verboten is an independent beverage house in Pretoria. We make premium brandy in limited editions, and we intend to be poured in places that have never heard an accent like ours.",
     content: doc(
       h2("The start"),
       p(
@@ -24,7 +24,7 @@ export const PAGES = [
       ),
       h2("What we make"),
       p(
-        "Batch No. 01 is the first release: a three year brandy, matured in oak and finished in French casks, bottled at 43%. Five hundred bottles, each one batch coded. When the batch is done, it is done. The next release gets its own number and its own story.",
+        "Batch No. 01 is the first release: a three year brandy, matured in oak and finished in French casks, bottled at 43%. A limited edition. When an edition is done, the next one earns its own name and its own story.",
       ),
       p(
         "Brandy & Cola is the same spirit with its collar loosened. Pre-mixed, canned, and served colder than strictly necessary at the markets and events where we pour.",
@@ -235,13 +235,13 @@ export const JOURNAL_POSTS = [
     title: "Batch No. 01 is open",
     category: "releases" as const,
     excerpt:
-      "Five hundred bottles. Three years in oak, finished in French casks, bottled at 43% in Pretoria. The first Verboten release is shipping now.",
+      "A limited edition. Three years in oak, finished in French casks, bottled at 43% in Pretoria. The first Verboten release is shipping now.",
     content: doc(
       p(
         "The first release from this house is a brandy we are prepared to put our name on, which is the whole point of the name.",
       ),
       p(
-        "Batch No. 01 spent a minimum of three years in oak before a finish in French casks. It bottles at 43%, in 750ml, and there are exactly five hundred bottles. Each one carries its batch code.",
+        "Batch No. 01 spent a minimum of three years in oak before a finish in French casks. It bottles at 43%, in 750ml. A limited edition, made to a standard we hold without apology.",
       ),
       h2("What it tastes like"),
       p(

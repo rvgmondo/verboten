@@ -234,7 +234,7 @@ export interface Product {
   };
   servingSuggestion?: string | null;
   /**
-   * The numbered release this product belongs to, if any.
+   * The limited edition this product belongs to, if any.
    */
   batch?: (number | null) | Batch;
   /**

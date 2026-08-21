@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     template: "%s | Verboten Spirits",
   },
   description:
-    "Independent South African beverage house in Pretoria. Premium brandy in numbered batches, and brandy & cola ready to drink. Not for sale under 18.",
+    "Independent South African beverage house in Pretoria. Premium brandy in limited editions, and brandy & cola ready to drink. Not for sale under 18.",
 };
 
 export default async function FrontendLayout({ children }: { children: React.ReactNode }) {

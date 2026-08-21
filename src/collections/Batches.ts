@@ -4,10 +4,11 @@ import { anyone, isAdminOrEditor } from "../access/access";
 import { revalidateHooks } from "../lib/revalidate";
 
 /**
- * Numbered releases. Verboten sells in batches (Batch No. 01 is 500 bottles),
- * so a batch carries its own story, bottle count and remaining stock. Products
- * whose inventory mode is "batch" draw availability from here, and a sold-out
- * batch displays elegantly on the front end instead of disappearing.
+ * Limited editions. Each edition carries its own story and stock; the bottle
+ * counts are used only for internal stock tracking and are never shown to
+ * shoppers (no numbered-bottle scarcity). Products whose inventory mode is
+ * "batch" draw availability from here, and a sold-out edition displays
+ * elegantly on the front end instead of disappearing.
  */
 export const Batches: CollectionConfig = {
   slug: "batches",
