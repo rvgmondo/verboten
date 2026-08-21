@@ -344,6 +344,11 @@
         "source": "/wishlist",
         "destination": "/shop",
         "permanent": true
+      },
+      {
+        "source": "/cart",
+        "destination": "/shop",
+        "permanent": true
       }
     ]
   },

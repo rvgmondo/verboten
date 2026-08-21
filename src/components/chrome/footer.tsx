@@ -41,8 +41,8 @@ export const Footer = async () => {
               Pure Spirit. Pure Mischief.
             </p>
             <p className="max-w-xs text-sm leading-relaxed text-parch">
-              An independent South African brandy house. Made in Pretoria,
-              built for the world.
+              An independent South African brandy house, pouring from
+              Silverton, Pretoria since 2020.
             </p>
             <Motto />
           </div>

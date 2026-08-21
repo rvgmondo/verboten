@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import { Motto } from "@/components/brand/motto";
@@ -12,8 +13,10 @@ import { Reveal } from "@/components/motion/reveal";
 import { productImage } from "@/components/shop/product-helpers";
 import { Button } from "@/components/ui/button";
 import { CrestDivider } from "@/components/ui/separator";
-import { getJournalPosts, getProducts, getStockists, getUpcomingEvents } from "@/lib/data";
+import { getJournalPosts, getProducts, getSiteSettings, getStockists, getUpcomingEvents } from "@/lib/data";
 import { getAvailability } from "@/lib/inventory";
+import { mediaSrc } from "@/lib/media";
+import { formatZAR } from "@/lib/money";
 
 export const metadata: Metadata = {
   title: "Verboten Spirits | Premium South African Brandy",
@@ -23,62 +26,109 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [products, posts, stockists, events] = await Promise.all([
+  const [products, posts, stockists, events, settings] = await Promise.all([
     getProducts(),
     getJournalPosts(3),
     getStockists(),
     getUpcomingEvents(),
+    getSiteSettings(),
   ]);
 
   const flagship = products.find((p) => p.slug === "verboten-premium-brandy-batch-no-01-3-year");
   const rtd = products.find((p) => p.slug === "verboten-brandy-cola");
   const flagshipImage = flagship ? productImage(flagship) : null;
   const rtdImage = rtd ? productImage(rtd) : null;
+  const heroSrc = flagshipImage ? mediaSrc(flagshipImage.url) : null;
+  const soldOut = flagship ? getAvailability(flagship).soldOut : false;
+  const flatRateCents = settings.shipping?.flatRateCents ?? 15000;
 
   return (
     <main>
-      {/* Hero (dark bookend) */}
+      {/* Hero: the cellar door. A full-bleed dark stage; candle glow, a ghost
+          wordmark and film grain behind the bottle, type carrying the front. */}
       <section className="inverse relative overflow-hidden border-b border-line bg-ink">
-        <div className="mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:py-28">
-          <div className="max-w-xl space-y-7">
-            <p className="eyebrow animate-fade-up">Pure Spirit. Pure Mischief.</p>
-            <h1
-              className="animate-fade-up font-display text-5xl leading-[1.02] tracking-tight text-bone sm:text-6xl lg:text-7xl"
-              style={{ animationDelay: "80ms" }}
-            >
-              Born in Pretoria. Made for the world.
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+          {/* Candlelight behind the bottle */}
+          <div className="animate-glow absolute right-[-18%] top-1/2 h-[110vmin] w-[110vmin] -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(205,184,141,0.16),rgba(205,184,141,0.05)_45%,transparent_72%)]" />
+          {/* Ghost wordmark rising from the floor of the stage */}
+          <span className="text-ghost absolute bottom-[6%] left-1/2 -translate-x-1/2 select-none whitespace-nowrap font-display text-[23vw] font-bold leading-none tracking-[0.05em]">
+            VERBOTEN
+          </span>
+          {/* Film grain over everything */}
+          <div className="grain absolute inset-0 opacity-[0.05]" />
+        </div>
+
+        <div className="relative mx-auto grid min-h-[86svh] max-w-6xl items-center gap-12 px-6 pb-20 pt-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-6 lg:pb-24 lg:pt-20">
+          <div className="relative z-20 max-w-xl space-y-7">
+            <p className="eyebrow animate-fade-up flex items-center gap-4">
+              <span aria-hidden="true" className="h-px w-10 bg-gold-dim/70" />
+              Pure Spirit. Pure Mischief.
+            </p>
+            <h1 className="font-display font-semibold leading-[0.98] tracking-tight text-[clamp(3rem,7.5vw,5.25rem)]">
+              <span
+                className="block animate-fade-up text-bone"
+                style={{ animationDelay: "80ms" }}
+              >
+                Born in Pretoria.
+              </span>
+              <span
+                className="block animate-fade-up text-gold"
+                style={{ animationDelay: "190ms" }}
+              >
+                Made for the world.
+              </span>
             </h1>
             <p
               className="animate-fade-up text-base leading-relaxed text-parch"
-              style={{ animationDelay: "160ms" }}
+              style={{ animationDelay: "300ms" }}
             >
-              Verboten is an independent South African brandy house. Premium
-              brandy in limited editions, rooted in Pretoria and built to stand
-              on any back bar in the world.
+              An independent South African brandy house with one rule: nothing
+              leaves until it earns the label.
             </p>
             <div
               className="animate-fade-up flex flex-wrap gap-4"
-              style={{ animationDelay: "240ms" }}
+              style={{ animationDelay: "380ms" }}
             >
-              <Button size="lg" asChild>
-                <Link href="/shop/verboten-premium-brandy-batch-no-01-3-year">
-                  Order Batch No. 01
-                </Link>
-              </Button>
+              {soldOut ? (
+                <Button size="lg" asChild>
+                  <Link href="#newsletter">Join the release list</Link>
+                </Button>
+              ) : (
+                <Button size="lg" asChild>
+                  <Link href="/shop/verboten-premium-brandy-batch-no-01-3-year">
+                    Order Batch No. 01
+                  </Link>
+                </Button>
+              )}
               <Button size="lg" variant="outline" asChild>
-                <Link href="/story">Read our story</Link>
+                <Link href="/story">The story</Link>
               </Button>
             </div>
-            <Motto className="animate-fade-up pt-4" />
+            {flagship && (
+              <p
+                className="animate-fade-up max-w-md text-sm leading-relaxed text-parch"
+                style={{ animationDelay: "450ms" }}
+              >
+                {soldOut
+                  ? "Batch No. 01 is gone. The next edition earns its own name; the release list hears first."
+                  : `${formatZAR(flagship.priceCents)} a bottle. Delivery ${formatZAR(flatRateCents)} flat, anywhere in South Africa. A limited edition: when it sells out, it is not coming back.`}
+              </p>
+            )}
+            <Motto className="animate-fade-up pt-2" />
           </div>
-          <div className="animate-fade-in" style={{ animationDelay: "200ms" }}>
-            {flagshipImage ? (
-              <CmsImage
-                media={flagshipImage}
-                aspect="aspect-[3/4]"
-                sizes="(min-width: 1024px) 480px, 100vw"
-                priority
-              />
+
+          <div className="animate-rise relative z-10" style={{ animationDelay: "150ms" }}>
+            {heroSrc && flagshipImage ? (
+              <div className="relative mx-auto aspect-[3/4] w-full max-w-[420px] [mask-image:radial-gradient(ellipse_72%_68%_at_center,black_52%,transparent_98%)] lg:max-w-[480px]">
+                <Image
+                  src={heroSrc}
+                  alt={flagshipImage.alt}
+                  fill
+                  sizes="(min-width: 1024px) 480px, 90vw"
+                  priority
+                  className="object-cover"
+                />
+              </div>
             ) : (
               <PlaceholderFrame
                 label="Hero: Batch No. 01 bottle on black, crest visible"
@@ -86,6 +136,25 @@ export default async function HomePage() {
               />
             )}
           </div>
+        </div>
+
+        {/* Brass plate: the facts, once, at the foot of the stage */}
+        <div className="relative z-20 border-t hairline bg-ink/70 backdrop-blur-sm">
+          <dl className="mx-auto grid max-w-6xl grid-cols-2 gap-y-5 px-6 py-6 sm:grid-cols-4">
+            {(
+              [
+                ["Age", "3 years in oak"],
+                ["Finish", "French casks"],
+                ["Strength", "43%"],
+                ["Bottle", "750ml"],
+              ] as const
+            ).map(([label, value]) => (
+              <div key={label}>
+                <dt className="text-[0.625rem] uppercase tracking-[0.2em] text-parch">{label}</dt>
+                <dd className="mt-1 font-display text-lg text-bone">{value}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
 
@@ -111,27 +180,9 @@ export default async function HomePage() {
               <SectionHeading
                 eyebrow="The flagship"
                 title="Batch No. 01"
-                lead="Three years in oak, finished in French casks, bottled at 43%. A limited edition that drinks like it has somewhere to be."
+                lead="Warm oak, dried apricot and vanilla on the nose. Caramel, toasted nuts and a quiet spice on the palate. The finish is long and does not need help."
               />
-              <dl className="grid grid-cols-2 gap-x-8 gap-y-3 border-y border-line py-5 text-sm sm:grid-cols-4">
-                <div>
-                  <dt className="text-[0.625rem] uppercase tracking-[0.2em] text-parch">Age</dt>
-                  <dd className="mt-1 text-bone">3 years</dd>
-                </div>
-                <div>
-                  <dt className="text-[0.625rem] uppercase tracking-[0.2em] text-parch">Finish</dt>
-                  <dd className="mt-1 text-bone">French oak</dd>
-                </div>
-                <div>
-                  <dt className="text-[0.625rem] uppercase tracking-[0.2em] text-parch">ABV</dt>
-                  <dd className="mt-1 text-bone">43%</dd>
-                </div>
-                <div>
-                  <dt className="text-[0.625rem] uppercase tracking-[0.2em] text-parch">Size</dt>
-                  <dd className="mt-1 text-bone">750ml</dd>
-                </div>
-              </dl>
-              <div className="flex flex-wrap items-center gap-5">
+              <div className="flex flex-wrap items-center gap-5 border-t border-line pt-5">
                 <Price cents={flagship.priceCents} className="text-2xl" />
                 <StockBadge availability={getAvailability(flagship)} />
               </div>
@@ -246,7 +297,7 @@ export default async function HomePage() {
       </section>
 
       {/* Newsletter */}
-      <section>
+      <section id="newsletter" className="scroll-mt-24">
         <div className="mx-auto max-w-6xl px-6 py-20">
           <CrestDivider className="mb-14" />
           <Reveal className="mx-auto max-w-md text-center">

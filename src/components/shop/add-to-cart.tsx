@@ -3,6 +3,7 @@
 import { Minus, Plus } from "lucide-react";
 import * as React from "react";
 
+import { NewsletterForm } from "@/components/chrome/newsletter-form";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/cart";
 
@@ -34,14 +35,18 @@ export const AddToCart = ({
   const max = maxAvailable === null ? 12 : Math.min(12, maxAvailable);
 
   if (soldOut) {
+    // Sold out is the warmest email moment a limited-edition brand has;
+    // the signup renders right here instead of pointing somewhere else.
     return (
-      <div className="space-y-2">
+      <div className="space-y-4">
         <Button disabled className="w-full sm:w-auto sm:min-w-56">
           Sold out
         </Button>
         <p className="text-xs text-parch">
-          This release is gone. Join the list below and hear about the next one first.
+          This release is gone. The next edition earns its own name, and this
+          list hears about it first.
         </p>
+        <NewsletterForm source="sold-out-product" />
       </div>
     );
   }

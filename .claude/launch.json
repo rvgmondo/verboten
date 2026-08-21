@@ -1,0 +1,15 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "verboten-prod",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": [
+        "-NoProfile",
+        "-Command",
+        "$env:Path = 'C:\\CC\\verboten\\vendor\\node;' + $env:Path; Set-Location C:\\CC\\verboten; node server.cjs"
+      ],
+      "port": 3001
+    }
+  ]
+}
