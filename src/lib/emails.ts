@@ -28,10 +28,12 @@ const totals = (order: Order): string => {
 
 const signoff = "Verboten Spirits, Pretoria\nDrink responsibly. Not for sale to persons under 18.";
 
-const STATUS_EMAILS: Partial<Record<Order["status"], (o: Order) => { subject: string; body: string }>> = {
-  paid: (o) => ({
+const STATUS_EMAILS: Partial<
+  Record<Order["status"], (o: Order, dispatch: string) => { subject: string; body: string }>
+> = {
+  paid: (o, dispatch) => ({
     subject: `Order ${o.orderNumber} confirmed`,
-    body: `Payment received. ${o.orderNumber} is yours.\n\n${orderLines(o)}\n\n${totals(o)}\n\nWe pack in 1 to 2 business days and you get a tracking number the moment it ships.\n\n${signoff}`,
+    body: `Payment received. ${o.orderNumber} is yours.\n\n${orderLines(o)}\n\n${totals(o)}\n\n${dispatch}, and you get a tracking number the moment it ships.\n\n${signoff}`,
   }),
   packed: (o) => ({
     subject: `Order ${o.orderNumber} is packed`,
@@ -58,7 +60,11 @@ const STATUS_EMAILS: Partial<Record<Order["status"], (o: Order) => { subject: st
 export const sendOrderStatusEmail = async (payload: Payload, order: Order): Promise<void> => {
   const template = STATUS_EMAILS[order.status];
   if (!template) return;
-  const { subject, body } = template(order);
+  // The dispatch promise is set once in Site Settings; every surface reads it
+  // so the email can never contradict the site.
+  const settings = await payload.findGlobal({ slug: "site-settings", overrideAccess: true });
+  const dispatch = settings.dispatchTimeText || "Ships within 1 to 2 weeks";
+  const { subject, body } = template(order, dispatch);
   try {
     await payload.sendEmail({ to: order.email, subject, text: body });
   } catch (err) {

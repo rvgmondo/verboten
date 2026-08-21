@@ -117,7 +117,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-gold-dim);
+    outline: 2px solid var(--color-gold);
     outline-offset: 3px;
   }
 

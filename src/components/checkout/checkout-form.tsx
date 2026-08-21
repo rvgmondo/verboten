@@ -86,6 +86,26 @@ export const CheckoutForm = ({
     createCheckout,
     null,
   );
+  const formRef = React.useRef<HTMLFormElement>(null);
+
+  // A failed submit can leave the first invalid field two screens up on a
+  // phone; take keyboard and screen-reader users straight to it.
+  React.useEffect(() => {
+    if (state && !state.ok) {
+      const invalid = formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]');
+      if (invalid) {
+        invalid.focus({ preventScroll: true });
+        invalid.scrollIntoView({ block: "center", behavior: "smooth" });
+      }
+    }
+  }, [state]);
+
+  // The DOB picker should open in plausible birth years, not at today.
+  const dobMax = React.useMemo(() => {
+    const d = new Date();
+    d.setFullYear(d.getFullYear() - 18);
+    return d.toISOString().slice(0, 10);
+  }, []);
 
   const [discountInput, setDiscountInput] = React.useState("");
   const [discount, setDiscount] = React.useState<{ cents: number; message: string } | null>(null);
@@ -140,7 +160,7 @@ export const CheckoutForm = ({
   }
 
   return (
-    <form action={action} noValidate className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr]">
+    <form ref={formRef} action={action} noValidate className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr]">
       <input type="hidden" name="items" value={JSON.stringify(items.map((i) => ({ productId: i.productId, quantity: i.quantity })))} />
 
       <div className="space-y-10">
@@ -154,6 +174,7 @@ export const CheckoutForm = ({
                 required
                 autoComplete="name"
                 aria-invalid={errors?.name ? true : undefined}
+                aria-describedby={errors?.name ? "co-name-error" : undefined}
               />
             </Field>
             <Field label="Email" name="email" error={errors?.email}>
@@ -164,10 +185,19 @@ export const CheckoutForm = ({
                 required
                 autoComplete="email"
                 aria-invalid={errors?.email ? true : undefined}
+                aria-describedby={errors?.email ? "co-email-error" : undefined}
               />
             </Field>
             <Field label="Phone (for the courier)" name="phone" error={errors?.phone}>
-              <Input id="co-phone" name="phone" type="tel" autoComplete="tel" />
+              <Input
+                id="co-phone"
+                name="phone"
+                type="tel"
+                required
+                autoComplete="tel"
+                aria-invalid={errors?.phone ? true : undefined}
+                aria-describedby={errors?.phone ? "co-phone-error" : undefined}
+              />
             </Field>
             <Field label="Date of birth" name="dateOfBirth" error={errors?.dateOfBirth}>
               <Input
@@ -175,8 +205,13 @@ export const CheckoutForm = ({
                 name="dateOfBirth"
                 type="date"
                 required
+                min="1900-01-01"
+                max={dobMax}
+                autoComplete="bday"
                 aria-invalid={errors?.dateOfBirth ? true : undefined}
-                aria-describedby="co-dob-why"
+                aria-describedby={
+                  errors?.dateOfBirth ? "co-dateOfBirth-error co-dob-why" : "co-dob-why"
+                }
               />
               <p id="co-dob-why" className="text-[0.6875rem] text-parch/80">
                 Alcohol law: we confirm you are 18 or older.
@@ -218,7 +253,7 @@ export const CheckoutForm = ({
                 name="province"
                 required
                 defaultValue="Gauteng"
-                className="h-11 w-full rounded-xs border border-line bg-coal px-3 text-sm text-bone transition-colors hover:border-gold-dim/60 focus:border-gold focus:outline-none"
+                className="h-11 w-full rounded-xs border border-line bg-coal px-3 text-base text-bone transition-colors hover:border-gold-dim/60 focus:border-gold sm:text-sm"
               >
                 {PROVINCES.map((p) => (
                   <option key={p} value={p}>
@@ -232,8 +267,12 @@ export const CheckoutForm = ({
                 id="co-postalCode"
                 name="postalCode"
                 required
+                inputMode="numeric"
+                pattern="[0-9]{4}"
+                maxLength={4}
                 autoComplete="postal-code"
                 aria-invalid={errors?.postalCode ? true : undefined}
+                aria-describedby={errors?.postalCode ? "co-postalCode-error" : undefined}
               />
             </Field>
           </div>
@@ -322,6 +361,10 @@ export const CheckoutForm = ({
         )}
 
         <Submit totalCents={totalCents} />
+        <p className="text-xs leading-relaxed text-parch">
+          Secure payment by PayFast: cards and Instant EFT. Your card details
+          never touch our servers.
+        </p>
         <p className="text-[0.6875rem] leading-relaxed text-parch/80">
           Drink responsibly. Not for sale to persons under 18. Someone 18 or
           older must receive the delivery.

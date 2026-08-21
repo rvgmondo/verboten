@@ -5,10 +5,15 @@ import { ProductCard } from "@/components/shop/product-card";
 import { getProducts } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Shop",
+  title: "Buy Brandy Online, Shipped Across South Africa",
   description:
-    "Verboten Premium Brandy Batch No. 01, the two bottle set, and Brandy & Cola ready to drink. Shipped across South Africa. Not for sale under 18.",
+    "Verboten Premium Brandy Batch No. 01, the two bottle set, and Brandy & Cola ready to drink. Order online, shipped anywhere in South Africa. Not for sale under 18.",
   alternates: { canonical: "/shop" },
+  openGraph: {
+    title: "Buy Verboten Brandy Online",
+    description:
+      "Premium South African brandy in limited editions, shipped anywhere in South Africa.",
+  },
 };
 
 /**

@@ -54,7 +54,7 @@ export const AgeGate = () => {
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="fixed inset-0 z-[60] bg-ink/95 backdrop-blur-md data-[state=open]:animate-fade-in" />
         <DialogPrimitive.Content
-          className="inverse fixed left-1/2 top-1/2 z-[70] w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 border border-gold-dim/50 bg-coal p-10 text-center shadow-panel data-[state=open]:animate-fade-up"
+          className="inverse fixed left-1/2 top-1/2 z-[70] max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto border border-gold-dim/50 bg-coal p-6 text-center shadow-panel data-[state=open]:animate-fade-up sm:p-10"
           onEscapeKeyDown={(e) => e.preventDefault()}
           onPointerDownOutside={(e) => e.preventDefault()}
           onInteractOutside={(e) => e.preventDefault()}

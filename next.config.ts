@@ -56,7 +56,14 @@ const nextConfig: NextConfig = {
   // TypeScript is the build-time quality gate; run ESLint separately via `npm run lint`.
   eslint: { ignoreDuringBuilds: true },
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    return [
+      { source: "/:path*", headers: securityHeaders },
+      // Brand assets change rarely; a replaced file needs a Cloudflare purge.
+      {
+        source: "/brand/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+    ];
   },
   // 301s preserving the old WordPress site's indexed URLs.
   // The full mapping rationale lives in docs/redirect-map.md.
@@ -69,6 +76,8 @@ const nextConfig: NextConfig = {
       { source: "/verboten-event-hub", destination: "/find-us", permanent: true },
       { source: "/my-account", destination: "/account", permanent: true },
       { source: "/wishlist", destination: "/shop", permanent: true },
+      // Old WooCommerce cart URL still in the wild; the new cart is a drawer.
+      { source: "/cart", destination: "/shop", permanent: true },
     ];
   },
 };

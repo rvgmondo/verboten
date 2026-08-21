@@ -5,7 +5,13 @@ import type { Event, JournalPost, Media, Product } from "@/payload-types";
 
 /** JSON-LD builders. Rendered via the JsonLd component (script tag). */
 
-export const SITE_URL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001";
+// If the env var is ever missing on a production build, canonicals, the
+// sitemap and JSON-LD must not silently point at localhost.
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SERVER_URL ||
+  (process.env.NODE_ENV === "production"
+    ? "https://verboten.co.za"
+    : "http://localhost:3001");
 const abs = (path: string) => `${SITE_URL}${path}`;
 
 export const organizationLd = () => ({

@@ -42,7 +42,16 @@ const schema = z.object({
   items: z.array(itemSchema).min(1, "Your cart is empty."),
   name: z.string().trim().min(2, "Enter your full name.").max(120),
   email: z.string().trim().toLowerCase().email("Enter a valid email address."),
-  phone: z.string().trim().max(30).optional().or(z.literal("")),
+  // Required: the courier must reach a person of age at the door. Format is
+  // kept loose (spaces, dashes, +27 or 0 prefixes all pass); digits decide.
+  phone: z
+    .string()
+    .trim()
+    .max(30)
+    .refine(
+      (v) => v.replace(/\D/g, "").length >= 9,
+      "Enter a phone number the courier can reach.",
+    ),
   dateOfBirth: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, "Enter your date of birth."),

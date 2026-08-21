@@ -7,7 +7,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: "/",
+        // /api/media/ is carved out of the /api/ block: every product image
+        // serves from there, and blocking it kills Google Images eligibility.
+        allow: ["/", "/api/media/"],
         disallow: [
           "/admin",
           "/api/",

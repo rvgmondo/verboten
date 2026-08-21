@@ -29,10 +29,18 @@ export const generateMetadata = async ({ params }: Params): Promise<Metadata> =>
   const { slug } = await params;
   const product = await getProductBySlug(slug);
   if (!product) return {};
+  // Fold the commercial search phrase into aged products' titles.
+  const title = product.specs?.ageYears
+    ? `${product.name}, ${product.specs.ageYears} Year South African Brandy`
+    : product.name;
   return {
-    title: product.name,
+    title,
     description: product.shortDescription ?? undefined,
     alternates: { canonical: `/shop/${product.slug}` },
+    openGraph: {
+      title,
+      description: product.shortDescription ?? undefined,
+    },
   };
 };
 
