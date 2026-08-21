@@ -37,8 +37,8 @@ export default async function HomePage() {
 
   return (
     <main>
-      {/* Hero */}
-      <section className="relative overflow-hidden border-b border-line">
+      {/* Hero (dark bookend) */}
+      <section className="inverse relative overflow-hidden border-b border-line bg-ink">
         <div className="mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:py-28">
           <div className="max-w-xl space-y-7">
             <p className="eyebrow animate-fade-up">Pretoria, South Africa</p>

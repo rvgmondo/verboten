@@ -1,9 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
 
-import { Crest } from "@/components/brand/crest";
 import { Button } from "@/components/ui/button";
 
 export default function ErrorPage({
@@ -19,7 +19,14 @@ export default function ErrorPage({
 
   return (
     <main className="flex min-h-[60vh] flex-col items-center justify-center gap-8 px-6 py-24 text-center">
-      <Crest className="h-16 w-16 text-gold-dim" aria-hidden="true" />
+      <Image
+        src="/brand/crest.png"
+        alt=""
+        width={64}
+        height={64}
+        aria-hidden="true"
+        className="h-16 w-16 object-contain"
+      />
       <div className="space-y-3">
         <p className="eyebrow">Something broke</p>
         <h1 className="font-display text-4xl tracking-tight text-bone">

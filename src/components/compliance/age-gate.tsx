@@ -1,10 +1,10 @@
 "use client";
 
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import * as React from "react";
 
-import { Crest } from "@/components/brand/crest";
 import { Button } from "@/components/ui/button";
 
 const COOKIE = "vb_age_ok";
@@ -54,12 +54,19 @@ export const AgeGate = () => {
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="fixed inset-0 z-[60] bg-ink/95 backdrop-blur-md data-[state=open]:animate-fade-in" />
         <DialogPrimitive.Content
-          className="fixed left-1/2 top-1/2 z-[70] w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 border border-gold-dim/50 bg-coal p-10 text-center shadow-panel data-[state=open]:animate-fade-up"
+          className="inverse fixed left-1/2 top-1/2 z-[70] w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 border border-gold-dim/50 bg-coal p-10 text-center shadow-panel data-[state=open]:animate-fade-up"
           onEscapeKeyDown={(e) => e.preventDefault()}
           onPointerDownOutside={(e) => e.preventDefault()}
           onInteractOutside={(e) => e.preventDefault()}
         >
-          <Crest className="mx-auto h-14 w-14 text-gold" aria-hidden="true" />
+          <Image
+            src="/brand/crest.png"
+            alt=""
+            width={56}
+            height={56}
+            aria-hidden="true"
+            className="mx-auto h-14 w-14 object-contain"
+          />
           <DialogPrimitive.Title className="mt-6 font-display text-3xl tracking-tight text-bone">
             Are you 18 or older?
           </DialogPrimitive.Title>

@@ -1,41 +1,40 @@
 @import "tailwindcss";
 
 /* ------------------------------------------------------------------ */
-/* Verboten design tokens.                                             */
-/* Contrast ratios verified against WCAG 2.2 AA (see Phase 3 notes):   */
-/*   gold on ink 8.18:1, bone on ink 16.35:1, parch on ink 8.79:1,     */
-/*   ink on gold (buttons) 8.18:1. gold-dim is 4.04:1 and is reserved  */
-/*   for borders, hairlines and large display type only.               */
+/* Verboten design tokens: a light, premium canvas by default.         */
+/*                                                                     */
+/* The palette is theme-aware. The default (:root) is the LIGHT theme  */
+/* (cream canvas, ink text, gold accents). Anything inside `.inverse`  */
+/* flips the same tokens to the DARK theme, so hero/footer/overlays    */
+/* stay dark as premium bookends with no per-element restyling.        */
+/*                                                                     */
+/* WCAG 2.2 AA verified. Light: ink text 16.3:1, muted 5.1:1, accent   */
+/* gold text 5.8:1, ink-on-goldfill 9.5:1 (buttons). Dark: bone 16.3,  */
+/* champagne gold 9.5, all on the near-black canvas.                   */
 /* ------------------------------------------------------------------ */
 
 @theme {
-  /* Brand palette. Verified WCAG 2.2 AA: gold on ink 9.51:1, bone on ink
-     16.3:1, ink on gold (buttons) 9.51:1. gold-dim is 4.28:1, reserved for
-     borders, hairlines and large display type only. */
+  /* --- LIGHT theme (default) --- */
+  --color-ink: #f5f1e6; /* page canvas (cream) */
+  --color-coal: #ffffff; /* raised surface / cards */
+  --color-smoke: #ede7d6; /* sunk surface / wells, image backdrops */
+  --color-line: #e4decd; /* hairline borders */
 
-  /* Base surfaces: the brand near-black (#141414) and neutral-dark steps. */
-  --color-ink: #141414;
-  --color-coal: #1b1b19;
-  --color-smoke: #252420;
-  --color-line: #33312b;
+  --color-bone: #141414; /* primary text */
+  --color-parch: #6c6559; /* muted / secondary text */
 
-  /* Text */
-  --color-bone: #f5f1e6;
-  --color-parch: #b0a891;
+  --color-gold: #6f5b2e; /* accent used AS TEXT (deep antique gold) */
+  --color-gold-bright: #55461f; /* accent text hover */
+  --color-gold-dim: #b89a5f; /* gold borders / large gold type */
 
-  /* The brand champagne gold, used with restraint. */
-  --color-gold: #cdb88d;
-  --color-gold-bright: #e6d8b4;
-  --color-gold-dim: #8a784f;
-
-  /* Cream surface for light sections (black text sits at 16.3:1). */
+  --color-danger: #b3402f;
   --color-cream: #f5f1e6;
-
-  /* Rare deep accent, backgrounds only */
   --color-oxblood: #3e1219;
 
-  /* Semantic states */
-  --color-danger: #e0655a;
+  /* --- Constants (identical in both themes) --- */
+  --color-goldfill: #cdb88d; /* champagne gold as a FILL (buttons, chips) */
+  --color-goldfill-bright: #dccaa1; /* fill hover */
+  --color-onaccent: #141414; /* text/icons on a gold fill, always dark */
 
   --radius-xs: 2px;
 
@@ -43,6 +42,7 @@
   --tracking-motto: 0.18em;
 
   --shadow-panel: 0 24px 64px -32px rgb(0 0 0 / 0.85);
+  --shadow-card: 0 1px 2px rgb(20 18 12 / 0.04), 0 12px 32px -20px rgb(20 18 12 / 0.18);
 
   --ease-out-quiet: cubic-bezier(0.22, 1, 0.36, 1);
 
@@ -92,13 +92,32 @@
     text-rendering: optimizeLegibility;
   }
 
+  /* Dark theme: applied to any subtree that opts in (hero, footer,
+     overlays). Descendants inherit these values, so the existing token
+     utilities (bg-ink, text-bone, border-line, text-gold, ...) resolve to
+     their dark meaning automatically. */
+  .inverse {
+    --color-ink: #141414;
+    --color-coal: #1b1b19;
+    --color-smoke: #252420;
+    --color-line: #33312b;
+    --color-bone: #f5f1e6;
+    --color-parch: #b0a891;
+    --color-gold: #cdb88d;
+    --color-gold-bright: #e6d8b4;
+    --color-gold-dim: #8a784f;
+    --color-danger: #e0655a;
+    background: var(--color-ink);
+    color: var(--color-bone);
+  }
+
   ::selection {
-    background: var(--color-gold);
-    color: var(--color-ink);
+    background: var(--color-goldfill);
+    color: var(--color-onaccent);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-gold-bright);
+    outline: 2px solid var(--color-gold-dim);
     outline-offset: 3px;
   }
 
@@ -126,7 +145,7 @@
 /* Brand utilities                                                     */
 /* ------------------------------------------------------------------ */
 
-/* Small caps label above headings: THE HOUSE STANDARD */
+/* Small caps label above headings; the gold token flips per theme. */
 @utility eyebrow {
   font-family: var(--font-sans);
   font-size: 0.6875rem;
@@ -136,7 +155,7 @@
   color: var(--color-gold);
 }
 
-/* Hairline rule in dim gold */
+/* Hairline rule in soft gold */
 @utility hairline {
   border-color: color-mix(in srgb, var(--color-gold-dim) 55%, transparent);
 }

@@ -11,7 +11,7 @@ const badgeVariants = cva(
         gold: "border-gold-dim/70 text-gold",
         quiet: "border-line text-parch",
         soldOut: "border-line bg-smoke text-parch",
-        low: "border-gold-dim/70 bg-gold/10 text-gold-bright",
+        low: "border-gold-dim/70 bg-goldfill/20 text-gold",
       },
     },
     defaultVariants: { variant: "quiet" },

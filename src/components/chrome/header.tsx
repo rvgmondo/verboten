@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Crest } from "@/components/brand/crest";
+import { BrandCrest } from "@/components/brand/brand-crest";
 import { CartButton } from "@/components/chrome/cart-button";
 import { MobileNav } from "@/components/chrome/mobile-nav";
 
@@ -21,7 +21,7 @@ export const Header = () => (
         className="flex items-center gap-3 text-bone transition-colors hover:text-gold-bright"
         aria-label="Verboten Spirits, home"
       >
-        <Crest className="h-8 w-8 text-gold" />
+        <BrandCrest className="h-8 w-8 text-gold" />
         <span className="font-display text-lg tracking-[0.08em]">VERBOTEN</span>
       </Link>
 

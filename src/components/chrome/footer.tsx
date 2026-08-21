@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { Crest } from "@/components/brand/crest";
+import { BrandCrest } from "@/components/brand/brand-crest";
 import { Motto } from "@/components/brand/motto";
 import { NewsletterForm } from "@/components/chrome/newsletter-form";
 import { getSiteSettings } from "@/lib/data";
@@ -30,12 +30,12 @@ export const Footer = async () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-line bg-coal">
+    <footer className="inverse border-t border-line bg-ink">
       <div className="mx-auto max-w-6xl px-6 py-16">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1.4fr]">
           <div className="space-y-5">
             <div className="flex items-center gap-3">
-              <Crest className="h-10 w-10 text-gold" />
+              <BrandCrest className="h-10 w-10 text-gold" />
               <span className="font-display text-lg tracking-[0.08em] text-bone">VERBOTEN</span>
             </div>
             <p className="max-w-xs text-sm leading-relaxed text-parch">

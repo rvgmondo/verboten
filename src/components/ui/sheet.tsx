@@ -27,7 +27,7 @@ export const SheetContent = React.forwardRef<
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col",
+        "inverse fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col",
         "border-l border-gold-dim/40 bg-coal shadow-panel",
         "transition-transform duration-300 ease-out-quiet",
         "data-[state=closed]:translate-x-full data-[state=open]:translate-x-0",

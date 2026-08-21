@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { Crest } from "@/components/brand/crest";
+import { BrandCrest } from "@/components/brand/brand-crest";
 
 export const metadata: Metadata = {
   title: "See You Later",
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function AccessRestrictedPage() {
   return (
     <main className="flex min-h-[70vh] flex-col items-center justify-center gap-8 px-6 py-24 text-center">
-      <Crest className="h-16 w-16 text-gold-dim" aria-hidden="true" />
+      <BrandCrest className="h-16 w-16 text-gold-dim" />
       <div className="space-y-4">
         <p className="eyebrow">Not yet</p>
         <h1 className="font-display text-4xl tracking-tight text-bone">

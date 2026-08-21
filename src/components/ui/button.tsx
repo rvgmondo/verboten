@@ -19,9 +19,9 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-gold text-ink hover:bg-gold-bright active:bg-gold",
+        primary: "bg-goldfill text-onaccent hover:bg-goldfill-bright active:bg-goldfill",
         outline:
-          "border border-gold-dim/70 text-bone hover:border-gold hover:text-gold-bright",
+          "border border-gold-dim/70 text-bone hover:border-gold-dim hover:text-gold",
         ghost: "text-parch hover:text-bone",
         danger: "border border-danger/60 text-danger hover:border-danger",
       },

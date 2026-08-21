@@ -32,7 +32,7 @@ export const MobileNav = () => {
       </DialogPrimitive.Trigger>
       <DialogPrimitive.Portal>
         <DialogPrimitive.Content
-          className="fixed inset-0 z-50 flex flex-col bg-ink data-[state=open]:animate-fade-in"
+          className="inverse fixed inset-0 z-50 flex flex-col bg-ink data-[state=open]:animate-fade-in"
           aria-describedby={undefined}
         >
           <DialogPrimitive.Title className="sr-only">Menu</DialogPrimitive.Title>

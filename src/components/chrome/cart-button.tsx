@@ -17,7 +17,7 @@ export const CartButton = () => {
       {count > 0 && (
         <span
           aria-hidden="true"
-          className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gold px-1 text-[0.625rem] font-semibold text-ink"
+          className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-goldfill px-1 text-[0.625rem] font-semibold text-onaccent"
         >
           {count}
         </span>
