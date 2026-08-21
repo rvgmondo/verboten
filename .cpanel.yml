@@ -1,0 +1,18 @@
+---
+# cPanel Git Version Control deploy script.
+#
+# Flow: I push to GitHub, you click "Update from Remote" then "Deploy HEAD
+# Commit" in cPanel (Git Version Control -> verboten -> Pull or Deploy).
+# This syncs the repo (which includes the prebuilt .next) into the running app
+# directory and restarts Passenger. No server build, no npm install unless
+# dependencies changed. Runtime data (the database, uploaded media, installed
+# node_modules, .env) is preserved by the excludes.
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/verbotenco/verboten
+    - /usr/bin/rsync -a --delete
+      --exclude 'node_modules' --exclude 'verboten.db' --exclude 'verboten.db-*'
+      --exclude 'media' --exclude '.env' --exclude 'tmp' --exclude '.git'
+      /home/verbotenco/repositories/verboten/ "$DEPLOYPATH/"
+    - /bin/mkdir -p "$DEPLOYPATH/tmp"
+    - /bin/touch "$DEPLOYPATH/tmp/restart.txt"

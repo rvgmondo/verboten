@@ -45,11 +45,12 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   images: {
-    formats: ["image/avif", "image/webp"],
-    remotePatterns: [
-      { protocol: "https", hostname: "verboten.co.za" },
-      { protocol: "https", hostname: "**.verboten.co.za" },
-    ],
+    // Serve images directly instead of through Next's /_next/image optimizer.
+    // On shared hosting behind a CDN (Cloudflare) the optimizer often fails
+    // (it cannot write its cache, and its internal fetch loops through the
+    // proxy). Payload already generates sized variants, and Cloudflare caches
+    // the delivered files, so direct serving is both reliable and fast here.
+    unoptimized: true,
   },
   reactStrictMode: true,
   // TypeScript is the build-time quality gate; run ESLint separately via `npm run lint`.

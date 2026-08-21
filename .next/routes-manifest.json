@@ -1,0 +1,301 @@
+{
+  "version": 3,
+  "pages404": true,
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    },
+    {
+      "source": "/product/:slug",
+      "destination": "/shop/:slug",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/product(?:/([^/]+?))(?:/)?$"
+    },
+    {
+      "source": "/product-category/:path*",
+      "destination": "/shop",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/product-category(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
+    },
+    {
+      "source": "/about-us",
+      "destination": "/story",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/about-us(?:/)?$"
+    },
+    {
+      "source": "/contact-us",
+      "destination": "/contact",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/contact-us(?:/)?$"
+    },
+    {
+      "source": "/verboten-event-hub",
+      "destination": "/find-us",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/verboten-event-hub(?:/)?$"
+    },
+    {
+      "source": "/my-account",
+      "destination": "/account",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/my-account(?:/)?$"
+    },
+    {
+      "source": "/wishlist",
+      "destination": "/shop",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/wishlist(?:/)?$"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/:path*",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; worker-src 'self' blob:; frame-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self' https://www.payfast.co.za https://sandbox.payfast.co.za; frame-ancestors 'self'; upgrade-insecure-requests"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), browsing-topics=()"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        }
+      ],
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
+    },
+    {
+      "headers": [
+        {
+          "key": "Accept-CH",
+          "value": "Sec-CH-Prefers-Color-Scheme"
+        },
+        {
+          "key": "Vary",
+          "value": "Sec-CH-Prefers-Color-Scheme"
+        },
+        {
+          "key": "Critical-CH",
+          "value": "Sec-CH-Prefers-Color-Scheme"
+        },
+        {
+          "key": "X-Powered-By",
+          "value": "Next.js, Payload"
+        }
+      ],
+      "source": "/:path*",
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
+    }
+  ],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [
+    {
+      "page": "/admin/[[...segments]]",
+      "regex": "^/admin(?:/(.+?))?(?:/)?$",
+      "routeKeys": {
+        "nxtPsegments": "nxtPsegments"
+      },
+      "namedRegex": "^/admin(?:/(?<nxtPsegments>.+?))?(?:/)?$"
+    },
+    {
+      "page": "/api/[...slug]",
+      "regex": "^/api/(.+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "namedRegex": "^/api/(?<nxtPslug>.+?)(?:/)?$"
+    },
+    {
+      "page": "/journal/[slug]",
+      "regex": "^/journal/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "namedRegex": "^/journal/(?<nxtPslug>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/journal/[slug]/opengraph-image-973581",
+      "regex": "^/journal/([^/]+?)/opengraph\\-image\\-973581(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "namedRegex": "^/journal/(?<nxtPslug>[^/]+?)/opengraph\\-image\\-973581(?:/)?$"
+    },
+    {
+      "page": "/shop/[slug]",
+      "regex": "^/shop/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "namedRegex": "^/shop/(?<nxtPslug>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/shop/[slug]/opengraph-image-1n96hn",
+      "regex": "^/shop/([^/]+?)/opengraph\\-image\\-1n96hn(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "namedRegex": "^/shop/(?<nxtPslug>[^/]+?)/opengraph\\-image\\-1n96hn(?:/)?$"
+    },
+    {
+      "page": "/[slug]",
+      "regex": "^/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "namedRegex": "^/(?<nxtPslug>[^/]+?)(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/access-restricted",
+      "regex": "^/access\\-restricted(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/access\\-restricted(?:/)?$"
+    },
+    {
+      "page": "/account",
+      "regex": "^/account(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/account(?:/)?$"
+    },
+    {
+      "page": "/checkout",
+      "regex": "^/checkout(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/checkout(?:/)?$"
+    },
+    {
+      "page": "/checkout/cancelled",
+      "regex": "^/checkout/cancelled(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/checkout/cancelled(?:/)?$"
+    },
+    {
+      "page": "/checkout/success",
+      "regex": "^/checkout/success(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/checkout/success(?:/)?$"
+    },
+    {
+      "page": "/contact",
+      "regex": "^/contact(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/contact(?:/)?$"
+    },
+    {
+      "page": "/find-us",
+      "regex": "^/find\\-us(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/find\\-us(?:/)?$"
+    },
+    {
+      "page": "/icon.png",
+      "regex": "^/icon\\.png(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/icon\\.png(?:/)?$"
+    },
+    {
+      "page": "/journal",
+      "regex": "^/journal(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/journal(?:/)?$"
+    },
+    {
+      "page": "/opengraph-image-4usi79",
+      "regex": "^/opengraph\\-image\\-4usi79(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/opengraph\\-image\\-4usi79(?:/)?$"
+    },
+    {
+      "page": "/robots.txt",
+      "regex": "^/robots\\.txt(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/robots\\.txt(?:/)?$"
+    },
+    {
+      "page": "/serves",
+      "regex": "^/serves(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/serves(?:/)?$"
+    },
+    {
+      "page": "/shop",
+      "regex": "^/shop(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/shop(?:/)?$"
+    },
+    {
+      "page": "/sitemap.xml",
+      "regex": "^/sitemap\\.xml(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sitemap\\.xml(?:/)?$"
+    },
+    {
+      "page": "/story",
+      "regex": "^/story(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/story(?:/)?$"
+    },
+    {
+      "page": "/styleguide",
+      "regex": "^/styleguide(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/styleguide(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "RSC",
+    "varyHeader": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch",
+    "prefetchHeader": "Next-Router-Prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSuffix": ".prefetch.rsc",
+    "prefetchSegmentHeader": "Next-Router-Segment-Prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments"
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}

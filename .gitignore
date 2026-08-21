@@ -7,7 +7,9 @@
 /coverage
 
 # next.js
-/.next/
+# .next IS committed so `git pull` deploys a ready-to-run build with no server
+# build step (see .cpanel.yml). Only the local build cache is ignored.
+/.next/cache/
 /out/
 
 # production
