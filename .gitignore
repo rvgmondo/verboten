@@ -46,3 +46,6 @@ next-env.d.ts
 
 # OS / editor
 Thumbs.db
+
+# deploy bundle (generated artifacts + prod env; never commit)
+/deploy/

@@ -20,6 +20,42 @@ folder. Back those up together and you have everything.
 
 ---
 
+## Fastest path: use the prebuilt bundle (recommended)
+
+The `deploy/` folder holds a ready-to-go package so you do NOT build on the
+server:
+
+- **`verboten-deploy.zip`**: the whole app, already built (`.next` included),
+  with the seeded `verboten.db` and the product photos in `media/`. No
+  `node_modules` (you install those on the server, once).
+- **`PROD-ENV.txt`**: every environment variable, with a fresh
+  `PAYLOAD_SECRET` already generated. You only fill the PayFast and email blanks.
+
+Steps:
+
+1. **cPanel → Setup Node.js App → Create Application:** Node 20 or 22,
+   Application mode Production, Application root `verboten`, Application URL
+   `verboten.co.za`, Application startup file `server.cjs`. Save.
+2. **File Manager → `~/verboten`:** upload `verboten-deploy.zip` and **Extract**
+   it there.
+3. **Environment variables** (on the Node App screen): paste each line from
+   `PROD-ENV.txt`; fill the `<FILL IN>` PayFast and SMTP values.
+4. **Enter the virtual environment** (button on the Node App screen), then:
+   ```
+   npm install --include=dev
+   ```
+   No build step: the `.next` build is already in the zip. `npm install` just
+   compiles the Linux `sharp` and SQLite binaries.
+5. **Restart** (button on the Node App screen). Confirm AutoSSL has issued the
+   certificate. Visit `/admin`, log in as `admin@verboten.co.za`, change the
+   password. In the PayFast dashboard set the passphrase to match
+   `PAYFAST_PASSPHRASE`. Place one real low-value test order.
+
+That is the whole deployment. The sections below are the manual, from-source
+alternative (e.g. deploying updates later, or via GitHub).
+
+---
+
 ## 1. Create the Node.js app (cPanel → Setup Node.js App → Create Application)
 
 - **Node version:** 20 or 22
