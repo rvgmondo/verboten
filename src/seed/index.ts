@@ -202,6 +202,17 @@ const run = async () => {
     log(`Created journal post ${post.slug}`);
   }
 
+  // --- Order-number counter (atomic sequence source; see lib/commerce/atomic) ---
+  const existingCounter = (
+    await payload.find({ collection: "counters", where: { name: { equals: "order" } }, limit: 1 })
+  ).docs[0];
+  if (!existingCounter) {
+    await payload.create({ collection: "counters", data: { name: "order", value: 0 } });
+    log("Created order counter");
+  } else {
+    log("Order counter exists; skipping");
+  }
+
   // --- Site settings (field defaults hold the real values; touching the
   //     global once materialises it) ---
   await payload.updateGlobal({ slug: "site-settings", data: {} });

@@ -9,8 +9,11 @@ copy rewrite. Replaces a WordPress WooCommerce template build.
 
 - **Next.js 15.4.11** — App Router, React 19, Server Components, TypeScript strict.
 - **Payload CMS 3.88** — same Next app (CMS + admin + auth + commerce data).
-- **PostgreSQL** — portable instance under `vendor/pgsql`, cluster in `.pgdata`,
-  port **5434**, db `verboten` (prod: Neon/Supabase via `DATABASE_URI`).
+- **SQLite by default** — a single file `verboten.db`, no DB server, so the site
+  is self-contained (this is the cPanel deploy target). If `DATABASE_URI` is a
+  `postgres://` URL the config switches to Postgres; the portable Postgres
+  tooling (`vendor/pgsql`, `.pgdata`, port 5434, `scripts/db-*.ps1`) remains for
+  that path. Dialect-specific raw SQL lives in `src/lib/commerce/atomic.ts`.
 - **Tailwind CSS v4** — CSS-first tokens in `src/app/globals.css`.
 - Motion, shadcn/ui-style primitives (fully restyled), React Hook Form, Zod.
 - Payments: **PayFast** behind a provider interface. Email: nodemailer (SMTP/Resend).
@@ -24,9 +27,10 @@ copy rewrite. Replaces a WordPress WooCommerce template build.
    $env:Path = "C:\CC\verboten\vendor\node;$env:Path"
    ```
 2. **`"type": "module"` is required** in package.json — Payload 3 is ESM-first.
-3. **Postgres must be running** before dev/build/seed: `npm run db:start`
-   (the `predev`/`prebuild` hooks do this automatically). One-time cluster
-   init: `npm run db:setup`.
+3. **SQLite by default** — nothing to start; the seed creates `verboten.db`.
+   Only if you set a `postgres://` `DATABASE_URI` do you need the portable
+   Postgres (`npm run db:setup` once, then `db:start`); the `predev`/`prebuild`
+   hooks (`scripts/predb.mjs`) start it only on Windows with a local URI.
 4. Dev server runs on **port 3001** (3000 is Amico's). Site: http://localhost:3001,
    admin: http://localhost:3001/admin.
 
@@ -34,8 +38,8 @@ copy rewrite. Replaces a WordPress WooCommerce template build.
 
 ```powershell
 $env:Path = "C:\CC\verboten\vendor\node;$env:Path"
-npm run db:setup     # first time only: init cluster + create db
-npm run seed:admin   # first time only: dev admin user
+npm run seed:admin   # first time only: dev admin user (creates verboten.db)
+npm run seed         # first time only: real products, pages, serves, journal
 npm run dev          # Next + Payload on http://localhost:3001
 ```
 

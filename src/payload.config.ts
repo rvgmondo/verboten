@@ -2,6 +2,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import { postgresAdapter } from "@payloadcms/db-postgres";
+import { sqliteAdapter } from "@payloadcms/db-sqlite";
 import { nodemailerAdapter } from "@payloadcms/email-nodemailer";
 import { seoPlugin } from "@payloadcms/plugin-seo";
 import type { GenerateTitle } from "@payloadcms/plugin-seo/types";
@@ -10,6 +11,7 @@ import { buildConfig } from "payload";
 import sharp from "sharp";
 
 import { Batches } from "./collections/Batches";
+import { Counters } from "./collections/Counters";
 import { Customers } from "./collections/Customers";
 import { DiscountCodes } from "./collections/DiscountCodes";
 import { Enquiries } from "./collections/Enquiries";
@@ -59,6 +61,7 @@ export default buildConfig({
     Subscribers,
     Media,
     Users,
+    Counters,
   ],
   globals: [SiteSettings],
   editor: lexicalEditor(),
@@ -69,9 +72,12 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
-  db: postgresAdapter({
-    pool: { connectionString: process.env.DATABASE_URI || "" },
-  }),
+  // SQLite by default: a single file (verboten.db) on disk, no database
+  // server, so the whole site is self-contained on cPanel. If DATABASE_URI is
+  // a postgres:// URL instead, use Postgres (e.g. a managed instance).
+  db: (process.env.DATABASE_URI || "").startsWith("postgres")
+    ? postgresAdapter({ pool: { connectionString: process.env.DATABASE_URI || "" } })
+    : sqliteAdapter({ client: { url: process.env.DATABASE_URI || "file:./verboten.db" } }),
   // Only configure SMTP when provided; otherwise Payload logs emails to the console.
   email: process.env.SMTP_HOST
     ? nodemailerAdapter({

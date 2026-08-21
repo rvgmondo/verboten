@@ -6,7 +6,12 @@ front end, custom admin, custom checkout. Replaces the previous WordPress
 WooCommerce build entirely.
 
 - **Stack**: Next.js 15 (App Router, React 19, TypeScript strict), Payload
-  CMS 3 in the same app, PostgreSQL, Tailwind CSS v4, Motion, Zod.
+  CMS 3 in the same app, SQLite by default (Postgres optional), Tailwind
+  CSS v4, Motion, Zod.
+- **Database**: SQLite (`verboten.db`), a single file with no server, so the
+  site is self-contained (the cPanel deploy target). Set a `postgres://`
+  `DATABASE_URI` to use Postgres instead; the app switches adapters
+  automatically.
 - **Payments**: PayFast behind a provider interface (`src/lib/payments/`);
   Yoco or Peach Payments can be added without touching checkout code.
 - **Email**: SMTP via nodemailer (Resend works over SMTP). Without SMTP
@@ -15,14 +20,13 @@ WooCommerce build entirely.
 ## Local development
 
 Requirements: Node 20+ (a portable Node 22 lives in `vendor/node` for this
-machine because Node 26 breaks Payload's config loader) and the portable
-PostgreSQL in `vendor/pgsql`.
+machine because Node 26 breaks Payload's config loader). SQLite needs no
+database server; the seed creates `verboten.db`.
 
 ```powershell
 $env:Path = "C:\CC\verboten\vendor\node;$env:Path"
 npm install
-npm run db:setup      # once: init cluster (.pgdata, port 5434) + create db
-npm run seed:admin    # once: dev admin user
+npm run seed:admin    # once: dev admin user (creates verboten.db)
 npm run seed          # once: real products, batch, pages, serves, journal
 npm run seed:media    # once: pull real product photography from the live site
 npm run dev           # http://localhost:3001
@@ -40,7 +44,7 @@ Copy `.env.example` to `.env`. The variables:
 
 | Variable | Purpose |
 | --- | --- |
-| `DATABASE_URI` | Postgres connection string. Local: portable instance on 5434. Production: Neon/Supabase URL. |
+| `DATABASE_URI` | `file:./verboten.db` for SQLite (default, self-contained). A `postgres://` URL switches to Postgres instead. |
 | `PAYLOAD_SECRET` | Payload auth secret. Generate per environment: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` |
 | `NEXT_PUBLIC_SERVER_URL` | Public origin, no trailing slash. Drives canonicals, sitemap, OG URLs, PayFast return/notify URLs. |
 | `ADMIN_EMAIL` / `ADMIN_PASSWORD` | Used once by `seed:admin`. |
@@ -101,25 +105,29 @@ never oversell the batch.
 
 ## Deployment
 
-### Vercel + managed Postgres (recommended)
+### cPanel (the target): see `DEPLOY-CPANEL.md`
 
-1. Create a Neon or Supabase Postgres database; set `DATABASE_URI`.
-2. Import the repo into Vercel; set every env var (production
-   `NEXT_PUBLIC_SERVER_URL=https://verboten.co.za`, real `PAYLOAD_SECRET`,
-   SMTP, live PayFast credentials).
-3. First deploy, then run the seeds once against the production database
-   (`npm run seed` etc. locally with `DATABASE_URI` pointed at prod).
-4. Media uploads on Vercel need persistent storage: attach a storage
-   adapter (e.g. `@payloadcms/storage-vercel-blob` or S3) in
-   `payload.config.ts`, or self-host.
-5. Point DNS. The 301 redirect map ships in `next.config.ts`, so old
-   WordPress URLs keep their equity from the first request.
+Runs on cPanel's "Setup Node.js App" (Passenger) via `server.cjs`, fully
+self-contained: SQLite (`verboten.db`) and `media/` both live on the cPanel
+disk, nothing external. The full step-by-step is in
+[`DEPLOY-CPANEL.md`](./DEPLOY-CPANEL.md). In short: create the Node app
+pointing at `server.cjs`, seed locally and upload `verboten.db` + `media/`,
+set the env vars (incl. live PayFast), `npm install --include=dev` +
+`npm run build`, then Restart. The 301 redirect map ships in
+`next.config.ts`, so old WordPress URLs keep their equity from cutover.
 
 ### VPS self-hosting
 
 Any Node 20+ host works: `npm install && npm run build && npm run start`
-behind a reverse proxy with the same env vars and any Postgres 15+.
-`media/` holds uploads on disk; back it up with the database.
+behind HTTPS with the same env vars. `verboten.db` and `media/` sit on the
+local disk; back them up together.
+
+### Serverless (Vercel etc.)
+
+Possible but not the default: the filesystem is not persistent, so SQLite and
+local media do not fit. Use a managed Postgres (`DATABASE_URI=postgres://...`,
+the app switches automatically) and a media storage adapter
+(`@payloadcms/storage-*`).
 
 ## Compliance notes
 
