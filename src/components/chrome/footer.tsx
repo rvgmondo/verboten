@@ -7,7 +7,6 @@ import { getSiteSettings } from "@/lib/data";
 
 const SHOP_LINKS = [
   { href: "/shop", label: "The shop" },
-  { href: "/serves", label: "Serves" },
   { href: "/find-us", label: "Where to find us" },
   { href: "/account", label: "Your orders" },
 ];
@@ -38,9 +37,12 @@ export const Footer = async () => {
               <BrandCrest className="h-10 w-10 text-gold" />
               <span className="font-display text-lg tracking-[0.08em] text-bone">VERBOTEN</span>
             </div>
+            <p className="font-display text-sm uppercase tracking-motto text-gold">
+              Pure Spirit. Pure Mischief.
+            </p>
             <p className="max-w-xs text-sm leading-relaxed text-parch">
-              An independent South African beverage house. Made in Pretoria,
-              poured wherever people know what they are drinking.
+              An independent South African brandy house. Made in Pretoria,
+              built for the world.
             </p>
             <Motto />
           </div>

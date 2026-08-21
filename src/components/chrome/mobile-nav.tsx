@@ -11,7 +11,6 @@ import { Motto } from "@/components/brand/motto";
 const LINKS = [
   { href: "/shop", label: "Shop" },
   { href: "/story", label: "Our Story" },
-  { href: "/serves", label: "Serves" },
   { href: "/find-us", label: "Find Us" },
   { href: "/journal", label: "Journal" },
   { href: "/contact", label: "Contact" },

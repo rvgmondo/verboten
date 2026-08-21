@@ -18,7 +18,7 @@ import { getAvailability } from "@/lib/inventory";
 export const metadata: Metadata = {
   title: "Verboten Spirits | Premium South African Brandy",
   description:
-    "Independent beverage house in Pretoria. Batch No. 01: a limited edition three year brandy finished in French oak, 43% ABV. Brandy & cola, ready to drink.",
+    "An independent South African brandy house in Pretoria. Batch No. 01: a limited edition three year brandy finished in French oak, 43% ABV. Born in South Africa, made for the world.",
   alternates: { canonical: "/" },
 };
 
@@ -41,20 +41,20 @@ export default async function HomePage() {
       <section className="inverse relative overflow-hidden border-b border-line bg-ink">
         <div className="mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:py-28">
           <div className="max-w-xl space-y-7">
-            <p className="eyebrow animate-fade-up">Pretoria, South Africa</p>
+            <p className="eyebrow animate-fade-up">Pure Spirit. Pure Mischief.</p>
             <h1
               className="animate-fade-up font-display text-5xl leading-[1.02] tracking-tight text-bone sm:text-6xl lg:text-7xl"
               style={{ animationDelay: "80ms" }}
             >
-              The name is the only warning.
+              Born in Pretoria. Made for the world.
             </h1>
             <p
               className="animate-fade-up text-base leading-relaxed text-parch"
               style={{ animationDelay: "160ms" }}
             >
-              Verboten is an independent South African beverage house. Premium
-              brandy in limited editions, made in Pretoria and built to stand on
-              any good back bar in the world.
+              Verboten is an independent South African brandy house. Premium
+              brandy in limited editions, rooted in Pretoria and built to stand
+              on any back bar in the world.
             </p>
             <div
               className="animate-fade-up flex flex-wrap gap-4"
@@ -111,7 +111,7 @@ export default async function HomePage() {
               <SectionHeading
                 eyebrow="The flagship"
                 title="Batch No. 01"
-                lead="Three years in oak, finished in French casks, bottled at 43%. A limited edition, made to a standard we refuse to move."
+                lead="Three years in oak, finished in French casks, bottled at 43%. A limited edition that drinks like it has somewhere to be."
               />
               <dl className="grid grid-cols-2 gap-x-8 gap-y-3 border-y border-line py-5 text-sm sm:grid-cols-4">
                 <div>
@@ -151,7 +151,7 @@ export default async function HomePage() {
               <SectionHeading
                 eyebrow="Ready to drink"
                 title="Brandy & Cola"
-                lead="The flagship, cut with cola and canned. Cold, direct, and made properly. Find it at the markets we pour at, or stock the fridge."
+                lead="The same brandy, cut with cola and canned. Cold, easy, and unmistakably South African. The national serve, ready when you are."
               />
               <div className="flex flex-wrap items-center gap-5">
                 <Price cents={rtd.priceCents} className="text-2xl" />
@@ -254,7 +254,7 @@ export default async function HomePage() {
               align="center"
               eyebrow="First pour"
               title="Hear about the next release before it lands"
-              lead="New editions, serves and where to find us. Release news goes to this list first."
+              lead="New editions and where to find us. Release news reaches this list first."
             />
             <div className="mt-8 text-left">
               <NewsletterForm source="home" />

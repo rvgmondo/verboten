@@ -13,7 +13,7 @@ export const PAGES = [
     slug: "story",
     title: "A house with its name on the door",
     intro:
-      "Verboten is an independent beverage house in Pretoria. We make premium brandy in limited editions, and we intend to be poured in places that have never heard an accent like ours.",
+      "Verboten is an independent South African brandy house in Pretoria. We make premium brandy in limited editions, rooted here and built to be poured in places that have never heard an accent like ours.",
     content: doc(
       h2("The start"),
       p(
@@ -249,7 +249,7 @@ export const JOURNAL_POSTS = [
       ),
       h2("How to get one"),
       p(
-        "Order from the shop and it ships anywhere in South Africa within one to two weeks. There is also a two bottle set: one to open, one for the shelf. When the batch closes, it closes.",
+        "Order from the shop and it ships anywhere in South Africa within one to two weeks. There is also a two bottle set: one to open, one to keep. When this edition is gone, the next one earns its own name.",
       ),
     ),
     publishedAt: "2026-08-01T08:00:00.000Z",

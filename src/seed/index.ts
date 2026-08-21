@@ -36,8 +36,8 @@ const run = async () => {
         bottlesRemaining: 500,
         status: "available",
         story: paragraphs(
-          "Batch No. 01 is the first Verboten release. A limited edition, matured for a minimum of three years in oak and finished in French oak casks.",
-          "Made to a standard, not to a schedule. When an edition is gone, the next one earns its own name.",
+          "This is the first one. A limited edition, matured at least three years in oak and finished in French casks. Made to a standard, not to a schedule.",
+          "We started in Pretoria with one idea: a South African brandy good enough to stand anywhere in the world. When this edition is gone, the next one earns its own name.",
         ),
       },
     });
@@ -70,10 +70,10 @@ const run = async () => {
     sku: "VB-B01-750",
     priceCents: 45000,
     shortDescription:
-      "A three year South African brandy, finished in French oak and bottled at 43% ABV. A limited edition from Pretoria.",
+      "A three year South African brandy, finished in French oak and bottled at 43% ABV. Born in Pretoria, made for the world.",
     description: paragraphs(
-      "Matured for a minimum of three years in oak, then finished in French oak casks. Bottled at 43% ABV in Pretoria.",
-      "Batch No. 01 is a limited edition. When it is gone, the next edition takes its place.",
+      "Three years in oak, then a finish in French casks. Bottled at 43% ABV in Pretoria. A brandy that drinks like it has somewhere to be.",
+      "Neat, it holds its own next to anything on the shelf. Tall, over ice with cola, it is South Africa in a glass. Either way, it was built to be poured far from home.",
     ),
     specs: {
       abv: 43,
@@ -102,9 +102,9 @@ const run = async () => {
     sku: "VB-RTD-CAN",
     priceCents: 4500,
     shortDescription:
-      "Verboten brandy and cola, pre-mixed and ready to drink. Served cold at markets, festivals and events.",
+      "The same brandy, cut with cola and canned. Cold, easy, and unmistakably South African.",
     description: paragraphs(
-      "The flagship brandy, cut with cola and canned. Made to be drunk cold, straight from the can or over ice.",
+      "The flagship brandy, cut with cola and canned. Made to be drunk cold, straight from the can or over ice. The national serve, ready when you are.",
     ),
     // ABV and can volume are unconfirmed (recon gap 7); left blank until the
     // client supplies them.
@@ -121,9 +121,9 @@ const run = async () => {
     sku: "VB-B01-SET2",
     priceCents: 85000,
     shortDescription:
-      "Two bottles of Verboten Premium Brandy Batch No. 01. One to open, one for the shelf.",
+      "Two bottles of Verboten Premium Brandy, Batch No. 01. One to open now, one to keep.",
     description: paragraphs(
-      "Two bottles from the same limited edition. Open one now; keep the second for a night that deserves it.",
+      "Two bottles from the same limited edition. Open one now, keep the second for the night that calls for it.",
     ),
     bundleItems: [{ product: brandy.id, quantity: 2 }],
     relatedProducts: [brandy.id, rtd.id],

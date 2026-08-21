@@ -27,7 +27,7 @@ export const SiteSettings: GlobalConfig = {
         {
           name: "text",
           type: "text",
-          defaultValue: "Limited edition | Ships within 1 to 2 weeks",
+          defaultValue: "Limited edition, from Pretoria | Ships nationwide in 1 to 2 weeks",
         },
       ],
     },

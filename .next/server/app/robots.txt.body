@@ -8,4 +8,4 @@ Disallow: /account
 Disallow: /access-restricted
 Disallow: /styleguide
 
-Sitemap: https://verboten.co.za/sitemap.xml
+Sitemap: http://localhost:3001/sitemap.xml
