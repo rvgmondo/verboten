@@ -11,11 +11,17 @@
  * custom server unchanged.
  */
 
-// Cap thread pools BEFORE anything loads. On shared hosts (CloudLinux LVE)
-// the process/thread limit is low, but the Postgres driver and sharp default
-// to one thread per CPU core and shared boxes report dozens of cores. Any
-// value the host already set wins.
-process.env.UV_THREADPOOL_SIZE = process.env.UV_THREADPOOL_SIZE || "4";
+// Cap native thread pools BEFORE anything loads. On shared hosts (CloudLinux
+// LVE) the per-account process/thread limit is low (often 75). Native modules
+// otherwise spin up one thread per CPU core, and shared boxes report dozens of
+// cores. The SQLite driver (libsql) uses a Rust tokio runtime that tries to
+// spawn a worker per host core and panics with "OS can't spawn worker thread"
+// (EAGAIN), crash-looping the app until the process limit is exhausted. These
+// caps hold the demand down; the host's NPROC limit still has to be high enough
+// for one instance. Any value the host already set wins.
+process.env.UV_THREADPOOL_SIZE = process.env.UV_THREADPOOL_SIZE || "2";
+process.env.TOKIO_WORKER_THREADS = process.env.TOKIO_WORKER_THREADS || "1";
+process.env.RAYON_NUM_THREADS = process.env.RAYON_NUM_THREADS || "1";
 process.env.VIPS_CONCURRENCY = process.env.VIPS_CONCURRENCY || "1";
 process.env.NEXT_TELEMETRY_DISABLED = process.env.NEXT_TELEMETRY_DISABLED || "1";
 process.env.NODE_ENV = process.env.NODE_ENV || "production";
