@@ -42,10 +42,13 @@ Steps:
    `PROD-ENV.txt`; fill the `<FILL IN>` PayFast and SMTP values.
 4. **Enter the virtual environment** (button on the Node App screen), then:
    ```
-   npm install --include=dev
+   npm install --omit=dev
    ```
-   No build step: the `.next` build is already in the zip. `npm install` just
-   compiles the Linux `sharp` and SQLite binaries.
+   No build step: the `.next` build is already in the zip, so you only need
+   the runtime dependencies. `--omit=dev` installs those (and compiles the
+   Linux `sharp` and SQLite binaries) while skipping the build-only dev tools,
+   one of which (`unrs-resolver`, from the ESLint tooling) has a native
+   postinstall that fails on some shared hosts.
 5. **Restart** (button on the Node App screen). Confirm AutoSSL has issued the
    certificate. Visit `/admin`, log in as `admin@verboten.co.za`, change the
    password. In the PayFast dashboard set the passphrase to match
