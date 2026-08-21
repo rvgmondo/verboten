@@ -1,12 +1,16 @@
 import path from "path";
-import { fileURLToPath } from "url";
 
 import type { CollectionConfig } from "payload";
 
 import { anyone, isAdminOrEditor } from "../access/access";
 import { revalidateHooks } from "../lib/revalidate";
 
-const dirname = path.dirname(fileURLToPath(import.meta.url));
+// Resolve the uploads directory from the app root (process.cwd()), NOT from
+// this module's location. In a bundled production build the module lives under
+// .next/, so a path relative to it points nowhere and Payload cannot serve
+// /api/media files. server.cjs chdirs to the app root, so cwd is correct in
+// production; in dev/seed the cwd is the project root. Override with MEDIA_DIR.
+const mediaDir = process.env.MEDIA_DIR || path.resolve(process.cwd(), "media");
 
 /**
  * Uploaded media (bottle and lifestyle photography, journal imagery, crest assets).
@@ -27,7 +31,7 @@ export const Media: CollectionConfig = {
     delete: isAdminOrEditor,
   },
   upload: {
-    staticDir: path.resolve(dirname, "../../media"),
+    staticDir: mediaDir,
     mimeTypes: ["image/*"],
     focalPoint: true,
     imageSizes: [
