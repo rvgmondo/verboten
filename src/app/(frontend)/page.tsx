@@ -1,19 +1,26 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 
-import { Motto } from "@/components/brand/motto";
+import { Marquee } from "@/components/brand/marquee";
 import { Price } from "@/components/brand/price";
 import { SectionHeading } from "@/components/brand/section-heading";
 import { StockBadge } from "@/components/brand/stock-badge";
 import { NewsletterForm } from "@/components/chrome/newsletter-form";
+import { HeroCinema } from "@/components/home/hero-cinema";
+import { ArtPlaceholder } from "@/components/media/art-placeholder";
 import { CmsImage } from "@/components/media/cms-image";
-import { PlaceholderFrame } from "@/components/media/placeholder-frame";
 import { Reveal } from "@/components/motion/reveal";
 import { productImage } from "@/components/shop/product-helpers";
 import { Button } from "@/components/ui/button";
 import { CrestDivider } from "@/components/ui/separator";
-import { getJournalPosts, getProducts, getSiteSettings, getStockists, getUpcomingEvents } from "@/lib/data";
+import {
+  getJournalPosts,
+  getProducts,
+  getServes,
+  getSiteSettings,
+  getStockists,
+  getUpcomingEvents,
+} from "@/lib/data";
 import { getAvailability } from "@/lib/inventory";
 import { mediaSrc } from "@/lib/media";
 import { formatZAR } from "@/lib/money";
@@ -26,12 +33,13 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [products, posts, stockists, events, settings] = await Promise.all([
+  const [products, posts, stockists, events, settings, serves] = await Promise.all([
     getProducts(),
     getJournalPosts(3),
     getStockists(),
     getUpcomingEvents(),
     getSiteSettings(),
+    getServes(),
   ]);
 
   const flagship = products.find((p) => p.slug === "verboten-premium-brandy-batch-no-01-3-year");
@@ -41,127 +49,41 @@ export default async function HomePage() {
   const heroSrc = flagshipImage ? mediaSrc(flagshipImage.url) : null;
   const soldOut = flagship ? getAvailability(flagship).soldOut : false;
   const flatRateCents = settings.shipping?.flatRateCents ?? 15000;
+  const commerceLine = flagship
+    ? soldOut
+      ? "Batch No. 01 is sold out. The next edition earns its own name."
+      : `${formatZAR(flagship.priceCents)} a bottle. Delivery ${formatZAR(flatRateCents)} flat, anywhere in South Africa. A limited edition: when it sells out, it is not coming back.`
+    : "A limited edition: when it sells out, it is not coming back.";
+  const heroServes = serves.slice(0, 3);
+  const SERVE_SHOTS = [
+    "Heavy tumbler, one clear cube, side light",
+    "Tall glass, cola pour mid-stream, plenty of ice",
+    "Old fashioned, orange peel, marble counter",
+  ];
 
   return (
     <main>
-      {/* Hero: the cellar door. A full-bleed dark stage; candle glow, a ghost
-          wordmark and film grain behind the bottle, type carrying the front. */}
-      <section className="inverse relative overflow-hidden border-b border-line bg-ink">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-          {/* Candlelight behind the bottle */}
-          <div className="animate-glow absolute right-[-18%] top-1/2 h-[110vmin] w-[110vmin] -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(205,184,141,0.16),rgba(205,184,141,0.05)_45%,transparent_72%)]" />
-          {/* Ghost wordmark rising from the floor of the stage */}
-          <span className="text-ghost absolute bottom-[6%] left-1/2 -translate-x-1/2 select-none whitespace-nowrap font-display text-[23vw] font-bold leading-none tracking-[0.05em]">
-            VERBOTEN
-          </span>
-          {/* Film grain over everything */}
-          <div className="grain absolute inset-0 opacity-[0.05]" />
-        </div>
+      {/* Hero: three chapters of the same dark stage. */}
+      <HeroCinema
+        bottleSrc={heroSrc}
+        bottleAlt={flagshipImage?.alt ?? "Verboten Premium Brandy Batch No. 01 bottle"}
+        soldOut={soldOut}
+        commerceLine={commerceLine}
+      />
 
-        <div className="relative mx-auto grid min-h-[86svh] max-w-6xl items-center gap-12 px-6 pb-20 pt-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-6 lg:pb-24 lg:pt-20">
-          <div className="relative z-20 max-w-xl space-y-7">
-            <p className="eyebrow animate-fade-up flex items-center gap-4">
-              <span aria-hidden="true" className="h-px w-10 bg-gold-dim/70" />
-              Pure Spirit. Pure Mischief.
-            </p>
-            <h1 className="font-display font-semibold leading-[0.98] tracking-tight text-[clamp(3rem,7.5vw,5.25rem)]">
-              <span
-                className="block animate-fade-up text-bone"
-                style={{ animationDelay: "80ms" }}
-              >
-                Born in Pretoria.
-              </span>
-              <span
-                className="block animate-fade-up text-gold"
-                style={{ animationDelay: "190ms" }}
-              >
-                Made for the world.
-              </span>
-            </h1>
-            <p
-              className="animate-fade-up text-base leading-relaxed text-parch"
-              style={{ animationDelay: "300ms" }}
-            >
-              An independent South African brandy house with one rule: nothing
-              leaves until it earns the label.
-            </p>
-            <div
-              className="animate-fade-up flex flex-wrap gap-4"
-              style={{ animationDelay: "380ms" }}
-            >
-              {soldOut ? (
-                <Button size="lg" asChild>
-                  <Link href="#newsletter">Join the release list</Link>
-                </Button>
-              ) : (
-                <Button size="lg" asChild>
-                  <Link href="/shop/verboten-premium-brandy-batch-no-01-3-year">
-                    Order Batch No. 01
-                  </Link>
-                </Button>
-              )}
-              <Button size="lg" variant="outline" asChild>
-                <Link href="/story">The story</Link>
-              </Button>
-            </div>
-            {flagship && (
-              <p
-                className="animate-fade-up max-w-md text-sm leading-relaxed text-parch"
-                style={{ animationDelay: "450ms" }}
-              >
-                {soldOut
-                  ? "Batch No. 01 is gone. The next edition earns its own name; the release list hears first."
-                  : `${formatZAR(flagship.priceCents)} a bottle. Delivery ${formatZAR(flatRateCents)} flat, anywhere in South Africa. A limited edition: when it sells out, it is not coming back.`}
-              </p>
-            )}
-            <Motto className="animate-fade-up pt-2" />
-          </div>
-
-          <div className="animate-rise relative z-10" style={{ animationDelay: "150ms" }}>
-            {heroSrc && flagshipImage ? (
-              <div className="relative mx-auto aspect-[3/4] w-full max-w-[420px] [mask-image:radial-gradient(ellipse_72%_68%_at_center,black_52%,transparent_98%)] lg:max-w-[480px]">
-                <Image
-                  src={heroSrc}
-                  alt={flagshipImage.alt}
-                  fill
-                  sizes="(min-width: 1024px) 480px, 90vw"
-                  priority
-                  className="object-cover"
-                />
-              </div>
-            ) : (
-              <PlaceholderFrame
-                label="Hero: Batch No. 01 bottle on black, crest visible"
-                aspect="aspect-[3/4]"
-              />
-            )}
-          </div>
-        </div>
-
-        {/* Brass plate: the facts, once, at the foot of the stage */}
-        <div className="relative z-20 border-t hairline bg-ink/70 backdrop-blur-sm">
-          <dl className="mx-auto grid max-w-6xl grid-cols-2 gap-y-5 px-6 py-6 sm:grid-cols-4">
-            {(
-              [
-                ["Age", "3 years in oak"],
-                ["Finish", "French casks"],
-                ["Strength", "43%"],
-                ["Bottle", "750ml"],
-              ] as const
-            ).map(([label, value]) => (
-              <div key={label}>
-                <dt className="text-[0.625rem] uppercase tracking-[0.2em] text-parch">{label}</dt>
-                <dd className="mt-1 font-display text-lg text-bone">{value}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </section>
+      {/* The brand lines on a slow loop: the house signature. */}
+      <Marquee />
 
       {/* Flagship */}
       {flagship && (
-        <section className="border-b border-line">
-          <Reveal className="mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-2 lg:items-center">
+        <section className="relative overflow-hidden border-b border-line">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -left-6 top-1/2 -translate-y-1/2 select-none font-display text-[38vmin] font-bold leading-none text-smoke"
+          >
+            01
+          </span>
+          <Reveal className="relative mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-2 lg:items-center">
             <div className="order-2 lg:order-1">
               {flagshipImage ? (
                 <CmsImage
@@ -170,8 +92,8 @@ export default async function HomePage() {
                   sizes="(min-width: 1024px) 560px, 100vw"
                 />
               ) : (
-                <PlaceholderFrame
-                  label="Batch No. 01: bottle and glass, side light"
+                <ArtPlaceholder
+                  shot="Batch No. 01, bottle and glass, side light"
                   aspect="aspect-square"
                 />
               )}
@@ -188,6 +110,38 @@ export default async function HomePage() {
               </div>
               <Button asChild>
                 <Link href={`/shop/${flagship.slug}`}>View the bottle</Link>
+              </Button>
+            </div>
+          </Reveal>
+        </section>
+      )}
+
+      {/* The ritual: how the house pours. Real serves from the CMS. */}
+      {heroServes.length > 0 && (
+        <section className="border-b border-line">
+          <Reveal className="mx-auto max-w-6xl px-6 py-20">
+            <SectionHeading
+              eyebrow="The ritual"
+              title="How this house pours"
+              lead="Three ways in. Each one earns its glass."
+            />
+            <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+              {heroServes.map((serve, i) => (
+                <article key={serve.id} className="group space-y-4">
+                  <ArtPlaceholder
+                    shot={SERVE_SHOTS[i] ?? "The pour, up close"}
+                    aspect="aspect-[4/5]"
+                  />
+                  <h3 className="font-display text-xl text-bone">{serve.name}</h3>
+                  {serve.description && (
+                    <p className="text-sm leading-relaxed text-parch">{serve.description}</p>
+                  )}
+                </article>
+              ))}
+            </div>
+            <div className="mt-10">
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/serves">Every serve, properly specced</Link>
               </Button>
             </div>
           </Reveal>
@@ -220,8 +174,8 @@ export default async function HomePage() {
                   sizes="(min-width: 1024px) 560px, 100vw"
                 />
               ) : (
-                <PlaceholderFrame
-                  label="Brandy & Cola cans on ice, condensation"
+                <ArtPlaceholder
+                  shot="Brandy and Cola cans on ice, condensation"
                   aspect="aspect-[4/3]"
                 />
               )}
@@ -237,8 +191,8 @@ export default async function HomePage() {
             <SectionHeading
               align="center"
               eyebrow="The house"
-              title="Built in Pretoria. Aimed at the world."
-              lead="Verboten started in 2020 with one conviction: South Africa can put a brandy on any shelf in Amsterdam or Berlin and not apologise for it. Batch No. 01 is the first proof."
+              title="A house with its name on the door"
+              lead="Started in a Silverton workshop in 2020, with a conviction: South Africa can put a brandy on any shelf in Amsterdam or Berlin and not apologise for it. Batch No. 01 is the first proof."
             />
             <Button variant="outline" asChild>
               <Link href="/story">The whole story</Link>

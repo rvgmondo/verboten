@@ -34,6 +34,24 @@ export const AddToCart = ({
   const [qty, setQty] = React.useState(1);
   const max = maxAvailable === null ? 12 : Math.min(12, maxAvailable);
 
+  // Mobile sticky buy bar: appears once the inline button scrolls away, so
+  // the money action is always one thumb-reach away on the money page.
+  const inlineRef = React.useRef<HTMLDivElement>(null);
+  const [showBar, setShowBar] = React.useState(false);
+  React.useEffect(() => {
+    const el = inlineRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(([entry]) => setShowBar(!entry.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  const priceLabel = new Intl.NumberFormat("en-ZA", {
+    style: "currency",
+    currency: "ZAR",
+    minimumFractionDigits: 0,
+  }).format(priceCents / 100);
+
   if (soldOut) {
     // Sold out is the warmest email moment a limited-edition brand has;
     // the signup renders right here instead of pointing somewhere else.
@@ -52,7 +70,23 @@ export const AddToCart = ({
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-4">
+    <div ref={inlineRef} className="flex flex-wrap items-center gap-4">
+      {/* Mobile-only sticky buy bar */}
+      {showBar && (
+        <div className="inverse fixed inset-x-0 bottom-0 z-40 border-t border-line bg-ink/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md sm:hidden">
+          <div className="flex items-center gap-4 px-4 py-3">
+            <span className="font-display text-lg text-gold">{priceLabel}</span>
+            <Button
+              onClick={() =>
+                add({ productId, slug, name, priceCents, maxAvailable, imageUrl, imageAlt }, qty)
+              }
+              className="flex-1"
+            >
+              Add to cart
+            </Button>
+          </div>
+        </div>
+      )}
       <div
         className="flex h-11 items-center border border-line"
         role="group"

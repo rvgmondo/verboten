@@ -92,6 +92,25 @@
       opacity: 0.9;
     }
   }
+
+  /* Brand-line marquee: the track holds two copies, so -50% loops clean. */
+  --animate-marquee: marquee 36s linear infinite;
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Ken Burns drift for hero chapters: a slow settle, no loop. */
+  --animate-kenburns: kenburns 9s var(--ease-out-quiet) both;
+  @keyframes kenburns {
+    from {
+      transform: scale(1.06) translateY(8px);
+    }
+    to {
+      transform: none;
+    }
+  }
 }
 
 @theme inline {
