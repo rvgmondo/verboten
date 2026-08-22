@@ -349,6 +349,16 @@
         "source": "/cart",
         "destination": "/shop",
         "permanent": true
+      },
+      {
+        "source": "/shop/verboten-premium-brandy-batch-no-01-3-year",
+        "destination": "/shop/verboten-premium-brandy",
+        "permanent": true
+      },
+      {
+        "source": "/shop/batch-no-01-premium-set-2-bottle",
+        "destination": "/shop/verboten-premium-set-2-bottle",
+        "permanent": true
       }
     ]
   },

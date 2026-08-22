@@ -7,12 +7,12 @@ import { getProducts } from "@/lib/data";
 export const metadata: Metadata = {
   title: "Buy Brandy Online, Shipped Across South Africa",
   description:
-    "Verboten Premium Brandy Batch No. 01, the two bottle set, and Brandy & Cola ready to drink. Order online, shipped anywhere in South Africa. Not for sale under 18.",
+    "Verboten Premium Brandy, the two bottle set, and Brandy & Cola ready to drink. Order online, shipped anywhere in South Africa. Not for sale under 18.",
   alternates: { canonical: "/shop" },
   openGraph: {
     title: "Buy Verboten Brandy Online",
     description:
-      "Premium South African brandy in limited editions, shipped anywhere in South Africa.",
+      "Premium South African brandy, shipped anywhere in South Africa.",
   },
 };
 
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 export default async function ShopPage() {
   const products = await getProducts();
   const flagship = products.find(
-    (p) => p.slug === "verboten-premium-brandy-batch-no-01-3-year",
+    (p) => p.slug === "verboten-premium-brandy",
   );
   const rest = products.filter((p) => p.id !== flagship?.id);
 

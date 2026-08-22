@@ -28,7 +28,7 @@ import { formatZAR } from "@/lib/money";
 export const metadata: Metadata = {
   title: "Verboten Spirits | Premium South African Brandy",
   description:
-    "An independent South African brandy house in Pretoria. Batch No. 01: a limited edition three year brandy finished in French oak, 43% ABV. Born in South Africa, made for the world.",
+    "An independent South African brandy house in Pretoria. A three year premium brandy finished in French oak, 43% ABV. Born in South Africa, made for the world.",
   alternates: { canonical: "/" },
 };
 
@@ -42,7 +42,7 @@ export default async function HomePage() {
     getServes(),
   ]);
 
-  const flagship = products.find((p) => p.slug === "verboten-premium-brandy-batch-no-01-3-year");
+  const flagship = products.find((p) => p.slug === "verboten-premium-brandy");
   const rtd = products.find((p) => p.slug === "verboten-brandy-cola");
   const flagshipImage = flagship ? productImage(flagship) : null;
   const rtdImage = rtd ? productImage(rtd) : null;
@@ -51,9 +51,9 @@ export default async function HomePage() {
   const flatRateCents = settings.shipping?.flatRateCents ?? 15000;
   const commerceLine = flagship
     ? soldOut
-      ? "Batch No. 01 is sold out. The next edition earns its own name."
-      : `${formatZAR(flagship.priceCents)} a bottle. Delivery ${formatZAR(flatRateCents)} flat, anywhere in South Africa. A limited edition: when it sells out, it is not coming back.`
-    : "A limited edition: when it sells out, it is not coming back.";
+      ? "Sold out for now. The release list hears the moment it is back."
+      : `${formatZAR(flagship.priceCents)} a bottle. Delivery ${formatZAR(flatRateCents)} flat, anywhere in South Africa.`
+    : "Premium South African brandy, shipped nationwide.";
   const heroServes = serves.slice(0, 3);
   const SERVE_SHOTS = [
     "Heavy tumbler, one clear cube, side light",
@@ -66,7 +66,7 @@ export default async function HomePage() {
       {/* Hero: three chapters of the same dark stage. */}
       <HeroCinema
         bottleSrc={heroSrc}
-        bottleAlt={flagshipImage?.alt ?? "Verboten Premium Brandy Batch No. 01 bottle"}
+        bottleAlt={flagshipImage?.alt ?? "Verboten Premium Brandy bottle"}
         soldOut={soldOut}
         commerceLine={commerceLine}
       />
@@ -79,9 +79,9 @@ export default async function HomePage() {
         <section className="relative overflow-hidden border-b border-line">
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute -left-6 top-1/2 -translate-y-1/2 select-none font-display text-[38vmin] font-bold leading-none text-smoke"
+            className="pointer-events-none absolute -left-6 top-1/2 -translate-y-1/2 select-none font-display text-[30vmin] font-bold leading-none text-smoke"
           >
-            01
+            VB
           </span>
           <Reveal className="relative mx-auto grid max-w-6xl gap-12 px-6 py-20 lg:grid-cols-2 lg:items-center">
             <div className="order-2 lg:order-1">
@@ -93,7 +93,7 @@ export default async function HomePage() {
                 />
               ) : (
                 <ArtPlaceholder
-                  shot="Batch No. 01, bottle and glass, side light"
+                  shot="The bottle and a poured glass, side light"
                   aspect="aspect-square"
                 />
               )}
@@ -101,7 +101,7 @@ export default async function HomePage() {
             <div className="order-1 space-y-6 lg:order-2">
               <SectionHeading
                 eyebrow="The flagship"
-                title="Batch No. 01"
+                title="Verboten Premium Brandy"
                 lead="Warm oak, dried apricot and vanilla on the nose. Caramel, toasted nuts and a quiet spice on the palate. The finish is long and does not need help."
               />
               <div className="flex flex-wrap items-center gap-5 border-t border-line pt-5">
@@ -192,7 +192,7 @@ export default async function HomePage() {
               align="center"
               eyebrow="The house"
               title="A house with its name on the door"
-              lead="Started in a Silverton workshop in 2020, with a conviction: South Africa can put a brandy on any shelf in Amsterdam or Berlin and not apologise for it. Batch No. 01 is the first proof."
+              lead="Started in a Silverton workshop in 2020, with a conviction: South Africa can put a brandy on any shelf in Amsterdam or Berlin and not apologise for it. The bottle is the proof."
             />
             <Button variant="outline" asChild>
               <Link href="/story">The whole story</Link>
@@ -259,7 +259,7 @@ export default async function HomePage() {
               align="center"
               eyebrow="First pour"
               title="Hear about the next release before it lands"
-              lead="New editions and where to find us. Release news reaches this list first."
+              lead="New releases and where to find us. Release news reaches this list first."
             />
             <div className="mt-8 text-left">
               <NewsletterForm source="home" />

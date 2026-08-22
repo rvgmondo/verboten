@@ -4,11 +4,10 @@ import { anyone, isAdminOrEditor } from "../access/access";
 import { revalidateHooks } from "../lib/revalidate";
 
 /**
- * Limited editions. Each edition carries its own story and stock; the bottle
- * counts are used only for internal stock tracking and are never shown to
- * shoppers (no numbered-bottle scarcity). Products whose inventory mode is
- * "batch" draw availability from here, and a sold-out edition displays
- * elegantly on the front end instead of disappearing.
+ * Internal stock batches (bottling runs). Purely operational: bottle counts
+ * track stock and are never shown to shoppers, and nothing here renders on
+ * the public site. Products whose inventory mode is "batch" draw availability
+ * from here, and a sold-out product displays elegantly instead of vanishing.
  */
 export const Batches: CollectionConfig = {
   slug: "batches",

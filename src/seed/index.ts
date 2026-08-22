@@ -35,9 +35,9 @@ const run = async () => {
         // Real remaining count unconfirmed (recon gap 9); staff adjust in admin.
         bottlesRemaining: 500,
         status: "available",
+        // Internal only: batch stories no longer render on the public site.
         story: paragraphs(
-          "This is the first one. A limited edition, matured at least three years in oak and finished in French casks. Made to a standard, not to a schedule.",
-          "We started in Pretoria with one idea: a South African brandy good enough to stand anywhere in the world. When this edition is gone, the next one earns its own name.",
+          "First bottling run. Matured at least three years in oak and finished in French casks.",
         ),
       },
     });
@@ -63,16 +63,16 @@ const run = async () => {
   };
 
   // --- Flagship brandy ---
-  const brandy = await ensureProduct("verboten-premium-brandy-batch-no-01-3-year", {
-    name: "Verboten Premium Brandy, Batch No. 01",
-    slug: "verboten-premium-brandy-batch-no-01-3-year",
+  const brandy = await ensureProduct("verboten-premium-brandy", {
+    name: "Verboten Premium Brandy",
+    slug: "verboten-premium-brandy",
     productType: "bottle",
     sku: "VB-B01-750",
     priceCents: 45000,
     shortDescription:
       "A three year South African brandy, finished in French oak and bottled at 43% ABV. Born in Pretoria, made for the world.",
     description: paragraphs(
-      "Three years in oak, then a finish in French casks. Bottled at 43% ABV in Pretoria. A brandy that drinks like it has somewhere to be.",
+      "Three years in oak, then a finish in French casks. Bottled at 43% ABV in Pretoria.",
       "Neat, it holds its own next to anything on the shelf. Tall, over ice with cola, it is South Africa in a glass. Either way, it was built to be poured far from home.",
     ),
     specs: {
@@ -106,28 +106,35 @@ const run = async () => {
     description: paragraphs(
       "The flagship brandy, cut with cola and canned. Made to be drunk cold, straight from the can or over ice. The national serve, ready when you are.",
     ),
-    // ABV and can volume are unconfirmed (recon gap 7); left blank until the
-    // client supplies them.
-    specs: { origin: "South Africa" },
+    // Confirmed from the can label: 440ml, 5% alcohol.
+    specs: { abv: 5, volumeMl: 440, origin: "South Africa" },
     inventory: { mode: "own", stockQty: 0, lowStockThreshold: 24 },
     _status: "published",
   });
 
   // --- 2-bottle premium set (a real bundle) ---
-  await ensureProduct("batch-no-01-premium-set-2-bottle", {
-    name: "Batch No. 01 Premium Set, 2 Bottles",
-    slug: "batch-no-01-premium-set-2-bottle",
+  const set = await ensureProduct("verboten-premium-set-2-bottle", {
+    name: "Verboten Premium Set, 2 Bottles",
+    slug: "verboten-premium-set-2-bottle",
     productType: "bundle",
     sku: "VB-B01-SET2",
     priceCents: 85000,
     shortDescription:
-      "Two bottles of Verboten Premium Brandy, Batch No. 01. One to open now, one to keep.",
+      "Two bottles of Verboten Premium Brandy for R850, fifty rand under buying them one at a time.",
     description: paragraphs(
-      "Two bottles from the same limited edition. Open one now, keep the second for the night that calls for it.",
+      "Two bottles, R50 under buying them one at a time. Open one now, keep the second for the night that calls for it.",
     ),
     bundleItems: [{ product: brandy.id, quantity: 2 }],
     relatedProducts: [brandy.id, rtd.id],
     _status: "published",
+  });
+
+  // The flagship cross-sells the set and the can (the "Also from the house"
+  // section only renders when relatedProducts exist). Idempotent update.
+  await payload.update({
+    collection: "products",
+    id: brandy.id,
+    data: { relatedProducts: [set.id, rtd.id] },
   });
 
   // --- Marketing and legal pages (the copy rewrite; see src/seed/content.ts) ---

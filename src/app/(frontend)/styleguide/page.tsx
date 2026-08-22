@@ -34,7 +34,7 @@ export default function StyleguidePage() {
       <section className="space-y-6">
         <SectionHeading eyebrow="Typography" title="The label voice" />
         <div className="space-y-3">
-          <p className="font-display text-7xl leading-none">Batch No. 01</p>
+          <p className="font-display text-7xl leading-none">Verboten Premium Brandy</p>
           <p className="font-display text-4xl text-gold">
             Three years in oak. Finished in French casks.
           </p>
@@ -95,7 +95,7 @@ export default function StyleguidePage() {
       <section className="space-y-6">
         <SectionHeading eyebrow="States" title="Badges and stock" />
         <div className="flex flex-wrap items-center gap-3">
-          <Badge variant="gold">Batch No. 01</Badge>
+          <Badge variant="gold">The flagship</Badge>
           <Badge variant="quiet">750ml</Badge>
           <Badge variant="low">6 left</Badge>
           <Badge variant="soldOut">Sold out</Badge>

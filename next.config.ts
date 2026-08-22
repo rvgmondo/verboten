@@ -9,13 +9,14 @@ const isDev = process.env.NODE_ENV !== "production";
 // form-action allows the PayFast checkout redirect (live + sandbox hosts).
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' 'unsafe-eval'`,
+  // Analytics allowances: Cloudflare Web Analytics beacon + optional GA4.
+  `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com https://www.googletagmanager.com`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
   "worker-src 'self' blob:",
   "frame-src 'self'",
-  `connect-src 'self'${isDev ? " ws: http://localhost:*" : ""}`,
+  `connect-src 'self' https://cloudflareinsights.com https://*.google-analytics.com https://*.analytics.google.com${isDev ? " ws: http://localhost:*" : ""}`,
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self' https://www.payfast.co.za https://sandbox.payfast.co.za",
@@ -78,6 +79,17 @@ const nextConfig: NextConfig = {
       { source: "/wishlist", destination: "/shop", permanent: true },
       // Old WooCommerce cart URL still in the wild; the new cart is a drawer.
       { source: "/cart", destination: "/shop", permanent: true },
+      // Batch-numbered product URLs, retired when the flagship was normalised.
+      {
+        source: "/shop/verboten-premium-brandy-batch-no-01-3-year",
+        destination: "/shop/verboten-premium-brandy",
+        permanent: true,
+      },
+      {
+        source: "/shop/batch-no-01-premium-set-2-bottle",
+        destination: "/shop/verboten-premium-set-2-bottle",
+        permanent: true,
+      },
     ];
   },
 };

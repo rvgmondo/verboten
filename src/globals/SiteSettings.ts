@@ -27,7 +27,7 @@ export const SiteSettings: GlobalConfig = {
         {
           name: "text",
           type: "text",
-          defaultValue: "Limited edition, from Pretoria | Ships nationwide in 1 to 2 weeks",
+          defaultValue: "Premium South African brandy | Ships nationwide in 1 to 2 weeks",
         },
       ],
     },

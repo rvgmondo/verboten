@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import React from "react";
 
 import { AnnouncementBar } from "@/components/chrome/announcement-bar";
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
     template: "%s | Verboten Spirits",
   },
   description:
-    "An independent South African brandy house in Pretoria. Premium brandy in limited editions, born in South Africa and made for the world. Not for sale under 18.",
+    "An independent South African brandy house in Pretoria. Premium brandy, born in South Africa and made for the world. Not for sale under 18.",
   // Links get shared in WhatsApp DMs more than anywhere else in SA; give
   // every page a real card. Page metadata overrides these per surface.
   openGraph: {
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
     locale: "en_ZA",
     title: "Verboten Spirits | Premium South African Brandy",
     description:
-      "An independent South African brandy house in Pretoria. Premium brandy in limited editions, born in South Africa and made for the world.",
+      "An independent South African brandy house in Pretoria. Premium brandy, born in South Africa and made for the world.",
   },
   twitter: { card: "summary_large_image" },
 };
@@ -68,6 +69,23 @@ export default async function FrontendLayout({ children }: { children: React.Rea
           <AgeGate />
           <JsonLd data={organizationLd()} />
         </CartProvider>
+        {/* GA4, armed only when NEXT_PUBLIC_GA_ID is set in the environment.
+            Cloudflare Web Analytics needs no code: it is injected at the edge
+            when toggled on in the Cloudflare dashboard (CSP already allows it). */}
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');`}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );

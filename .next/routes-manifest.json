@@ -58,6 +58,18 @@
       "destination": "/shop",
       "statusCode": 308,
       "regex": "^(?!/_next)/cart(?:/)?$"
+    },
+    {
+      "source": "/shop/verboten-premium-brandy-batch-no-01-3-year",
+      "destination": "/shop/verboten-premium-brandy",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/shop/verboten-premium-brandy-batch-no-01-3-year(?:/)?$"
+    },
+    {
+      "source": "/shop/batch-no-01-premium-set-2-bottle",
+      "destination": "/shop/verboten-premium-set-2-bottle",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/shop/batch-no-01-premium-set-2-bottle(?:/)?$"
     }
   ],
   "headers": [
@@ -66,7 +78,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; worker-src 'self' blob:; frame-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self' https://www.payfast.co.za https://sandbox.payfast.co.za; frame-ancestors 'self'; upgrade-insecure-requests"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; worker-src 'self' blob:; frame-src 'self'; connect-src 'self' https://cloudflareinsights.com https://*.google-analytics.com https://*.analytics.google.com; object-src 'none'; base-uri 'self'; form-action 'self' https://www.payfast.co.za https://sandbox.payfast.co.za; frame-ancestors 'self'; upgrade-insecure-requests"
         },
         {
           "key": "X-Content-Type-Options",
@@ -145,6 +157,14 @@
         "nxtPslug": "nxtPslug"
       },
       "namedRegex": "^/api/(?<nxtPslug>.+?)(?:/)?$"
+    },
+    {
+      "page": "/find-us/ics/[id]",
+      "regex": "^/find\\-us/ics/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/find\\-us/ics/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
       "page": "/journal/[slug]",

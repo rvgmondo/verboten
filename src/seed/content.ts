@@ -13,7 +13,7 @@ export const PAGES = [
     slug: "story",
     title: "A house with its name on the door",
     intro:
-      "Verboten is an independent South African brandy house in Pretoria. We make premium brandy in limited editions, rooted here and built to be poured in places that have never heard an accent like ours.",
+      "Verboten is an independent South African brandy house in Pretoria. We make premium brandy, rooted here and built to be poured in places that have never heard an accent like ours.",
     content: doc(
       h2("The start"),
       p(
@@ -24,7 +24,7 @@ export const PAGES = [
       ),
       h2("What we make"),
       p(
-        "Batch No. 01 is the first release: a three year brandy, matured in oak and finished in French casks, bottled at 43%. A limited edition. When an edition is done, the next one earns its own name and its own story.",
+        "The flagship is a three year brandy, matured in oak and finished in French casks, bottled at 43%. Made to a standard, not to a schedule.",
       ),
       p(
         "Brandy & Cola is the same spirit with its collar loosened. Pre-mixed, canned, and served colder than strictly necessary at the markets and events where we pour.",
@@ -190,7 +190,7 @@ export const SERVES = [
   {
     name: "Neat, one cube",
     description:
-      "The house serve. Batch No. 01 was finished in French oak so you could taste it, not bury it.",
+      "The house serve. The brandy was finished in French oak so you could taste it, not bury it.",
     ingredients: [
       { amount: "50ml", item: "Verboten Premium Brandy" },
       { amount: "1", item: "Large clear ice cube, optional" },
@@ -232,16 +232,16 @@ export const SERVES = [
 export const JOURNAL_POSTS = [
   {
     slug: "batch-no-01-is-open",
-    title: "Batch No. 01 is open",
+    title: "The first Verboten brandy is shipping",
     category: "releases" as const,
     excerpt:
-      "A limited edition. Three years in oak, finished in French casks, bottled at 43% in Pretoria. The first Verboten release is shipping now.",
+      "Three years in oak, finished in French casks, bottled at 43% in Pretoria. Verboten Premium Brandy is shipping now.",
     content: doc(
       p(
         "The first release from this house is a brandy we are prepared to put our name on, which is the whole point of the name.",
       ),
       p(
-        "Batch No. 01 spent a minimum of three years in oak before a finish in French casks. It bottles at 43%, in 750ml. A limited edition, made to a standard we hold without apology.",
+        "Verboten Premium Brandy spends a minimum of three years in oak before a finish in French casks. It bottles at 43%, in 750ml. Made to a standard we hold without apology.",
       ),
       h2("What it tastes like"),
       p(
@@ -249,9 +249,65 @@ export const JOURNAL_POSTS = [
       ),
       h2("How to get one"),
       p(
-        "Order from the shop and it ships anywhere in South Africa within one to two weeks. There is also a two bottle set: one to open, one to keep. When this edition is gone, the next one earns its own name.",
+        "Order from the shop and it ships anywhere in South Africa within one to two weeks. There is also a two bottle set: one to open, one to keep.",
       ),
     ),
     publishedAt: "2026-08-01T08:00:00.000Z",
+  },
+  {
+    slug: "brandy-and-coke-done-properly",
+    title: "Brandy and Coke, done properly",
+    category: "stories" as const,
+    excerpt:
+      "South Africa's drink deserves better than a warm glass and a guess. The proper brandy and Coke, step by step, and why the brandy matters more than you think.",
+    content: doc(
+      p(
+        "Brandy and Coke is South Africa's drink. It gets poured at every braai, every match, every family thing, and most of the time it gets poured badly. Warm glass, flat cola, brandy chosen by price alone. The drink deserves better, and so do you.",
+      ),
+      h2("The rules"),
+      p(
+        "Cold everything. The glass from the freezer if you can manage it, the cola from the fridge, never the pantry. Ice first, more than feels polite. Brandy in before the cola so the pour mixes itself. Cola down the side of the glass, slowly, so the bubbles survive. Stir once. Once.",
+      ),
+      h2("The ratio"),
+      p(
+        "One part brandy to two and a half parts cola. Stronger and you lose the refreshment, weaker and you are drinking cola with regrets. Fifty millilitres of brandy to about 120 of cola in a tall glass full of ice is the pour we stand behind.",
+      ),
+      h2("Why the brandy matters"),
+      p(
+        "Cola is loud. A thin brandy disappears under it, which is why so many brandy and Cokes taste like sweet nothing. A brandy with three years in oak and a French cask finish holds its shape: you taste caramel and dried fruit through the cola instead of just sugar. That is the whole argument for pouring something better into the national drink.",
+      ),
+      p(
+        "If the fridge is doing the work tonight, our Brandy and Cola comes pre-mixed in a can, cold and ready. Same brandy, collar loosened.",
+      ),
+    ),
+    publishedAt: "2026-08-15T08:00:00.000Z",
+  },
+  {
+    slug: "what-makes-a-south-african-brandy",
+    title: "What makes a South African brandy",
+    category: "stories" as const,
+    excerpt:
+      "South African brandy has beaten the big names in blind tastings for years. What makes it different, why the law here is stricter than cognac's, and how to taste the difference.",
+    content: doc(
+      p(
+        "Here is something most people at the braai do not know: South African law holds brandy to a standard stricter than France holds cognac. Pot-stilled, matured at least three years in oak, nothing rushed. The world's blind tastings have noticed, even when the world's shelves have not caught up yet.",
+      ),
+      h2("The law is the floor"),
+      p(
+        "To call itself South African brandy, the spirit must be distilled from wine and rested in oak for a minimum of three years. That is not marketing. It is the legal floor, and it is why a properly made local brandy drinks smoother than plenty of imports at twice the price.",
+      ),
+      h2("What oak actually does"),
+      p(
+        "Three years in a barrel is where a brandy earns its colour and most of its character. The wood breathes, the spirit rounds, the sharp edges go. A finish in French casks on top of that adds the quiet vanilla and spice you taste at the end of a sip. Time is the one ingredient nobody can fake.",
+      ),
+      h2("How to taste it"),
+      p(
+        "Pour a small glass neat. Let it sit for two minutes, because the first nose out of the bottle is always the roughest. Then look for three things: fruit up front, warmth without burn in the middle, and a finish that stays after you swallow. If all three show up, someone made that brandy with intent.",
+      ),
+      p(
+        "That is the standard we hold ours to. Made in Pretoria, aged three years, finished in French oak, and built to stand next to anything in the world.",
+      ),
+    ),
+    publishedAt: "2026-08-20T08:00:00.000Z",
   },
 ] as const;

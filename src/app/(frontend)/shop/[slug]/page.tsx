@@ -29,9 +29,9 @@ export const generateMetadata = async ({ params }: Params): Promise<Metadata> =>
   const { slug } = await params;
   const product = await getProductBySlug(slug);
   if (!product) return {};
-  // Fold the commercial search phrase into aged products' titles.
+  // Fold the age into titles without doubling the word "brandy".
   const title = product.specs?.ageYears
-    ? `${product.name}, ${product.specs.ageYears} Year South African Brandy`
+    ? `${product.name}, Aged ${product.specs.ageYears} Years`
     : product.name;
   return {
     title,
@@ -210,22 +210,6 @@ export default async function ProductPage({ params }: Params) {
           )}
         </div>
       </div>
-
-      {/* Edition story */}
-      {batch && batch.story && (
-        <section
-          aria-labelledby="batch-story"
-          className="mt-20 border border-gold-dim/40 bg-coal p-8 sm:p-12"
-        >
-          <div className="max-w-2xl space-y-5">
-            <p className="eyebrow">Limited edition</p>
-            <h2 id="batch-story" className="font-display text-3xl tracking-tight text-bone">
-              {batch.name}
-            </h2>
-            <RichText data={batch.story} />
-          </div>
-        </section>
-      )}
 
       {/* Related */}
       {related.length > 0 && (

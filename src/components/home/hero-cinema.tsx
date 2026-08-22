@@ -38,7 +38,7 @@ const CHAPTERS: Chapter[] = [
     titleA: "Born in Pretoria.",
     titleB: "Made for the world.",
     body: "An independent South African brandy house with one rule: nothing leaves until it earns the label.",
-    cta: { href: "/shop/verboten-premium-brandy-batch-no-01-3-year", label: "Order Batch No. 01" },
+    cta: { href: "/shop/verboten-premium-brandy", label: "Order the brandy" },
     ctaSecondary: { href: "/story", label: "The story" },
   },
   {
@@ -97,8 +97,8 @@ export const HeroCinema = ({
       i === 0
         ? {
             ...c,
-            body: "Batch No. 01 is gone. The next edition earns its own name, and the release list hears first.",
-            cta: { href: "#newsletter", label: "Join the release list" },
+            body: "Sold out for now. Join the list and hear the moment it lands back.",
+            cta: { href: "#newsletter", label: "Join the list" },
           }
         : c,
     );
@@ -188,7 +188,7 @@ export const HeroCinema = ({
                 </div>
               ) : (
                 <ArtPlaceholder
-                  shot="Batch No. 01 bottle on black, crest catching the light"
+                  shot="The bottle on black, crest catching the light"
                   aspect="aspect-[3/4]"
                   className="mx-auto w-full max-w-[420px] lg:max-w-[480px]"
                 />

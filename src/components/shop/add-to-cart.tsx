@@ -53,16 +53,15 @@ export const AddToCart = ({
   }).format(priceCents / 100);
 
   if (soldOut) {
-    // Sold out is the warmest email moment a limited-edition brand has;
-    // the signup renders right here instead of pointing somewhere else.
+    // Sold out is the warmest email moment the shop has; the signup renders
+    // right here instead of pointing somewhere else.
     return (
       <div className="space-y-4">
         <Button disabled className="w-full sm:w-auto sm:min-w-56">
           Sold out
         </Button>
         <p className="text-xs text-parch">
-          This release is gone. The next edition earns its own name, and this
-          list hears about it first.
+          Sold out for now. This list hears first the moment it is back.
         </p>
         <NewsletterForm source="sold-out-product" />
       </div>

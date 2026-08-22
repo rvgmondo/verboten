@@ -126,7 +126,7 @@ export const Products: CollectionConfig = {
       relationTo: "batches",
       admin: {
         position: "sidebar",
-        description: "The limited edition this product belongs to, if any.",
+        description: "The internal stock batch this product draws from, if any. Never shown to shoppers.",
       },
     },
     {

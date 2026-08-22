@@ -31,6 +31,29 @@ const formatEventDate = (iso: string) =>
     year: "numeric",
   });
 
+/** Prefilled Google Calendar link; the .ics route covers everything else. */
+const googleCalendarUrl = (event: {
+  title: string;
+  startDate: string;
+  endDate?: string | null;
+  location: string;
+  description?: string | null;
+}) => {
+  const fmt = (iso: string) =>
+    new Date(iso).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  const end =
+    event.endDate ||
+    new Date(new Date(event.startDate).getTime() + 3 * 3600_000).toISOString();
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: `Verboten at ${event.title}`,
+    dates: `${fmt(event.startDate)}/${fmt(end)}`,
+    location: event.location,
+    ...(event.description ? { details: event.description } : {}),
+  });
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+};
+
 export default async function FindUsPage() {
   const [stockists, events, settings] = await Promise.all([
     getStockists(),
@@ -58,7 +81,7 @@ export default async function FindUsPage() {
         {events.length > 0 ? (
           <ul className="divide-y divide-line border-y border-line">
             {events.map((event) => (
-              <li key={event.id} className="grid gap-2 py-6 sm:grid-cols-[220px_1fr_auto] sm:gap-6">
+              <li key={event.id} className="grid gap-2 py-6 sm:grid-cols-[220px_1fr] sm:gap-6">
                 <p className="text-sm text-gold">{formatEventDate(event.startDate)}</p>
                 <div>
                   <h3 className="font-display text-lg text-bone">{event.title}</h3>
@@ -66,16 +89,41 @@ export default async function FindUsPage() {
                   {event.description && (
                     <p className="mt-2 text-sm leading-relaxed text-parch">{event.description}</p>
                   )}
-                </div>
-                {event.url && (
-                  <div>
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    {event.url && (
+                      <Button variant="outline" size="sm" asChild>
+                        <a href={event.url} target="_blank" rel="noopener noreferrer">
+                          Details
+                        </a>
+                      </Button>
+                    )}
                     <Button variant="outline" size="sm" asChild>
-                      <a href={event.url} target="_blank" rel="noopener noreferrer">
-                        Details
+                      <a
+                        href={googleCalendarUrl(event)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Google Calendar
                       </a>
                     </Button>
+                    <Button variant="ghost" size="sm" asChild>
+                      <a href={`/find-us/ics/${event.id}`}>Add to calendar (.ics)</a>
+                    </Button>
+                    {settings.contact?.whatsapp && (
+                      <Button variant="ghost" size="sm" asChild>
+                        <a
+                          href={`https://wa.me/${settings.contact.whatsapp}?text=${encodeURIComponent(
+                            `I am coming to ${event.title} on ${formatEventDate(event.startDate)}.`,
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Tell us you are coming
+                        </a>
+                      </Button>
+                    )}
                   </div>
-                )}
+                </div>
               </li>
             ))}
           </ul>
