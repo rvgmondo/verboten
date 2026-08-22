@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
 
+import { BrandBadge } from "@/components/brand/crest";
 import { Motto } from "@/components/brand/motto";
 import { ArtPlaceholder } from "@/components/media/art-placeholder";
 import { Button } from "@/components/ui/button";
@@ -215,7 +216,12 @@ export const HeroCinema = ({
                 active === 2 ? "opacity-100" : "pointer-events-none opacity-0"
               }`}
             >
-              <div className="py-16 text-center">
+              <div className="py-10 text-center">
+                <BrandBadge
+                  className={`mx-auto mb-10 h-48 w-48 sm:h-60 sm:w-60 ${
+                    active === 2 ? "animate-kenburns" : ""
+                  }`}
+                />
                 <Motto className="text-2xl sm:text-3xl" />
                 <Motto line="MEMORIES NOT REGRETS" className="mt-6 text-2xl opacity-60 sm:text-3xl" />
               </div>

@@ -1,4 +1,4 @@
-import { Crest } from "@/components/brand/crest";
+import { BrandBadge } from "@/components/brand/crest";
 import { cn } from "@/lib/utils";
 
 /**
@@ -31,11 +31,8 @@ export const ArtPlaceholder = ({
       aria-hidden="true"
       className="absolute left-1/2 top-1/2 h-[130%] w-[130%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(205,184,141,0.14),rgba(205,184,141,0.04)_50%,transparent_75%)]"
     />
-    {/* The crest, half-seen in the dark */}
-    <Crest
-      aria-hidden="true"
-      className="absolute left-1/2 top-1/2 h-2/5 w-2/5 -translate-x-1/2 -translate-y-1/2 text-gold opacity-[0.16]"
-    />
+    {/* The badge, half-seen in the dark */}
+    <BrandBadge className="absolute left-1/2 top-1/2 h-2/5 w-2/5 -translate-x-1/2 -translate-y-1/2 opacity-[0.22]" />
     {/* Grain and vignette */}
     <div aria-hidden="true" className="grain absolute inset-0 opacity-[0.06]" />
     <div

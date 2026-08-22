@@ -1,32 +1,41 @@
+/* eslint-disable @next/next/no-img-element */
 import * as React from "react";
 
+import { cn } from "@/lib/utils";
+
 /**
- * PLACEHOLDER CREST. A geometric V monogram in a double-ruled roundel,
- * standing in until the client's real crest artwork arrives (listed on the
- * content shot list). Inherits currentColor so it works in gold or bone.
+ * The real brand marks, served from public/brand/ (cached immutable).
+ *
+ * Crest: the flat gold skull-and-wings, for small moments (nav, dividers)
+ * where the badge's ring text would be unreadable.
+ * BrandBadge: the full circular seal ("Pure Spirit. Pure Mischief."), for
+ * moments with room: order pages, watermarks, stamps.
+ *
+ * Plain <img> on purpose: these render in server and client components alike,
+ * sizes come from className, and the image pipeline is unoptimized anyway.
  */
 export const Crest = ({
   className,
   ...props
-}: React.SVGProps<SVGSVGElement>) => (
-  <svg
-    viewBox="0 0 64 64"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
+}: React.ImgHTMLAttributes<HTMLImageElement>) => (
+  <img
+    src="/brand/crest.png"
+    alt=""
     aria-hidden="true"
-    className={className}
+    className={cn("object-contain", className)}
     {...props}
-  >
-    <circle cx="32" cy="32" r="30" stroke="currentColor" strokeWidth="1.5" />
-    <circle cx="32" cy="32" r="25.5" stroke="currentColor" strokeWidth="0.75" />
-    <path
-      d="M20 21 L32 45 L44 21"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="square"
-      strokeLinejoin="miter"
-    />
-    <path d="M32 10.5 L34 13.5 L32 16.5 L30 13.5 Z" fill="currentColor" />
-    <path d="M32 47.5 L34 50.5 L32 53.5 L30 50.5 Z" fill="currentColor" />
-  </svg>
+  />
+);
+
+export const BrandBadge = ({
+  className,
+  ...props
+}: React.ImgHTMLAttributes<HTMLImageElement>) => (
+  <img
+    src="/brand/badge.png"
+    alt=""
+    aria-hidden="true"
+    className={cn("object-contain", className)}
+    {...props}
+  />
 );
