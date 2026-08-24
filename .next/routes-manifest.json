@@ -116,6 +116,16 @@
       "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
     },
     {
+      "source": "/",
+      "headers": [
+        {
+          "key": "Link",
+          "value": "</llms.txt>; rel=\"describedby\"; type=\"text/plain\""
+        }
+      ],
+      "regex": "^/(?:/)?$"
+    },
+    {
       "source": "/brand/:path*",
       "headers": [
         {

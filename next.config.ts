@@ -59,6 +59,16 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
+      // Agent discovery (RFC 8288). Points at llms.txt, which genuinely
+      // describes the house, using the registered "describedby" relation.
+      // Deliberately NOT an api-catalog link: /api/ is Payload's CMS backend,
+      // not a public API, and robots.txt disallows it for the same reason.
+      {
+        source: "/",
+        headers: [
+          { key: "Link", value: '</llms.txt>; rel="describedby"; type="text/plain"' },
+        ],
+      },
       // Brand assets change rarely; a replaced file needs a Cloudflare purge.
       {
         source: "/brand/:path*",
