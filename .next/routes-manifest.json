@@ -12,6 +12,18 @@
       "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
     },
     {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.verboten.co.za"
+        }
+      ],
+      "destination": "https://verboten.co.za/:path*",
+      "statusCode": 308,
+      "regex": "^(?!/_next)(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
+    },
+    {
       "source": "/product/:slug",
       "destination": "/shop/:slug",
       "statusCode": 308,
@@ -279,6 +291,12 @@
       "regex": "^/journal(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/journal(?:/)?$"
+    },
+    {
+      "page": "/llms.txt",
+      "regex": "^/llms\\.txt(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/llms\\.txt(?:/)?$"
     },
     {
       "page": "/opengraph-image-4usi79",

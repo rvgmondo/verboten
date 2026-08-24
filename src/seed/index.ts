@@ -102,9 +102,12 @@ const run = async () => {
     sku: "VB-RTD-CAN",
     priceCents: 4500,
     shortDescription:
-      "The same brandy, cut with cola and canned. Cold, easy, and unmistakably South African.",
+      "The same spirit with its collar loosened. 440ml at 5%, pre-mixed and ready. Cold, easy, and unmistakably South African.",
     description: paragraphs(
-      "The flagship brandy, cut with cola and canned. Made to be drunk cold, straight from the can or over ice. The national serve, ready when you are.",
+      "The flagship brandy, cut with cola and canned at 5%, in a 440ml can. Made to be drunk cold, straight from the can or over ice.",
+      "Brandy and Coke is South Africa's drink, and most of the time it gets poured badly. Warm glass, flat cola, brandy chosen on price alone. This is the same pour made properly and sealed, so it tastes the way it should at a braai, a market, or the back of a bakkie.",
+      "The brandy underneath is the same three year spirit we bottle at 43%, finished in French oak. Cola is loud, and a thin brandy disappears under it. This one holds its shape: caramel and dried fruit through the cola instead of just sugar.",
+      "Serve it colder than you think it needs. Over ice if the day is long.",
     ),
     // Confirmed from the can label: 440ml, 5% alcohol.
     specs: { abv: 5, volumeMl: 440, origin: "South Africa" },
@@ -122,7 +125,9 @@ const run = async () => {
     shortDescription:
       "Two bottles of Verboten Premium Brandy for R850, fifty rand under buying them one at a time.",
     description: paragraphs(
-      "Two bottles, R50 under buying them one at a time. Open one now, keep the second for the night that calls for it.",
+      "Two bottles of the same three year brandy: matured in oak, finished in French casks, bottled at 43% ABV in Pretoria.",
+      "R850 for the pair, fifty rand under buying them one at a time. Open one now, and keep the second for the night that earns it.",
+      "It travels well as a gift, for the kind of person who notices what is in the glass and does not need to say so.",
     ),
     bundleItems: [{ product: brandy.id, quantity: 2 }],
     relatedProducts: [brandy.id, rtd.id],

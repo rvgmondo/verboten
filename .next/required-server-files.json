@@ -311,6 +311,17 @@
     ],
     "_originalRedirects": [
       {
+        "source": "/:path*",
+        "has": [
+          {
+            "type": "host",
+            "value": "www.verboten.co.za"
+          }
+        ],
+        "destination": "https://verboten.co.za/:path*",
+        "permanent": true
+      },
+      {
         "source": "/product/:slug",
         "destination": "/shop/:slug",
         "permanent": true

@@ -70,6 +70,15 @@ const nextConfig: NextConfig = {
   // The full mapping rationale lives in docs/redirect-map.md.
   async redirects() {
     return [
+      // One canonical host. Semrush crawled www and apex as two separate sites,
+      // which splits crawl budget, caching and any link equity. Fires only when
+      // the Host header is www, so it cannot loop.
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.verboten.co.za" }],
+        destination: "https://verboten.co.za/:path*",
+        permanent: true,
+      },
       { source: "/product/:slug", destination: "/shop/:slug", permanent: true },
       { source: "/product-category/:path*", destination: "/shop", permanent: true },
       { source: "/about-us", destination: "/story", permanent: true },
