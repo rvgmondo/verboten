@@ -33,6 +33,7 @@ export const ProductCard = ({
             media={image}
             aspect={featured ? "aspect-[4/3]" : "aspect-[3/4]"}
             sizes={featured ? "(min-width: 1024px) 640px, 100vw" : "(min-width: 640px) 320px, 100vw"}
+            slotWidth={featured ? 640 : 320}
             className="transition-transform duration-500 group-hover:scale-[1.015]"
           />
         ) : (

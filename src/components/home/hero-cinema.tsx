@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import * as React from "react";
 
@@ -63,11 +62,14 @@ const CHAPTERS: Chapter[] = [
 
 export const HeroCinema = ({
   bottleSrc,
+  bottleSrcSet,
   bottleAlt,
   soldOut,
   commerceLine,
 }: {
   bottleSrc: string | null;
+  /** Responsive candidates from Payload's generated variants. */
+  bottleSrcSet?: string;
   bottleAlt: string;
   soldOut: boolean;
   commerceLine: string;
@@ -177,13 +179,18 @@ export const HeroCinema = ({
             >
               {bottleSrc ? (
                 <div className="relative mx-auto aspect-[3/4] w-full max-w-[420px] overflow-hidden [mask-image:radial-gradient(ellipse_72%_68%_at_center,black_52%,transparent_98%)] lg:max-w-[480px]">
-                  <Image
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={bottleSrc}
+                    srcSet={bottleSrcSet}
+                    sizes={bottleSrcSet ? "(min-width: 1024px) 480px, 90vw" : undefined}
                     alt={bottleAlt}
-                    fill
-                    sizes="(min-width: 1024px) 480px, 90vw"
-                    priority
-                    className={`object-cover ${active === 0 ? "animate-kenburns" : ""}`}
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="sync"
+                    className={`absolute inset-0 h-full w-full object-cover ${
+                      active === 0 ? "animate-kenburns" : ""
+                    }`}
                   />
                 </div>
               ) : (

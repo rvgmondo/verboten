@@ -73,6 +73,7 @@ export const ProductStage = ({
               media={image}
               aspect="aspect-square"
               sizes="(min-width: 1024px) 560px, 100vw"
+              slotWidth={560}
               priority={priority}
               className="bg-transparent [mask-image:radial-gradient(ellipse_74%_70%_at_center,black_54%,transparent_97%)]"
             />

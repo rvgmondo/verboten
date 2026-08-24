@@ -132,6 +132,7 @@ export default async function GalleryPage() {
                               ? "(min-width: 1024px) 760px, 100vw"
                               : "(min-width: 1024px) 380px, (min-width: 640px) 50vw, 100vw"
                           }
+                          slotWidth={item.featured ? 760 : 380}
                           className="bg-transparent"
                         />
                         <figcaption className="mt-3 text-xs leading-relaxed text-parch">

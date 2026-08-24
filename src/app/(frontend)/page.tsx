@@ -22,7 +22,7 @@ import {
   getUpcomingEvents,
 } from "@/lib/data";
 import { getAvailability } from "@/lib/inventory";
-import { mediaSrc } from "@/lib/media";
+import { mediaSrcAt, mediaSrcSet } from "@/lib/media";
 import { formatZAR } from "@/lib/money";
 
 export const metadata: Metadata = {
@@ -46,7 +46,8 @@ export default async function HomePage() {
   const rtd = products.find((p) => p.slug === "verboten-brandy-cola");
   const flagshipImage = flagship ? productImage(flagship) : null;
   const rtdImage = rtd ? productImage(rtd) : null;
-  const heroSrc = flagshipImage ? mediaSrc(flagshipImage.url) : null;
+  const heroSrc = flagshipImage ? mediaSrcAt(flagshipImage, 960) : null;
+  const heroSrcSet = flagshipImage ? mediaSrcSet(flagshipImage) : undefined;
   const soldOut = flagship ? getAvailability(flagship).soldOut : false;
   const flatRateCents = settings.shipping?.flatRateCents ?? 15000;
   const commerceLine = flagship
@@ -66,6 +67,7 @@ export default async function HomePage() {
       {/* Hero: three chapters of the same dark stage. */}
       <HeroCinema
         bottleSrc={heroSrc}
+        bottleSrcSet={heroSrcSet}
         bottleAlt={flagshipImage?.alt ?? "Verboten Premium Brandy bottle"}
         soldOut={soldOut}
         commerceLine={commerceLine}

@@ -14,7 +14,7 @@ import { productImage } from "@/components/shop/product-helpers";
 import { Badge } from "@/components/ui/badge";
 import { getProductBySlug, getProducts, getSiteSettings } from "@/lib/data";
 import { getAvailability } from "@/lib/inventory";
-import { mediaSrc } from "@/lib/media";
+import { mediaSrcAt } from "@/lib/media";
 import { breadcrumbLd, productLd } from "@/lib/seo";
 import type { Media, Product } from "@/payload-types";
 
@@ -119,7 +119,7 @@ export default async function ProductPage({ params }: Params) {
             {gallery.length > 0 ? (
               <ProductGallery
                 images={gallery
-                  .map((m) => ({ url: mediaSrc(m.url), alt: m.alt }))
+                  .map((m) => ({ url: mediaSrcAt(m, 1200), alt: m.alt }))
                   .filter((m): m is { url: string; alt: string } => Boolean(m.url))}
               />
             ) : (
@@ -154,7 +154,7 @@ export default async function ProductPage({ params }: Params) {
             priceCents={product.priceCents}
             maxAvailable={availability.available}
             soldOut={availability.soldOut}
-            imageUrl={mediaSrc(image?.url) ?? undefined}
+            imageUrl={(image ? mediaSrcAt(image, 200) : null) ?? undefined}
             imageAlt={image?.alt}
           />
 

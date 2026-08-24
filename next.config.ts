@@ -59,6 +59,13 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
+      // Uploaded media never changes under a given filename (Payload writes a
+      // new name on re-upload), so it is safe to cache hard. Without this the
+      // origin serves every photograph on every visit.
+      {
+        source: "/api/media/file/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
       // Agent discovery (RFC 8288). Points at llms.txt, which genuinely
       // describes the house, using the registered "describedby" relation.
       // Deliberately NOT an api-catalog link: /api/ is Payload's CMS backend,

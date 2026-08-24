@@ -12,6 +12,8 @@ import { revalidateHooks } from "../lib/revalidate";
 // production; in dev/seed the cwd is the project root. Override with MEDIA_DIR.
 const mediaDir = process.env.MEDIA_DIR || path.resolve(process.cwd(), "media");
 
+const WEBP = { format: "webp" as const, options: { quality: 82 } };
+
 /**
  * Uploaded media (bottle and lifestyle photography, journal imagery, crest assets).
  *
@@ -34,11 +36,15 @@ export const Media: CollectionConfig = {
     staticDir: mediaDir,
     mimeTypes: ["image/*"],
     focalPoint: true,
+    // Display variants are WebP regardless of what was uploaded. A photograph
+    // saved as PNG is enormous (a 768px PNG can of ours is 1.1MB, larger than
+    // most JPEG originals), and WebP is universally supported now. The og size
+    // stays JPEG because some share-card scrapers still prefer it.
     imageSizes: [
-      { name: "thumbnail", width: 400, position: "centre" },
-      { name: "card", width: 768, position: "centre" },
-      { name: "feature", width: 1280, position: "centre" },
-      { name: "hero", width: 1920, position: "centre" },
+      { name: "thumbnail", width: 400, position: "centre", formatOptions: WEBP },
+      { name: "card", width: 768, position: "centre", formatOptions: WEBP },
+      { name: "feature", width: 1280, position: "centre", formatOptions: WEBP },
+      { name: "hero", width: 1920, position: "centre", formatOptions: WEBP },
       { name: "og", width: 1200, height: 630, position: "centre" },
     ],
   },
