@@ -25,9 +25,10 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (commit only the example)
+# env files (commit only the example and the secret-free production URL)
 .env*
 !.env.example
+!.env.production
 
 # vercel
 .vercel

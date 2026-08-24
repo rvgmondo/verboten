@@ -30,7 +30,15 @@ import { SiteSettings } from "./globals/SiteSettings";
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
-const serverURL = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001";
+// Baked into the admin client bundle at build time (.env.production) and used
+// server-side for CORS/CSRF. If it ever pointed at localhost in production,
+// the live admin would call localhost and every cookie-authed save would 403
+// as a CSRF mismatch, so the production fallback is the real domain.
+const serverURL =
+  process.env.NEXT_PUBLIC_SERVER_URL ||
+  (process.env.NODE_ENV === "production"
+    ? "https://verboten.co.za"
+    : "http://localhost:3001");
 
 const generateTitle: GenerateTitle = ({ doc }) => {
   const title = (doc as { title?: string; name?: string })?.title

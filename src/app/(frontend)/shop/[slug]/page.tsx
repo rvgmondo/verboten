@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { Price } from "@/components/brand/price";
 import { StockBadge } from "@/components/brand/stock-badge";
 import { JsonLd } from "@/components/json-ld";
-import { PlaceholderFrame } from "@/components/media/placeholder-frame";
+import { ArtPlaceholder } from "@/components/media/art-placeholder";
 import { RichText } from "@/components/rich-text";
 import { AddToCart } from "@/components/shop/add-to-cart";
 import { ProductGallery } from "@/components/shop/gallery";
@@ -16,7 +16,7 @@ import { getProductBySlug, getProducts, getSiteSettings } from "@/lib/data";
 import { getAvailability } from "@/lib/inventory";
 import { mediaSrc } from "@/lib/media";
 import { breadcrumbLd, productLd } from "@/lib/seo";
-import type { Batch, Media, Product } from "@/payload-types";
+import type { Media, Product } from "@/payload-types";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -69,8 +69,6 @@ export default async function ProductPage({ params }: Params) {
   const gallery = (product.gallery ?? [])
     .map((g) => (typeof g.image === "object" ? (g.image as Media) : null))
     .filter(Boolean) as Media[];
-  const batch =
-    product.batch && typeof product.batch === "object" ? (product.batch as Batch) : null;
   const related = (product.relatedProducts ?? [])
     .map((r) => (typeof r === "object" ? (r as Product) : null))
     .filter((p): p is Product => Boolean(p))
@@ -110,20 +108,27 @@ export default async function ProductPage({ params }: Params) {
       </nav>
 
       <div className="grid gap-12 lg:grid-cols-[1fr_0.9fr]">
-        {/* Gallery */}
-        <div>
-          {gallery.length > 0 ? (
-            <ProductGallery
-              images={gallery
-                .map((m) => ({ url: mediaSrc(m.url), alt: m.alt }))
-                .filter((m): m is { url: string; alt: string } => Boolean(m.url))}
-            />
-          ) : (
-            <PlaceholderFrame
-              label={`${product.name}: primary product photography`}
-              aspect="aspect-[4/5]"
-            />
-          )}
+        {/* Gallery. The photography is shot on black, so it sits on a dark
+            panel with the bottle lit from behind, never on the cream canvas. */}
+        <div className="inverse relative overflow-hidden bg-ink p-4 sm:p-6">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[85%] w-[85%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(205,184,141,0.14),rgba(205,184,141,0.04)_50%,transparent_74%)]"
+          />
+          <div className="relative">
+            {gallery.length > 0 ? (
+              <ProductGallery
+                images={gallery
+                  .map((m) => ({ url: mediaSrc(m.url), alt: m.alt }))
+                  .filter((m): m is { url: string; alt: string } => Boolean(m.url))}
+              />
+            ) : (
+              <ArtPlaceholder
+                shot={`${product.name}, primary product photography`}
+                aspect="aspect-[4/5]"
+              />
+            )}
+          </div>
         </div>
 
         {/* Details */}
@@ -133,7 +138,7 @@ export default async function ProductPage({ params }: Params) {
               <StockBadge availability={availability} />
               {product.productType === "bundle" && <Badge variant="quiet">2 bottle set</Badge>}
             </div>
-            <h1 className="font-display text-4xl leading-[1.05] tracking-tight text-bone sm:text-5xl">
+            <h1 className="font-display font-semibold leading-[1.0] tracking-tight text-bone text-[clamp(2.2rem,4.6vw,3.4rem)]">
               {product.name}
             </h1>
             {product.shortDescription && (

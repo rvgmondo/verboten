@@ -63,11 +63,17 @@ Env lives in `.env` (gitignored); see `.env.example`.
 
 ## Products (real data, seed source of truth)
 
-- Verboten Premium Brandy Batch No. 01 — 3-year, French oak finish, 43% ABV,
-  750ml, R450. Batch of 500 numbered bottles.
-- Batch No. 01 Premium Set (2 bottles) — R850. A bundle, first-class product.
-- Verboten Brandy & Cola RTD can — R45.
+- Verboten Premium Brandy: 3-year, French oak finish, 43% ABV, 750ml, R450.
+  Slug `verboten-premium-brandy`.
+- Verboten Premium Set (2 bottles): R850. A bundle, first-class product.
+  Slug `verboten-premium-set-2-bottle`.
+- Verboten Brandy & Cola RTD can: 440ml, 5% ABV, R45.
 - Gin and further spirits in development.
+
+NO batch numbering and NO "limited edition" framing anywhere shoppers see:
+the flagship is a permanent product. The `batches` collection is internal
+stock tracking only and never renders publicly. Old batch-numbered URLs 301
+to the new slugs (next.config.ts).
 
 ## Structure
 
