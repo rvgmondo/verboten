@@ -29,7 +29,7 @@ export const CartDrawer = () => {
 
         {items.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-4 p-6 text-center">
-            <p className="text-sm text-parch">Nothing here yet.</p>
+            <p className="text-sm text-parch">Empty, for now.</p>
             <Button variant="outline" size="sm" asChild onClick={close}>
               <Link href="/shop">Browse the shop</Link>
             </Button>

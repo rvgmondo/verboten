@@ -129,8 +129,8 @@ export default async function ShopPage() {
         <div className="mx-auto max-w-6xl space-y-6 px-6 py-16 text-center">
           <Motto className="mx-auto" />
           <p className="mx-auto max-w-md text-sm leading-relaxed text-parch">
-            Not sure where to start? The brandy neat, or the can cold. Both come
-            from the same place.
+            Not sure where to start? The brandy neat, or the can cold. Both
+            come from the same place, and both were made to be shared.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button variant="outline" asChild>

@@ -76,6 +76,7 @@ export interface Config {
     enquiries: Enquiry;
     'journal-posts': JournalPost;
     serves: Serve;
+    'gallery-items': GalleryItem;
     stockists: Stockist;
     events: Event;
     pages: Page;
@@ -98,6 +99,7 @@ export interface Config {
     enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
     'journal-posts': JournalPostsSelect<false> | JournalPostsSelect<true>;
     serves: ServesSelect<false> | ServesSelect<true>;
+    'gallery-items': GalleryItemsSelect<false> | GalleryItemsSelect<true>;
     stockists: StockistsSelect<false> | StockistsSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
@@ -234,7 +236,7 @@ export interface Product {
   };
   servingSuggestion?: string | null;
   /**
-   * The limited edition this product belongs to, if any.
+   * The internal stock batch this product draws from, if any. Never shown to shoppers.
    */
   batch?: (number | null) | Batch;
   /**
@@ -650,6 +652,31 @@ export interface Serve {
   createdAt: string;
 }
 /**
+ * Photographs for the gallery page. Group them by category; the page hides any category that has no images.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gallery-items".
+ */
+export interface GalleryItem {
+  id: number;
+  image: number | Media;
+  /**
+   * A short line under the photograph. Say what it is, not how good it looks.
+   */
+  caption: string;
+  category: 'bottle' | 'production' | 'events' | 'venues';
+  /**
+   * Lower numbers come first.
+   */
+  sortOrder?: number | null;
+  /**
+   * Featured images span two columns.
+   */
+  featured?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "stockists".
  */
@@ -851,6 +878,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'serves';
         value: number | Serve;
+      } | null)
+    | ({
+        relationTo: 'gallery-items';
+        value: number | GalleryItem;
       } | null)
     | ({
         relationTo: 'stockists';
@@ -1179,6 +1210,19 @@ export interface ServesSelect<T extends boolean = true> {
   method?: T;
   image?: T;
   sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gallery-items_select".
+ */
+export interface GalleryItemsSelect<T extends boolean = true> {
+  image?: T;
+  caption?: T;
+  category?: T;
+  sortOrder?: T;
+  featured?: T;
   updatedAt?: T;
   createdAt?: T;
 }

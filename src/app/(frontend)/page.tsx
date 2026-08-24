@@ -123,7 +123,7 @@ export default async function HomePage() {
             <SectionHeading
               eyebrow="The ritual"
               title="How this house pours"
-              lead="Three ways in. Each one earns its glass."
+              lead="Three ways in. Nothing here needs a cocktail kit, or an audience."
             />
             <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
               {heroServes.map((serve, i) => (
@@ -156,7 +156,7 @@ export default async function HomePage() {
               <SectionHeading
                 eyebrow="Ready to drink"
                 title="Brandy & Cola"
-                lead="The same brandy, cut with cola and canned. Cold, easy, and unmistakably South African. The national serve, ready when you are."
+                lead="The same spirit with its collar loosened. Pre-mixed, canned, and served colder than strictly necessary. The national serve, done properly."
               />
               <div className="flex flex-wrap items-center gap-5">
                 <Price cents={rtd.priceCents} className="text-2xl" />
@@ -208,8 +208,8 @@ export default async function HomePage() {
             <SectionHeading eyebrow="Out in the world" title="Where to find us" />
             <p className="text-sm leading-relaxed text-parch">
               {stockists.length > 0
-                ? "Bars, bottle stores and venues that pour Verboten, plus the markets and events where we set up."
-                : "The stockist list is short and getting longer. Until your local carries us, order direct and we ship to your door, or catch us at the next market."}
+                ? "Quality bars that know their stuff, restaurants that care what they serve, and events worth showing up to."
+                : "The list is short and getting longer. Until your local carries us, order direct and we ship to your door, or catch us at the next event."}
             </p>
             <Button variant="outline" size="sm" asChild>
               <Link href="/find-us">
@@ -239,8 +239,8 @@ export default async function HomePage() {
               </ul>
             ) : (
               <p className="text-sm leading-relaxed text-parch">
-                Release notes, event recaps and the occasional opinion. First
-                entries are being written.
+                Notes, recaps and the occasional opinion. Written when there
+                is something worth saying.
               </p>
             )}
             <Button variant="ghost" size="sm" asChild>
@@ -258,8 +258,8 @@ export default async function HomePage() {
             <SectionHeading
               align="center"
               eyebrow="First pour"
-              title="Hear about the next release before it lands"
-              lead="New releases and where to find us. Release news reaches this list first."
+              title="Hear it before it is announced"
+              lead="New releases, and where we are pouring next. This list knows first."
             />
             <div className="mt-8 text-left">
               <NewsletterForm source="home" />

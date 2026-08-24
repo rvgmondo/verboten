@@ -38,7 +38,7 @@ export default async function JournalPage() {
         as="h1"
         eyebrow="The journal"
         title="Notes from the house"
-        lead="Releases, recaps and the occasional opinion. Written when there is something to say."
+        lead="Releases, recaps and the occasional opinion. Written when there is something worth saying."
       />
 
       {posts.length > 0 ? (
@@ -79,7 +79,7 @@ export default async function JournalPage() {
         </ul>
       ) : (
         <div className="mt-14 border border-line bg-coal p-8">
-          <p className="text-sm text-parch">First entries are being written.</p>
+          <p className="text-sm text-parch">Nothing published yet. It will be worth the wait.</p>
         </div>
       )}
     </main>

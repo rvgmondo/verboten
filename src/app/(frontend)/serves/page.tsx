@@ -22,7 +22,7 @@ export default async function ServesPage() {
         as="h1"
         eyebrow="Serves"
         title="How the house pours it"
-        lead="Simple builds that respect the bottle. Nothing here needs a cocktail kit."
+        lead="Simple builds that respect the bottle. Nothing here needs a cocktail kit, or an audience."
       />
 
       <div className="mt-14 space-y-16">

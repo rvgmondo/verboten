@@ -13,6 +13,7 @@ const SHOP_LINKS = [
 
 const HOUSE_LINKS = [
   { href: "/story", label: "Our story" },
+  { href: "/gallery", label: "Gallery" },
   { href: "/journal", label: "Journal" },
   { href: "/contact", label: "Contact" },
 ];
@@ -42,7 +43,7 @@ export const Footer = async () => {
             </p>
             <p className="max-w-xs text-sm leading-relaxed text-parch">
               An independent South African brandy house, pouring from
-              Silverton, Pretoria since 2020.
+              Silverton, Pretoria since 2020. For those who know.
             </p>
             <Motto />
           </div>

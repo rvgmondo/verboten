@@ -47,7 +47,7 @@ const CHAPTERS: Chapter[] = [
     kicker: "Ready to drink",
     titleA: "The national serve,",
     titleB: "done properly.",
-    body: "The same brandy, cut with cola and canned. Cold, easy, and unmistakably South African.",
+    body: "The same spirit with its collar loosened. Pre-mixed, canned, and colder than strictly necessary.",
     cta: { href: "/shop/verboten-brandy-cola", label: "See the can" },
   },
   {
@@ -56,7 +56,7 @@ const CHAPTERS: Chapter[] = [
     kicker: "The house",
     titleA: "Vir dié",
     titleB: "wat weet.",
-    body: "For those who know. The name is German for forbidden, and it is a promise about restraint, not a dare.",
+    body: "For those who know. Verboten is German for forbidden, and some traditions are meant to be whispered, not shouted.",
     cta: { href: "/story", label: "Step inside" },
   },
 ];

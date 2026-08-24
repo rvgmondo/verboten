@@ -18,8 +18,8 @@ export default function AccessRestrictedPage() {
           This site is for adults
         </h1>
         <p className="mx-auto max-w-sm text-sm leading-relaxed text-parch">
-          Verboten is made for people 18 and older, and that is not a rule we
-          bend. Come back when it is your time; the good stuff keeps.
+          Verboten is for people 18 and older, and that is the one rule we do
+          not bend. Come back when it is your turn. The good stuff keeps.
         </p>
       </div>
     </main>

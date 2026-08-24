@@ -136,3 +136,26 @@ export const getPageBySlug = unstable_cache(
   ["page-by-slug"],
   { tags: ["pages"], revalidate: 3600 },
 );
+
+export const getGalleryItems = unstable_cache(
+  async () => {
+    const payload = await payloadClient();
+    try {
+      const res = await payload.find({
+        collection: "gallery-items",
+        sort: "sortOrder",
+        depth: 1,
+        limit: 200,
+      });
+      return res.docs;
+    } catch (err) {
+      // The table is created by scripts/ensure-schema.mjs on the server. Until
+      // it exists the gallery renders its empty state rather than 500ing, so a
+      // deploy can never take the site down waiting on a schema step.
+      payload.logger.error({ err }, "Gallery unavailable; is the schema up to date?");
+      return [];
+    }
+  },
+  ["gallery-list"],
+  { tags: ["gallery"], revalidate: 3600 },
+);

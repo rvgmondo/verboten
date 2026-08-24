@@ -67,12 +67,12 @@ export const AgeGate = () => {
             aria-hidden="true"
             className="mx-auto h-14 w-14 object-contain"
           />
-          <DialogPrimitive.Title className="mt-6 font-display text-3xl tracking-tight text-bone">
-            Are you 18 or older?
+          <DialogPrimitive.Title className="mt-6 font-display text-3xl leading-[1.1] tracking-tight text-bone">
+            Some rules are meant to be questioned. This is not one of them.
           </DialogPrimitive.Title>
-          <DialogPrimitive.Description className="mt-3 text-sm leading-relaxed text-parch">
-            Verboten makes and sells alcohol. South African law and our own
-            standards require you to be 18 or older to enter.
+          <DialogPrimitive.Description className="mt-4 text-sm leading-relaxed text-parch">
+            Verboten makes and sells alcohol. You have to be 18 or older to come
+            in.
           </DialogPrimitive.Description>
           <div className="mt-8 space-y-3">
             <Button onClick={confirm} className="w-full" autoFocus>

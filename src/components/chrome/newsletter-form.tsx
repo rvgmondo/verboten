@@ -26,7 +26,7 @@ export const NewsletterForm = ({ source = "footer" }: { source?: string }) => {
 
   return (
     <form action={action} className="space-y-3">
-      <Label htmlFor={`${id}-email`}>New releases, first</Label>
+      <Label htmlFor={`${id}-email`}>Know first</Label>
       <div className="flex gap-2">
         <Input
           id={`${id}-email`}

@@ -23,7 +23,7 @@ export default async function ContactPage() {
             as="h1"
             eyebrow="Contact"
             title="Talk to the house"
-            lead="Order questions, stockist enquiries, events, or anything else. We reply within one business day."
+            lead="Order questions, stockist enquiries, events, or anything else worth asking. We reply within one business day."
           />
           <dl className="space-y-6 text-sm">
             {contact?.email && (

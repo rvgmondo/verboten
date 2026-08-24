@@ -16,6 +16,7 @@ import { Customers } from "./collections/Customers";
 import { DiscountCodes } from "./collections/DiscountCodes";
 import { Enquiries } from "./collections/Enquiries";
 import { Events } from "./collections/Events";
+import { GalleryItems } from "./collections/GalleryItems";
 import { JournalPosts } from "./collections/JournalPosts";
 import { Media } from "./collections/Media";
 import { Orders } from "./collections/Orders";
@@ -63,6 +64,7 @@ export default buildConfig({
     Enquiries,
     JournalPosts,
     Serves,
+    GalleryItems,
     Stockists,
     Events,
     Pages,
@@ -85,6 +87,9 @@ export default buildConfig({
   // a postgres:// URL instead, use Postgres (e.g. a managed instance).
   db: (process.env.DATABASE_URI || "").startsWith("postgres")
     ? postgresAdapter({ pool: { connectionString: process.env.DATABASE_URI || "" } })
+    // Schema changes are applied deliberately, not auto-pushed: the live
+    // database is a single file holding real orders. When a release adds a
+    // collection, run scripts/ensure-schema.mjs on the server once.
     : sqliteAdapter({ client: { url: process.env.DATABASE_URI || "file:./verboten.db" } }),
   // Only configure SMTP when provided; otherwise Payload logs emails to the console.
   email: process.env.SMTP_HOST
