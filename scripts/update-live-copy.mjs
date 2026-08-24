@@ -30,6 +30,12 @@ if (!EMAIL || !PASSWORD) {
 const text = (t) => ({ type: "text", detail: 0, format: 0, mode: "normal", style: "", text: t, version: 1 });
 const p = (t) => ({ type: "paragraph", format: "", indent: 0, version: 1, direction: "ltr", children: [text(t)] });
 const h2 = (t) => ({ type: "heading", tag: "h2", format: "", indent: 0, version: 1, direction: "ltr", children: [text(t)] });
+const ul = (...items) => ({
+  type: "list", listType: "bullet", tag: "ul", start: 1, format: "", indent: 0, version: 1, direction: "ltr",
+  children: items.map((item, i) => ({
+    type: "listitem", value: i + 1, format: "", indent: 0, version: 1, direction: "ltr", children: [text(item)],
+  })),
+});
 const doc = (...children) => ({ root: { type: "root", format: "", indent: 0, version: 1, direction: "ltr", children } });
 const paragraphs = (...texts) => doc(...texts.map(p));
 
@@ -141,23 +147,40 @@ const JOURNAL_NEW = [
 ];
 
 const STORY_PAGE = {
+  title: "Some rules are meant to be questioned",
   intro:
-    "Verboten is an independent South African brandy house in Pretoria. We make premium brandy, rooted here and built to be poured in places that have never heard an accent like ours.",
+    "Pretoria, 2020. Two founders, a conviction that the best traditions start with someone breaking the rules, and a spirit made to prove it.",
   content: doc(
     h2("The start"),
-    p("Verboten started in Pretoria in 2020. Not in a boardroom, in a workshop in Silverton, with a conviction that South African brandy could stand next to anything in the world if someone held it to that standard on purpose."),
-    p("We work with master blenders who have spent their lives in South African spirits. The recipes are ours. The standard is not negotiable."),
+    p("In 2020, in Pretoria, while the world was following orders, two founders were quietly breaking convention. Technical precision, and the kind of creativity that only thrives in secrecy."),
+    p("What came out of it was a spirit smooth enough to make you question what you thought you knew about premium drinks."),
+    h2("A quiet rebellion"),
+    p("Verboten is German for forbidden. The name is a promise about restraint: nothing leaves this house unless it earns the label. South African soul, a German sounding surname, and an Afrikaans undercurrent for the ones who know."),
+    p("Today Verboten is not just a spirit. It is a quiet rebellion in a glass."),
     h2("What we make"),
     p("The flagship is a three year brandy, matured in oak and finished in French casks, bottled at 43%. Made to a standard, not to a schedule."),
     p("Brandy & Cola is the same spirit with its collar loosened. Pre-mixed, canned, and served colder than strictly necessary at the markets and events where we pour."),
     p("A gin is in development. It will announce itself when it is ready."),
-    h2("The name"),
-    p("Verboten is German for forbidden. The name is a promise about restraint: nothing leaves this house unless it earns the label. South African soul, a German sounding surname, and an Afrikaans undercurrent for the ones who know."),
+    h2("Where to find us"),
+    ul(
+      "Quality bars that know their stuff.",
+      "Restaurants that care about what they serve.",
+      "Events worth showing up to.",
+      "Direct to your door when you order online.",
+    ),
     h2("Where this goes"),
-    p("South Africa first: Pretoria, then every good back bar in the country. Then outward. The Netherlands and Germany are the first stops abroad, not because it sounds good in a paragraph, but because the plan is already on the wall."),
-    p("Guinness was not built to be a novelty. Neither is this."),
+    p("From Johannesburg to Berlin, Amsterdam to Cape Town. Verboten is for everyone who knows that the best traditions often start with someone breaking the rules."),
+    p("Because some traditions are meant to be whispered, not shouted."),
   ),
   _status: "published",
+};
+
+// The Terms page still framed stock as limited batches; normalisation removed
+// that framing everywhere shoppers see it.
+const TERMS_STOCK_FIX = {
+  find: "Batches are limited by design",
+  replacement:
+    "Stock levels shown on the site are live, but they are not a reservation. A product is yours when your payment is confirmed, not when it enters your cart.",
 };
 
 const SERVE_UPDATE = {
@@ -281,6 +304,33 @@ const run = async () => {
   if (story) {
     await api(`/api/pages/${story.id}`, { method: "PATCH", body: STORY_PAGE });
     console.log("Story page updated");
+  }
+
+  // 5b. Terms page: swap the one paragraph that still framed stock as limited
+  // batches. Walks the rich text and replaces the matching text node in place,
+  // so the rest of the legal copy is left exactly as it is.
+  const terms = await findBySlug("pages", "terms-conditions");
+  if (terms) {
+    const full = await api(`/api/pages/${terms.id}?depth=0`);
+    let changed = false;
+    const walk = (node) => {
+      if (!node || typeof node !== "object") return;
+      if (node.type === "text" && typeof node.text === "string" && node.text.includes(TERMS_STOCK_FIX.find)) {
+        node.text = TERMS_STOCK_FIX.replacement;
+        changed = true;
+      }
+      for (const child of node.children ?? []) walk(child);
+    };
+    walk(full?.content?.root);
+    if (changed) {
+      await api(`/api/pages/${terms.id}`, {
+        method: "PATCH",
+        body: { content: full.content, _status: "published" },
+      });
+      console.log("Terms page stock paragraph updated");
+    } else {
+      console.log("Terms page already current; skipping");
+    }
   }
 
   // 6. The house serve description.

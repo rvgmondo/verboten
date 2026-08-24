@@ -191,8 +191,8 @@ export default async function HomePage() {
             <SectionHeading
               align="center"
               eyebrow="The house"
-              title="A house with its name on the door"
-              lead="Started in a Silverton workshop in 2020, with a conviction: South Africa can put a brandy on any shelf in Amsterdam or Berlin and not apologise for it. The bottle is the proof."
+              title="Some rules are meant to be questioned."
+              lead="Pretoria, 2020. Two founders, quietly breaking convention, and the conviction that the best traditions often start with someone breaking the rules."
             />
             <Button variant="outline" asChild>
               <Link href="/story">The whole story</Link>

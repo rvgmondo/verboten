@@ -70,7 +70,7 @@ export default async function FindUsPage() {
         as="h1"
         eyebrow="Out in the world"
         title="Where to find us"
-        lead="On good back bars, at the markets we pour at, and straight from us to your door."
+        lead="Quality bars that know their stuff. Restaurants that care about what they serve. Events worth showing up to. And direct to your door when you order online."
       />
 
       {/* Events */}

@@ -11,17 +11,22 @@ import { doc, h2, p, ul } from "./lexical";
 export const PAGES = [
   {
     slug: "story",
-    title: "A house with its name on the door",
+    title: "Some rules are meant to be questioned",
     intro:
-      "Verboten is an independent South African brandy house in Pretoria. We make premium brandy, rooted here and built to be poured in places that have never heard an accent like ours.",
+      "Pretoria, 2020. Two founders, a conviction that the best traditions start with someone breaking the rules, and a spirit made to prove it.",
     content: doc(
       h2("The start"),
       p(
-        "Verboten started in Pretoria in 2020. Not in a boardroom, in a workshop in Silverton, with a conviction that South African brandy could stand next to anything in the world if someone held it to that standard on purpose.",
+        "In 2020, in Pretoria, while the world was following orders, two founders were quietly breaking convention. Technical precision, and the kind of creativity that only thrives in secrecy.",
       ),
       p(
-        "We work with master blenders who have spent their lives in South African spirits. The recipes are ours. The standard is not negotiable.",
+        "What came out of it was a spirit smooth enough to make you question what you thought you knew about premium drinks.",
       ),
+      h2("A quiet rebellion"),
+      p(
+        "Verboten is German for forbidden. The name is a promise about restraint: nothing leaves this house unless it earns the label. South African soul, a German sounding surname, and an Afrikaans undercurrent for the ones who know.",
+      ),
+      p("Today Verboten is not just a spirit. It is a quiet rebellion in a glass."),
       h2("What we make"),
       p(
         "The flagship is a three year brandy, matured in oak and finished in French casks, bottled at 43%. Made to a standard, not to a schedule.",
@@ -30,15 +35,18 @@ export const PAGES = [
         "Brandy & Cola is the same spirit with its collar loosened. Pre-mixed, canned, and served colder than strictly necessary at the markets and events where we pour.",
       ),
       p("A gin is in development. It will announce itself when it is ready."),
-      h2("The name"),
-      p(
-        "Verboten is German for forbidden. The name is a promise about restraint: nothing leaves this house unless it earns the label. South African soul, a German sounding surname, and an Afrikaans undercurrent for the ones who know.",
+      h2("Where to find us"),
+      ul(
+        "Quality bars that know their stuff.",
+        "Restaurants that care about what they serve.",
+        "Events worth showing up to.",
+        "Direct to your door when you order online.",
       ),
       h2("Where this goes"),
       p(
-        "South Africa first: Pretoria, then every good back bar in the country. Then outward. The Netherlands and Germany are the first stops abroad, not because it sounds good in a paragraph, but because the plan is already on the wall.",
+        "From Johannesburg to Berlin, Amsterdam to Cape Town. Verboten is for everyone who knows that the best traditions often start with someone breaking the rules.",
       ),
-      p("Guinness was not built to be a novelty. Neither is this."),
+      p("Because some traditions are meant to be whispered, not shouted."),
     ),
   },
   {
@@ -65,7 +73,7 @@ export const PAGES = [
       ),
       h2("Pricing and stock"),
       p(
-        "Batches are limited by design, so stock levels shown on the site are live but not a reservation. A product is yours when your payment is confirmed, not when it enters your cart.",
+        "Stock levels shown on the site are live, but they are not a reservation. A product is yours when your payment is confirmed, not when it enters your cart.",
       ),
       h2("Shipping and returns"),
       p(

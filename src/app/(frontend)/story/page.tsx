@@ -11,7 +11,7 @@ import { notFound } from "next/navigation";
 export const metadata: Metadata = {
   title: "Our Story",
   description:
-    "Verboten is an independent South African brandy house in Pretoria. Founded in 2020, making premium brandy and building toward shelves in Amsterdam and Berlin.",
+    "Pretoria, 2020. Two founders quietly breaking convention, and the conviction that the best traditions often start with someone breaking the rules. The Verboten story.",
   alternates: { canonical: "/story" },
 };
 
