@@ -317,3 +317,53 @@ Seed questions when the real ones run dry:
 - Why does yours cost R450 when the shelf next to it starts lower?
 
 That last one is the single most valuable post you can make, and most brands are too nervous to make it. Answer it with numbers. Three years in oak, a French oak finish, 43%, fifteen pours, thirty rand a glass. No adjectives. Let the arithmetic do the arguing.
+---
+
+## 6. Your actual voice, and how it differs from this pack
+
+Added after reading the real Facebook posts from April to July 2026. Some of what is written above assumed a brand that posts in English and treats Afrikaans as a rare flourish. That is not what you do, and the pack is the thing that was wrong.
+
+### What the real posts actually do
+
+Reading the Lavender Kontrei Mark posts back, the pattern is consistent and it works:
+
+- **You switch language wholesale, not word by word.** A post is either English or Afrikaans. "Die manne is reg, die stalletjie staan sterk, en die brandewyn is YSKOUD" is a whole post, not a line dropped into English copy.
+- **You invite rather than announce.** "Kom maak 'n draai", "Kom sê hallo", "Sien julle daar". The reader is being asked over, not sold to.
+- **Every post carries the practical block.** Date, time, place, directions past Obaro, entry fee. Nobody has to ask a follow-up question.
+- **You hang posts on the occasion, not the product.** Mother's Day, the Bokke on the big screen, the XC championships, Dirk van der Westhuizen live at 11:00. The brandy is what is in your hand while the occasion happens.
+- **The compliance line is always there**, in the language of the post.
+
+That is a good voice. It is warmer than the website, and that is correct: the website is the shop window, the feed is the stall. They should not sound identical.
+
+### The bilingual policy
+
+Write each post in one language. Do not mix.
+
+- **Afrikaans for market and event posts.** This is your home crowd, at a Pretoria kontrei mark, and the Afrikaans posts read noticeably better than the English ones.
+- **English for product, story and shipping posts.** These reach people who do not know the brand and may not be in Gauteng.
+- **Roughly half and half over a month.** That is close to what you already do.
+
+When a market post matters enough to reach both, write the Afrikaans version as the caption and put two English lines at the end. Never a full duplicate translation, it reads like a form.
+
+### Afrikaans compliance line
+
+Use the one you already use, it is correct:
+
+```
+Waarskuwing: Alkohol kan skadelik wees vir jou gesondheid. Nie vir persone onder 18 nie.
+```
+
+English posts keep: `Not for sale to persons under the age of 18. Drink responsibly.`
+
+### What to change from what you are already doing
+
+Four things, all small:
+
+1. **Drop the word "craft".** It appears in your posts as "craft gins" and in #CraftDistillery. It is on the banned list in the brand brief, and it is the single most worn-out word in South African spirits. Say what it actually is: "our gins", "distilled in Pretoria", "made in small runs" if the run size matters.
+2. **Cut the emoji count by about half.** Two or three in a post reads warm. Eight reads like a flyer. Keep them where they replace a bullet, drop them where they decorate.
+3. **Name the drink properly and consistently.** The posts variously say Brandy & Cola, Brandy & Coke, and Premium Brandy & Cola. Pick one written form and hold it.
+4. **Add one line of destination.** Almost every post ends at the stall. One in three should end at the site or the bar booking, because the market crowd is the warmest audience you will ever have and they are currently walking away with nothing but a cup.
+
+### What not to change
+
+The invitation, the practical block, the Afrikaans, the occasion-first framing, and "Pure Mischief". Those are working. The 30 day calendar above should be read through this section, not instead of it: keep the structure and the pillars, and let roughly half of it be written in Afrikaans in the register you already use.
