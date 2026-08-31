@@ -86,7 +86,7 @@ export default async function ShopPage() {
             style={{ animationDelay: "160ms" }}
           >
             Everything the house currently makes, shipped anywhere in South
-            Africa. A gin is in development and will announce itself.
+            Africa. A beer is in development and will announce itself.
           </p>
           <dl
             className="animate-fade-up mt-10 flex flex-wrap gap-x-12 gap-y-5"

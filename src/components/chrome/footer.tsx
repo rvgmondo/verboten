@@ -7,6 +7,7 @@ import { getSiteSettings } from "@/lib/data";
 
 const SHOP_LINKS = [
   { href: "/shop", label: "The shop" },
+  { href: "/book-the-bar", label: "Book the bar" },
   { href: "/find-us", label: "Where to find us" },
   { href: "/account", label: "Your orders" },
 ];

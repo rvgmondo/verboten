@@ -265,6 +265,12 @@
       "namedRegex": "^/account(?:/)?$"
     },
     {
+      "page": "/book-the-bar",
+      "regex": "^/book\\-the\\-bar(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/book\\-the\\-bar(?:/)?$"
+    },
+    {
       "page": "/checkout",
       "regex": "^/checkout(?:/)?$",
       "routeKeys": {},

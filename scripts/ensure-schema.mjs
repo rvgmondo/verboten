@@ -47,6 +47,26 @@ const STATEMENTS = [
 /** Columns to add only when the table lacks them (SQLite has no IF NOT EXISTS for ADD COLUMN). */
 const COLUMNS = [
   {
+    table: "enquiries",
+    column: "topic",
+    ddl: "ALTER TABLE `enquiries` ADD COLUMN `topic` text DEFAULT 'general' NOT NULL",
+  },
+  {
+    table: "enquiries",
+    column: "event_date",
+    ddl: "ALTER TABLE `enquiries` ADD COLUMN `event_date` text",
+  },
+  {
+    table: "enquiries",
+    column: "event_location",
+    ddl: "ALTER TABLE `enquiries` ADD COLUMN `event_location` text",
+  },
+  {
+    table: "enquiries",
+    column: "event_guests",
+    ddl: "ALTER TABLE `enquiries` ADD COLUMN `event_guests` numeric",
+  },
+  {
     table: "payload_locked_documents_rels",
     column: "gallery_items_id",
     ddl: "ALTER TABLE `payload_locked_documents_rels` ADD COLUMN `gallery_items_id` integer REFERENCES gallery_items(id)",

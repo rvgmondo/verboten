@@ -6,6 +6,7 @@ import { MobileNav } from "@/components/chrome/mobile-nav";
 
 export const NAV_LINKS = [
   { href: "/shop", label: "Shop" },
+  { href: "/book-the-bar", label: "Book the Bar" },
   { href: "/story", label: "Our Story" },
   { href: "/gallery", label: "Gallery" },
   { href: "/find-us", label: "Find Us" },

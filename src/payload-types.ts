@@ -573,10 +573,25 @@ export interface Customer {
  */
 export interface Enquiry {
   id: number;
+  /**
+   * Where the enquiry came from.
+   */
+  topic: 'general' | 'booking' | 'stockist';
   name: string;
   email: string;
   phone?: string | null;
   message: string;
+  /**
+   * What the mobile bar needs in order to quote.
+   */
+  event?: {
+    /**
+     * As the enquirer typed it.
+     */
+    date?: string | null;
+    location?: string | null;
+    guests?: number | null;
+  };
   status: 'new' | 'handled';
   updatedAt: string;
   createdAt: string;
@@ -1161,10 +1176,18 @@ export interface CustomersSelect<T extends boolean = true> {
  * via the `definition` "enquiries_select".
  */
 export interface EnquiriesSelect<T extends boolean = true> {
+  topic?: T;
   name?: T;
   email?: T;
   phone?: T;
   message?: T;
+  event?:
+    | T
+    | {
+        date?: T;
+        location?: T;
+        guests?: T;
+      };
   status?: T;
   updatedAt?: T;
   createdAt?: T;

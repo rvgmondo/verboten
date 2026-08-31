@@ -165,7 +165,8 @@ const STORY_PAGE = {
     h2("What we make"),
     p("The flagship is a three year brandy, matured in oak and finished in French casks, bottled at 43%. Made to a standard, not to a schedule."),
     p("Brandy & Cola is the same spirit with its collar loosened. Pre-mixed, canned, and served colder than strictly necessary at the markets and events where we pour."),
-    p("A gin is in development. It will announce itself when it is ready."),
+    p("Gin joined the range, poured on tap at the markets and events where we set up."),
+    p("A beer is in development. It will announce itself when it is ready."),
     h2("Where to find us"),
     ul(
       "Quality bars that know their stuff.",

@@ -11,7 +11,7 @@ export const Enquiries: CollectionConfig = {
   slug: "enquiries",
   admin: {
     useAsTitle: "email",
-    defaultColumns: ["name", "email", "status", "createdAt"],
+    defaultColumns: ["name", "topic", "email", "status", "createdAt"],
     group: "Orders",
   },
   access: {
@@ -21,10 +21,35 @@ export const Enquiries: CollectionConfig = {
     delete: isAdmin,
   },
   fields: [
+    {
+      name: "topic",
+      type: "select",
+      required: true,
+      defaultValue: "general",
+      options: [
+        { label: "General", value: "general" },
+        { label: "Bar booking", value: "booking" },
+        { label: "Stockist", value: "stockist" },
+      ],
+      admin: { position: "sidebar", description: "Where the enquiry came from." },
+    },
     { name: "name", type: "text", required: true },
     { name: "email", type: "email", required: true },
     { name: "phone", type: "text" },
     { name: "message", type: "textarea", required: true },
+    {
+      name: "event",
+      type: "group",
+      admin: {
+        condition: (data) => data?.topic === "booking",
+        description: "What the mobile bar needs in order to quote.",
+      },
+      fields: [
+        { name: "date", type: "text", admin: { description: "As the enquirer typed it." } },
+        { name: "location", type: "text" },
+        { name: "guests", type: "number", min: 0 },
+      ],
+    },
     {
       name: "status",
       type: "select",

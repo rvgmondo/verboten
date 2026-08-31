@@ -53,6 +53,7 @@ Delivery is ${settings.shipping?.flatRateCents ? `${formatZAR(settings.shipping.
 ## Pages
 
 - [Shop](${SITE_URL}/shop): the full range, buy online.
+- [Book the bar](${SITE_URL}/book-the-bar): mobile bar hire for events, brandy and cola on tap.
 - [Our story](${SITE_URL}/story): how and why Verboten was founded.
 - [Gallery](${SITE_URL}/gallery): the bottle, the making of it, and where it is poured.
 - [Serves](${SITE_URL}/serves): how the house recommends pouring it.

@@ -9,10 +9,17 @@ import { clientKey, rateLimit } from "@/lib/rate-limit";
 import config from "../../payload.config";
 
 const schema = z.object({
+  /** Which form this came from; drives the admin queue and the alert subject. */
+  topic: z.enum(["general", "booking", "stockist"]).default("general"),
   name: z.string().trim().min(2, "Tell us your name.").max(120),
   email: z.string().trim().toLowerCase().email("Enter a valid email address."),
   phone: z.string().trim().max(30).optional().or(z.literal("")),
   message: z.string().trim().min(10, "Give us a little more to work with.").max(4000),
+  // Bar bookings only. Free text on purpose: a date typed as "12 Dec" or
+  // "sometime in March" is more useful than an empty required field.
+  eventDate: z.string().trim().max(120).optional().or(z.literal("")),
+  eventLocation: z.string().trim().max(200).optional().or(z.literal("")),
+  eventGuests: z.coerce.number().int().min(0).max(100000).optional(),
   /** Honeypot: humans never see or fill this field. */
   website: z.string().max(0).optional().or(z.literal("")),
 });
@@ -32,11 +39,16 @@ export async function submitContact(
     return { ok: false, message: "Too many messages in a short time. Try again in a few minutes." };
   }
 
+  const rawGuests = String(formData.get("eventGuests") ?? "").trim();
   const parsed = schema.safeParse({
+    topic: formData.get("topic") ?? "general",
     name: formData.get("name"),
     email: formData.get("email"),
     phone: formData.get("phone") ?? "",
     message: formData.get("message"),
+    eventDate: formData.get("eventDate") ?? "",
+    eventLocation: formData.get("eventLocation") ?? "",
+    eventGuests: rawGuests === "" ? undefined : rawGuests,
     website: formData.get("website") ?? "",
   });
 
@@ -54,11 +66,28 @@ export async function submitContact(
   }
 
   const payload = await getPayload({ config });
-  const { name, email, phone, message } = parsed.data;
+  const { topic, name, email, phone, message, eventDate, eventLocation, eventGuests } =
+    parsed.data;
 
   await payload.create({
     collection: "enquiries",
-    data: { name, email, phone: phone || undefined, message, status: "new" },
+    data: {
+      topic,
+      name,
+      email,
+      phone: phone || undefined,
+      message,
+      status: "new",
+      ...(topic === "booking"
+        ? {
+            event: {
+              date: eventDate || undefined,
+              location: eventLocation || undefined,
+              guests: eventGuests,
+            },
+          }
+        : {}),
+    },
     overrideAccess: true,
   });
 
@@ -76,5 +105,11 @@ export async function submitContact(
     }
   }
 
-  return { ok: true, message: "Thank you. We reply within one business day." };
+  return {
+    ok: true,
+    message:
+      topic === "booking"
+        ? "Thank you. We come back with a quote within one business day."
+        : "Thank you. We reply within one business day.",
+  };
 }
