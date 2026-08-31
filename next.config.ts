@@ -19,7 +19,12 @@ const csp = [
   `connect-src 'self' https://cloudflareinsights.com https://*.google-analytics.com https://*.analytics.google.com${isDev ? " ws: http://localhost:*" : ""}`,
   "object-src 'none'",
   "base-uri 'self'",
-  "form-action 'self' https://www.payfast.co.za https://sandbox.payfast.co.za",
+  // form-action is enforced on the redirects a form navigation follows, not
+  // just the first POST. PayFast hands off between its own hosts during
+  // checkout, so naming only www and sandbox silently killed the handoff:
+  // the browser blocked the navigation and the page simply sat there.
+  // Scoped to PayFast's domains, still nowhere else.
+  "form-action 'self' https://*.payfast.co.za https://payfast.co.za https://*.payfast.io https://payfast.io",
   "frame-ancestors 'self'",
 ]
   .concat(isDev ? [] : ["upgrade-insecure-requests"])
