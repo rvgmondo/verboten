@@ -12,6 +12,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import type { BundleOffer } from "@/lib/data";
+import { orderTotals } from "@/lib/commerce/totals";
 import { useCart } from "@/lib/cart";
 import { formatZAR } from "@/lib/money";
 
@@ -24,10 +25,10 @@ type Props = {
 export const CartDrawer = ({ flatRateCents, freeThresholdCents, offers }: Props) => {
   const { items, isOpen, close, add, remove, setQuantity, subtotalCents } = useCart();
 
-  const qualifiesFree = freeThresholdCents > 0 && subtotalCents >= freeThresholdCents;
-  const shippingCents = qualifiesFree ? 0 : flatRateCents;
-  const totalCents = subtotalCents + shippingCents;
-  const awayFromFree = freeThresholdCents > 0 ? freeThresholdCents - subtotalCents : 0;
+  // The cart carries no discount yet, so this is the same sum the checkout
+  // will reach, from the same function.
+  const { shippingCents, totalCents, qualifiesFree, awayFromFreeCents: awayFromFree } =
+    orderTotals({ subtotalCents, flatRateCents, freeThresholdCents });
   /* Only nudge toward free delivery when it is actually within reach. Telling
      someone holding one bottle that they are R2,000 away is discouragement,
      not motivation. */

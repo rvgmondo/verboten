@@ -6,6 +6,7 @@ import { z } from "zod";
 
 import { nextOrderNumber } from "@/lib/commerce/atomic";
 import { checkDiscount, claimDiscount, releaseDiscount } from "@/lib/commerce/discounts";
+import { orderTotals } from "@/lib/commerce/totals";
 import { findStockProblems } from "@/lib/commerce/stock";
 import { getPaymentProvider } from "@/lib/payments";
 import { clientKey, rateLimit } from "@/lib/rate-limit";
@@ -189,13 +190,12 @@ export async function createCheckout(
   }
 
   const settings = await payload.findGlobal({ slug: "site-settings", overrideAccess: true });
-  const freeThreshold = settings.shipping?.freeThresholdCents ?? 0;
-  const shippingCents =
-    freeThreshold > 0 && subtotalCents - discountCents >= freeThreshold
-      ? 0
-      : (settings.shipping?.flatRateCents ?? 0);
-
-  const totalCents = subtotalCents - discountCents + shippingCents;
+  const { shippingCents, totalCents } = orderTotals({
+    subtotalCents,
+    discountCents,
+    flatRateCents: settings.shipping?.flatRateCents ?? 0,
+    freeThresholdCents: settings.shipping?.freeThresholdCents ?? 0,
+  });
 
   // Nobody gets sent to PayFast for a number they were not shown. The cart
   // lives in localStorage and the discount preview lives in React state, so a

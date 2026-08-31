@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { orderTotals } from "@/lib/commerce/totals";
 import { useCart } from "@/lib/cart";
 import { formatZAR } from "@/lib/money";
 
@@ -122,12 +123,14 @@ export const CheckoutForm = ({
   const [discount, setDiscount] = React.useState<{ cents: number; message: string } | null>(null);
   const [applying, setApplying] = React.useState(false);
 
-  const discountCents = discount?.cents ?? 0;
-  const shippingCents =
-    freeThresholdCents > 0 && subtotalCents - discountCents >= freeThresholdCents
-      ? 0
-      : flatRateCents;
-  const totalCents = subtotalCents - discountCents + shippingCents;
+  // Same function the server action uses, so the summary and the order can
+  // never drift apart on arithmetic alone.
+  const { discountCents, shippingCents, totalCents } = orderTotals({
+    subtotalCents,
+    discountCents: discount?.cents ?? 0,
+    flatRateCents,
+    freeThresholdCents,
+  });
 
   const errors = state && !state.ok ? state.fieldErrors : undefined;
 

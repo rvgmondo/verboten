@@ -3,6 +3,22 @@ import type { Payload } from "payload";
 import { claimDiscountUse, releaseDiscountUse } from "@/lib/commerce/atomic";
 import type { DiscountCode } from "@/payload-types";
 
+/**
+ * What a code takes off a given subtotal.
+ *
+ * Percentages round DOWN and fixed amounts are capped at the subtotal, so a
+ * discount can never exceed the goods and hand back delivery money. Kept
+ * separate from the lookup so the arithmetic can be tested without a database.
+ */
+export const discountAmount = (
+  type: DiscountCode["type"],
+  value: number,
+  subtotalCents: number,
+): number =>
+  type === "percentage"
+    ? Math.max(0, Math.floor((subtotalCents * value) / 100))
+    : Math.max(0, Math.min(Math.round(value), subtotalCents));
+
 export type DiscountCheck =
   | { ok: true; code: DiscountCode; discountCents: number }
   | { ok: false; reason: string };
@@ -43,12 +59,7 @@ export const checkDiscount = async (
     return { ok: false, reason: "Your order does not meet the minimum for that code." };
   }
 
-  const discountCents =
-    doc.type === "percentage"
-      ? Math.floor((subtotalCents * doc.value) / 100)
-      : Math.min(Math.round(doc.value), subtotalCents);
-
-  return { ok: true, code: doc, discountCents };
+  return { ok: true, code: doc, discountCents: discountAmount(doc.type, doc.value, subtotalCents) };
 };
 
 const findCode = async (payload: Payload, code: string) =>
