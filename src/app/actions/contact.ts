@@ -101,9 +101,27 @@ export async function submitContact(
     try {
       await payload.sendEmail({
         to: staffEmail,
-        subject: `New enquiry from ${name}`,
-        text: `From: ${name} <${email}>${phone ? `\nPhone: ${phone}` : ""}\n\n${message}`,
+        // Hitting reply answers the customer, not the website.
+        replyTo: email,
+        subject:
+          topic === "booking"
+            ? `Bar booking enquiry from ${name}`
+            : `New enquiry from ${name}`,
+        text: [
+          `From: ${name} <${email}>`,
+          phone ? `Phone: ${phone}` : null,
+          topic === "booking" ? `Date: ${eventDate || "not given"}` : null,
+          topic === "booking" ? `Where: ${eventLocation || "not given"}` : null,
+          topic === "booking" ? `Guests: ${eventGuests ?? "not given"}` : null,
+          "",
+          message,
+          "",
+          "Reply to this email and it goes straight to them.",
+        ]
+          .filter((l) => l !== null)
+          .join("\n"),
       });
+      payload.logger.info({ to: staffEmail, topic }, "Enquiry alert sent");
     } catch (err) {
       // The enquiry is stored either way; email failure must not lose it.
       payload.logger.error({ err }, "Enquiry alert email failed");

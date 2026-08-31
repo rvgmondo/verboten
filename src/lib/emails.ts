@@ -84,9 +84,11 @@ export const sendStaffNewOrderAlert = async (payload: Payload, order: Order): Pr
   try {
     await payload.sendEmail({
       to,
+      replyTo: order.email,
       subject: `New paid order ${order.orderNumber} (${formatZAR(order.totalCents)})`,
       text: `${order.customerName} <${order.email}>\n\n${orderLines(order)}\n\n${totals(order)}\n\nShip to:\n  ${[order.shippingAddress.line1, order.shippingAddress.line2, order.shippingAddress.suburb, order.shippingAddress.city, order.shippingAddress.province, order.shippingAddress.postalCode].filter(Boolean).join("\n  ")}\n\nOpen the admin to process it.`,
     });
+    payload.logger.info({ to, order: order.orderNumber }, "Staff order alert sent");
   } catch (err) {
     payload.logger.error({ err, order: order.orderNumber }, "Staff order alert failed");
   }
