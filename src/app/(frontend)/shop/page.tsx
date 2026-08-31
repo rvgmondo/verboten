@@ -22,6 +22,8 @@ export const metadata: Metadata = {
 const LABELS: Record<string, string> = {
   "verboten-premium-brandy": "The flagship",
   "verboten-premium-set-2-bottle": "The set",
+  "verboten-nyx": "The liqueur",
+  "verboten-blood-orange-gin": "The gin",
   "verboten-brandy-cola": "Ready to drink",
 };
 
@@ -42,6 +44,8 @@ export default async function ShopPage() {
   const order = [
     "verboten-premium-brandy",
     "verboten-premium-set-2-bottle",
+    "verboten-nyx",
+    "verboten-blood-orange-gin",
     "verboten-brandy-cola",
   ];
   const sorted = [...products].sort((a, b) => {
@@ -86,7 +90,8 @@ export default async function ShopPage() {
             style={{ animationDelay: "160ms" }}
           >
             Everything the house currently makes, shipped anywhere in South
-            Africa. A beer is in development and will announce itself.
+            Africa. Canned NYX and cola, and a canned gin and tonic, are on the
+            way. A beer is in development and will announce itself.
           </p>
           <dl
             className="animate-fade-up mt-10 flex flex-wrap gap-x-12 gap-y-5"

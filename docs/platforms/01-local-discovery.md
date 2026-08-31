@@ -16,7 +16,7 @@ Everything below is finished and ready to paste. Where a platform rule could bit
 
 ```
 Verboten Spirits
-Silverton, Pretoria, Gauteng, 0081
+Silverton, Pretoria, Gauteng, 0184
 South Africa
 +27 75 387 3456
 info@verboten.co.za

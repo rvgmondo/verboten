@@ -93,6 +93,59 @@ const PRODUCTS = [
   },
 ];
 
+/**
+ * Products that may not exist on the live database yet. Created if missing,
+ * refreshed if already there. Stock is a placeholder on creation only, so a
+ * later run never overwrites a real count set in the admin.
+ */
+const NEW_PRODUCTS = [
+  {
+    slug: "verboten-nyx",
+    create: {
+      name: "Verboten NYX",
+      slug: "verboten-nyx",
+      productType: "bottle",
+      sku: "VB-NYX-750",
+      priceCents: 25000,
+      inventory: { mode: "own", stockQty: 12, lowStockThreshold: 6 },
+    },
+    data: {
+      shortDescription:
+        "Liquorice and anise in the Greek style, bottled at 43%. Very cold and neat, or long with cola.",
+      description: paragraphs(
+        "A liquorice liqueur in the Greek style, made in Pretoria and bottled at 43% ABV in 750ml.",
+        "Anise up front, liquorice through the middle, and a finish that runs longer than you expect. Over ice it turns cloudy, the way it is supposed to.",
+        "Serve it very cold and neat, or long with cola. A canned premix with cola is on the way.",
+      ),
+      specs: { abv: 43, volumeMl: 750, origin: "South Africa" },
+      _status: "published",
+    },
+  },
+  {
+    slug: "verboten-blood-orange-gin",
+    create: {
+      name: "Verboten Blood Orange Gin",
+      slug: "verboten-blood-orange-gin",
+      productType: "bottle",
+      sku: "VB-GIN-BO-750",
+      priceCents: 25000,
+      inventory: { mode: "own", stockQty: 12, lowStockThreshold: 6 },
+    },
+    data: {
+      shortDescription:
+        "Blood orange gin, 750ml. Bright at the front, bitter at the edge, dry where it counts.",
+      description: paragraphs(
+        "Gin with blood orange, made in Pretoria and bottled in 750ml.",
+        "Sweet orange up front, a bitter edge behind it, and dry through the finish. It carries tonic instead of hiding under it.",
+        "Tonic, plenty of ice, and a wedge of orange if there is one in the house. A canned premix with tonic is on the way.",
+      ),
+      // ABV not supplied; left off rather than guessed.
+      specs: { volumeMl: 750, origin: "South Africa" },
+      _status: "published",
+    },
+  },
+];
+
 const JOURNAL_UPDATES = {
   "batch-no-01-is-open": {
     title: "The first Verboten brandy is shipping",
@@ -165,7 +218,7 @@ const STORY_PAGE = {
     h2("What we make"),
     p("The flagship is a three year brandy, matured in oak and finished in French casks, bottled at 43%. Made to a standard, not to a schedule."),
     p("Brandy & Cola is the same spirit with its collar loosened. Pre-mixed, canned, and served colder than strictly necessary at the markets and events where we pour."),
-    p("Gin joined the range, poured on tap at the markets and events where we set up."),
+    p("Alongside the brandy there is NYX, a liquorice liqueur in the Greek style, and a blood orange gin. Both are bottled at 750ml and poured on tap at the markets and events where we set up."),
     p("A beer is in development. It will announce itself when it is ready."),
     h2("Where to find us"),
     ul(
@@ -239,12 +292,17 @@ const run = async () => {
   if (!token) throw new Error("Login succeeded but no token returned.");
   console.log(`Logged in as ${EMAIL}`);
 
-  // 1. Announcement bar.
+  // 1. Announcement bar, and the address. The postal code was 0081 on the
+  // site and 0184 on the Facebook page; 0184 is the correct one, and it has
+  // to match everywhere for Google Business Profile.
   await api("/api/globals/site-settings", {
     method: "POST",
-    body: { announcement: { enabled: true, text: ANNOUNCEMENT } },
+    body: {
+      announcement: { enabled: true, text: ANNOUNCEMENT },
+      contact: { address: "Silverton, Pretoria, Gauteng, 0184" },
+    },
   });
-  console.log("Announcement bar updated");
+  console.log("Announcement bar and address updated");
 
   // 2. Products: rename, re-slug, respec.
   const ids = {};
@@ -259,12 +317,34 @@ const run = async () => {
     console.log(`Product updated: ${prod.slug}`);
   }
 
+  // 2b. Products that may not exist live yet.
+  for (const prod of NEW_PRODUCTS) {
+    const found = await findBySlug("products", prod.slug);
+    if (found) {
+      await api(`/api/products/${found.id}`, { method: "PATCH", body: prod.data });
+      ids[prod.slug] = found.id;
+      console.log(`Product refreshed: ${prod.slug}`);
+    } else {
+      const created = await api(`/api/products`, {
+        method: "POST",
+        body: { ...prod.create, ...prod.data },
+      });
+      ids[prod.slug] = created?.doc?.id;
+      console.log(`Product CREATED: ${prod.slug} (set the real stock in the admin)`);
+    }
+  }
+
   // 3. Flagship cross-sell (the "Also from the house" section needs this).
   if (ids["verboten-premium-brandy"] && ids["verboten-premium-set-2-bottle"] && ids["verboten-brandy-cola"]) {
     await api(`/api/products/${ids["verboten-premium-brandy"]}`, {
       method: "PATCH",
       body: {
-        relatedProducts: [ids["verboten-premium-set-2-bottle"], ids["verboten-brandy-cola"]],
+        relatedProducts: [
+          ids["verboten-premium-set-2-bottle"],
+          ids["verboten-brandy-cola"],
+          ids["verboten-nyx"],
+          ids["verboten-blood-orange-gin"],
+        ].filter(Boolean),
         _status: "published",
       },
     });

@@ -359,7 +359,7 @@ English posts keep: `Not for sale to persons under the age of 18. Drink responsi
 
 Four things, all small:
 
-1. **Drop the word "craft".** It appears in your posts as "craft gins" and in #CraftDistillery. It is on the banned list in the brand brief, and it is the single most worn-out word in South African spirits. Say what it actually is: "our gins", "distilled in Pretoria", "made in small runs" if the run size matters.
+1. **Use "craft" only when it is literally true.** You do make special small runs for some events, and calling those craft gins is accurate, so keep it there. What the brand brief bans is craft as an identity, the generic badge every South African spirits brand wears. So: "a craft gin made for the day" is fine, #CraftDistillery as a permanent tag is not. Default to saying what it actually is: "our gins", "distilled in Pretoria", "made for this market only".
 2. **Cut the emoji count by about half.** Two or three in a post reads warm. Eight reads like a flyer. Keep them where they replace a bullet, drop them where they decorate.
 3. **Name the drink properly and consistently.** The posts variously say Brandy & Cola, Brandy & Coke, and Premium Brandy & Cola. Pick one written form and hold it.
 4. **Add one line of destination.** Almost every post ends at the stall. One in three should end at the site or the bar booking, because the market crowd is the warmest audience you will ever have and they are currently walking away with nothing but a cup.

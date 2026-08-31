@@ -115,6 +115,44 @@ const run = async () => {
     _status: "published",
   });
 
+  // --- Verboten NYX (liquorice liqueur) ---
+  const nyx = await ensureProduct("verboten-nyx", {
+    name: "Verboten NYX",
+    slug: "verboten-nyx",
+    productType: "bottle",
+    sku: "VB-NYX-750",
+    priceCents: 25000,
+    shortDescription: "Liquorice and anise in the Greek style, bottled at 43%. Very cold and neat, or long with cola.",
+    description: paragraphs(
+      "A liquorice liqueur in the Greek style, made in Pretoria and bottled at 43% ABV in 750ml.",
+      "Anise up front, liquorice through the middle, and a finish that runs longer than you expect. Over ice it turns cloudy, the way it is supposed to.",
+      "Serve it very cold and neat, or long with cola. A canned premix with cola is on the way.",
+    ),
+    specs: { abv: 43, volumeMl: 750, origin: "South Africa" },
+    // Stock is a placeholder: set the real count in the admin.
+    inventory: { mode: "own", stockQty: 12, lowStockThreshold: 6 },
+    _status: "published",
+  });
+
+  // --- Verboten Blood Orange Gin ---
+  // ABV not supplied yet, so the field is left off rather than guessed.
+  const gin = await ensureProduct("verboten-blood-orange-gin", {
+    name: "Verboten Blood Orange Gin",
+    slug: "verboten-blood-orange-gin",
+    productType: "bottle",
+    sku: "VB-GIN-BO-750",
+    priceCents: 25000,
+    shortDescription: "Blood orange gin, 750ml. Bright at the front, bitter at the edge, dry where it counts.",
+    description: paragraphs(
+      "Gin with blood orange, made in Pretoria and bottled in 750ml.",
+      "Sweet orange up front, a bitter edge behind it, and dry through the finish. It carries tonic instead of hiding under it.",
+      "Tonic, plenty of ice, and a wedge of orange if there is one in the house. A canned premix with tonic is on the way.",
+    ),
+    specs: { volumeMl: 750, origin: "South Africa" },
+    inventory: { mode: "own", stockQty: 12, lowStockThreshold: 6 },
+    _status: "published",
+  });
+
   // --- 2-bottle premium set (a real bundle) ---
   const set = await ensureProduct("verboten-premium-set-2-bottle", {
     name: "Verboten Premium Set, 2 Bottles",
@@ -139,7 +177,7 @@ const run = async () => {
   await payload.update({
     collection: "products",
     id: brandy.id,
-    data: { relatedProducts: [set.id, rtd.id] },
+    data: { relatedProducts: [set.id, rtd.id, nyx.id, gin.id] },
   });
 
   // --- Marketing and legal pages (the copy rewrite; see src/seed/content.ts) ---

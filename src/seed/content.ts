@@ -34,7 +34,7 @@ export const PAGES = [
       p(
         "Brandy & Cola is the same spirit with its collar loosened. Pre-mixed, canned, and served colder than strictly necessary at the markets and events where we pour.",
       ),
-      p("Gin joined the range, poured on tap at the markets and events where we set up."),
+      p("Alongside the brandy there is NYX, a liquorice liqueur in the Greek style, and a blood orange gin. Both are bottled at 750ml and poured on tap at the markets and events where we set up."),
       p("A beer is in development. It will announce itself when it is ready."),
       h2("Where to find us"),
       ul(

@@ -30,7 +30,7 @@ export const organizationLd = () => ({
     "@type": "PostalAddress",
     addressLocality: "Silverton, Pretoria",
     addressRegion: "Gauteng",
-    postalCode: "0081",
+    postalCode: "0184",
     addressCountry: "ZA",
   },
   sameAs: [

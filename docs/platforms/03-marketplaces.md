@@ -544,7 +544,7 @@ Consignment available on first orders by arrangement.
 Staff tasting and training offered free with any opening order.
 
 **Verboten Pty Ltd**
-Silverton, Pretoria, Gauteng, 0081
+Silverton, Pretoria, Gauteng, 0184
 orders@verboten.co.za, info@verboten.co.za
 +27 75 387 3456, WhatsApp on the same number
 verboten.co.za, instagram.com/verbotenspirits

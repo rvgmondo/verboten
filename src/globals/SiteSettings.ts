@@ -91,7 +91,7 @@ export const SiteSettings: GlobalConfig = {
         {
           name: "address",
           type: "text",
-          defaultValue: "Silverton, Pretoria, Gauteng, 0081",
+          defaultValue: "Silverton, Pretoria, Gauteng, 0184",
         },
         { name: "supportHours", type: "text", defaultValue: "Monday to Friday, 9am to 5pm SAST" },
       ],
