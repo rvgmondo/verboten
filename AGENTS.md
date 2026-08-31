@@ -95,19 +95,98 @@ vendor/                    # portable node + postgres (gitignored)
 There is intentionally **no `src/app/layout.tsx`** — two root layouts, one per
 route group. Do not add a top-level layout.
 
+## Money rules (do not re-derive these anywhere)
+
+The shop is live and takes real payments. Four invariants hold it together,
+and each one exists because breaking it cost something or nearly did.
+
+1. **One place computes a total.** `orderTotals()` in
+   `src/lib/commerce/totals.ts`. The server action, the checkout summary and
+   the cart drawer all call it. It used to be three copies of the same
+   arithmetic, which is how a buyer once saw one number and would have been
+   charged another. Never inline shipping or total maths again.
+2. **The buyer is never charged more than they were shown.** The checkout form
+   posts `quotedTotalCents`; `createCheckout` refuses when its own total is
+   *higher*. Lower is fine and is the normal case when someone types a code
+   without pressing Apply.
+3. **A discount use is claimed when the order is created, not when payment
+   lands.** `claimDiscount()` tests the cap and takes the use in one statement.
+   Reading the cap and counting the redemption later let ten people spend a
+   single-use code in the same minute. A failed payment calls
+   `releaseDiscount()`.
+4. **Stock cannot go negative and cannot fail silently.** The decrement takes
+   what it can and returns the shortfall; the webhook writes an `OVERSOLD:`
+   note onto the order. Nothing reserves stock between checkout and payment, so
+   two people can still pay for the last bottle. That is a known, documented
+   trade-off, not an oversight: make it visible, never hide it.
+
+Customer accounts require a **confirmed email** (`verify` on the Customers
+collection). The account page shows guest orders matched on email address, so
+an unverified signup would hand a stranger someone else's purchase history.
+This makes account signup depend on SMTP working.
+
+## Testing
+
+```powershell
+$env:Path = "C:\CC\verboten\vendor\node;$env:Path"
+npm test
+```
+
+`node:test` via `tsx`, no framework installed: the host is shared and the
+toolchain stays small. Covers the only logic where a quiet mistake costs money
+(totals, discount arithmetic, stock and bundle availability). Add to
+`src/lib/commerce/commerce.test.ts` rather than starting a parallel setup.
+
+`scripts/verify-money-path.mjs` drives a real order through a forged but
+correctly signed ITN. Localhost only, and it refuses to run anywhere else.
+
+## Deploying
+
+The build is committed, so the server never builds. Order matters.
+
+1. `npm run build` locally, commit, push.
+2. cPanel > Git Version Control > Update from Remote, then Deploy HEAD.
+3. **If the release added a collection or a field**, on the server:
+   ```bash
+   cd ~/verboten && source ~/nodevenv/verboten/*/bin/activate
+   node -v                      # must be v20.x, not the system Node 10
+   node scripts/ensure-schema.mjs
+   ```
+   Payload only pushes schema in development, and the live database is a single
+   SQLite file holding real orders, so new tables and columns are added by this
+   idempotent script and nothing else.
+4. **Restart properly.** The cPanel Restart button does not kill the running
+   process, which then serves the old build from memory and makes a successful
+   deploy look like a failed one:
+   ```bash
+   pkill -u "$(whoami)" -9 -f node
+   ```
+   then Stop and Start the app in cPanel.
+5. **If content changed**, run `scripts/update-live-copy.mjs` (needs
+   `ADMIN_EMAIL` and `ADMIN_PASSWORD`, talks to the live site over HTTPS, so the
+   app must be up first).
+6. Purge the Cloudflare cache. Verify twice: the first response can come from a
+   stale edge copy and look like a failure.
+
+The deploy excludes `verboten.db`, `media`, `.env` and `node_modules`, so live
+data survives. `verboten.db` is gitignored and must stay that way: it holds
+staff password hashes and, once trading, customer names, addresses and dates of
+birth.
+
 ## Build phases
 
 1. ✅ Scaffold: Next + Payload + Postgres running, admin reachable.
-2. Data model: Products, Batches, Orders, Customers, DiscountCodes, Stockists,
-   Events, JournalPosts, Serves, Pages, Subscribers, SiteSettings; roles &
-   access control; seed real products.
-3. Design system: tokens, dark theme, typography, restyled component library.
-4. Public site: all pages against CMS data, full copy rewrite.
-5. Commerce: cart, checkout, PayFast + webhook verification, order emails,
+2. ✅ Data model: Products, Batches, Orders, Customers, DiscountCodes,
+   Stockists, Events, JournalPosts, Serves, Pages, Subscribers, SiteSettings;
+   roles & access control; seed real products.
+3. ✅ Design system: tokens, dark theme, typography, restyled components.
+4. ✅ Public site: all pages against CMS data, full copy rewrite.
+5. ✅ Commerce: cart, checkout, PayFast + webhook verification, order emails,
    discount codes.
-6. Age gate, compliance pages, accessibility pass, motion pass.
-7. SEO, structured data, redirect map, OG images, performance.
-8. Final QA: sandbox purchase E2E, a11y audit, Lighthouse, README.
+6. ✅ Age gate, compliance pages, accessibility pass, motion pass.
+7. ✅ SEO, structured data, redirect map, OG images, performance.
+8. ✅ Live, with a sandbox purchase driven end to end and the money path
+   verified. Ongoing: audit findings, conversion work, real photography.
 
 ## Compliance (non-negotiable)
 
