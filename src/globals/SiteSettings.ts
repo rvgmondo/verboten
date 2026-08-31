@@ -89,6 +89,14 @@ export const SiteSettings: GlobalConfig = {
         { name: "email", type: "email", defaultValue: "info@verboten.co.za" },
         { name: "ordersEmail", type: "email", defaultValue: "orders@verboten.co.za" },
         {
+          name: "notificationsEmail",
+          type: "email",
+          admin: {
+            description:
+              "Where new order alerts and contact enquiries are sent. Change it here, no deploy needed. Falls back to the orders address if left blank.",
+          },
+        },
+        {
           name: "address",
           type: "text",
           defaultValue: "Silverton, Pretoria, Gauteng, 0184",

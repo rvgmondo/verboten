@@ -73,7 +73,13 @@ export const sendOrderStatusEmail = async (payload: Payload, order: Order): Prom
 };
 
 export const sendStaffNewOrderAlert = async (payload: Payload, order: Order): Promise<void> => {
-  const to = process.env.ADMIN_NOTIFICATIONS_EMAIL;
+  // Settings first so staff can redirect alerts without a deploy; the env var
+  // stays as a fallback for environments with no settings row yet.
+  const settings = await payload.findGlobal({ slug: "site-settings", overrideAccess: true });
+  const to =
+    settings.contact?.notificationsEmail ||
+    process.env.ADMIN_NOTIFICATIONS_EMAIL ||
+    settings.contact?.ordersEmail;
   if (!to) return;
   try {
     await payload.sendEmail({
@@ -83,5 +89,119 @@ export const sendStaffNewOrderAlert = async (payload: Payload, order: Order): Pr
     });
   } catch (err) {
     payload.logger.error({ err, order: order.orderNumber }, "Staff order alert failed");
+  }
+};
+
+/* ------------------------------------------------------------------ */
+/* Acknowledgements: what the person on the other end receives.        */
+/*                                                                     */
+/* Every form on this site used to notify staff and tell the sender    */
+/* nothing. Silence after a form reads as a broken website, so each    */
+/* submission now answers back in the house voice.                     */
+/* ------------------------------------------------------------------ */
+
+const ACK_SIGNOFF = (settings: {
+  contact?: { email?: string | null; phone?: string | null } | null;
+}) =>
+  [
+    "Verboten Spirits",
+    "Silverton, Pretoria",
+    settings.contact?.email ?? "info@verboten.co.za",
+    settings.contact?.phone ?? "",
+    "",
+    "Drink responsibly. Not for sale to persons under 18.",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+/** Confirms a contact or bar booking enquiry to the person who sent it. */
+export const sendEnquiryAcknowledgement = async (
+  payload: Payload,
+  { topic, name, to }: { topic: "general" | "booking" | "stockist"; name: string; to: string },
+): Promise<void> => {
+  const settings = await payload.findGlobal({ slug: "site-settings", overrideAccess: true });
+  const hours = settings.contact?.supportHours ?? "Monday to Friday, 9am to 5pm SAST";
+
+  const body =
+    topic === "booking"
+      ? [
+          `${name},`,
+          "",
+          "We have your booking enquiry. Someone reads every one of these, and we come back with a quote within one business day.",
+          "",
+          "If the date is tight, phone or WhatsApp us and we will move faster.",
+          "",
+          `We are here ${hours}.`,
+          "",
+          ACK_SIGNOFF(settings),
+        ].join("\n")
+      : [
+          `${name},`,
+          "",
+          "Thank you, we have your message. We reply within one business day, and it is a person replying, not a system.",
+          "",
+          `We are here ${hours}.`,
+          "",
+          ACK_SIGNOFF(settings),
+        ].join("\n");
+
+  try {
+    await payload.sendEmail({
+      to,
+      subject:
+        topic === "booking"
+          ? "We have your booking enquiry"
+          : "We have your message",
+      text: body,
+    });
+  } catch (err) {
+    // The enquiry is stored either way; a mail failure must not lose it.
+    payload.logger.error({ err, to }, "Enquiry acknowledgement failed");
+  }
+};
+
+/** Double opt-in: asks a new subscriber to confirm before we ever mail them. */
+export const sendNewsletterConfirmation = async (
+  payload: Payload,
+  { to, token, siteUrl }: { to: string; token: string; siteUrl: string },
+): Promise<void> => {
+  const settings = await payload.findGlobal({ slug: "site-settings", overrideAccess: true });
+  const link = `${siteUrl}/newsletter/confirm?token=${encodeURIComponent(token)}`;
+
+  const body = [
+    "One step left.",
+    "",
+    "Confirm this address and you are on the list. We only send release news and where we are pouring next, and never anything else.",
+    "",
+    link,
+    "",
+    "If you did not ask for this, ignore this email and nothing happens. We do not add anyone who has not confirmed.",
+    "",
+    ACK_SIGNOFF(settings),
+  ].join("\n");
+
+  try {
+    await payload.sendEmail({ to, subject: "Confirm your place on the list", text: body });
+  } catch (err) {
+    payload.logger.error({ err, to }, "Newsletter confirmation failed");
+  }
+};
+
+/** Sent once the address is confirmed. */
+export const sendNewsletterWelcome = async (payload: Payload, to: string): Promise<void> => {
+  const settings = await payload.findGlobal({ slug: "site-settings", overrideAccess: true });
+  const body = [
+    "You are on the list.",
+    "",
+    "New releases, and where the bar is pouring next. This list hears first.",
+    "",
+    "Vir die wat weet.",
+    "",
+    ACK_SIGNOFF(settings),
+  ].join("\n");
+  try {
+    await payload.sendEmail({ to, subject: "You are on the list", text: body });
+  } catch (err) {
+    payload.logger.error({ err, to }, "Newsletter welcome failed");
   }
 };

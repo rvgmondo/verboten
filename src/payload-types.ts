@@ -1494,6 +1494,10 @@ export interface SiteSetting {
     whatsapp?: string | null;
     email?: string | null;
     ordersEmail?: string | null;
+    /**
+     * Where new order alerts and contact enquiries are sent. Change it here, no deploy needed. Falls back to the orders address if left blank.
+     */
+    notificationsEmail?: string | null;
     address?: string | null;
     supportHours?: string | null;
   };
@@ -1531,6 +1535,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         whatsapp?: T;
         email?: T;
         ordersEmail?: T;
+        notificationsEmail?: T;
         address?: T;
         supportHours?: T;
       };

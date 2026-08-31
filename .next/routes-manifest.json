@@ -325,6 +325,12 @@
       "namedRegex": "^/llms\\.txt(?:/)?$"
     },
     {
+      "page": "/newsletter/confirm",
+      "regex": "^/newsletter/confirm(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/newsletter/confirm(?:/)?$"
+    },
+    {
       "page": "/opengraph-image-4usi79",
       "regex": "^/opengraph\\-image\\-4usi79(?:/)?$",
       "routeKeys": {},

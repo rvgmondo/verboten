@@ -47,6 +47,11 @@ const STATEMENTS = [
 /** Columns to add only when the table lacks them (SQLite has no IF NOT EXISTS for ADD COLUMN). */
 const COLUMNS = [
   {
+    table: "site_settings",
+    column: "contact_notifications_email",
+    ddl: "ALTER TABLE `site_settings` ADD COLUMN `contact_notifications_email` text",
+  },
+  {
     table: "enquiries",
     column: "topic",
     ddl: "ALTER TABLE `enquiries` ADD COLUMN `topic` text DEFAULT 'general' NOT NULL",

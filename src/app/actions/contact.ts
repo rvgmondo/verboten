@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { getPayload } from "payload";
 import { z } from "zod";
 
+import { sendEnquiryAcknowledgement } from "@/lib/emails";
 import { clientKey, rateLimit } from "@/lib/rate-limit";
 
 import config from "../../payload.config";
@@ -91,7 +92,11 @@ export async function submitContact(
     overrideAccess: true,
   });
 
-  const staffEmail = process.env.ADMIN_NOTIFICATIONS_EMAIL;
+  const settings = await payload.findGlobal({ slug: "site-settings", overrideAccess: true });
+  const staffEmail =
+    settings.contact?.notificationsEmail ||
+    process.env.ADMIN_NOTIFICATIONS_EMAIL ||
+    settings.contact?.ordersEmail;
   if (staffEmail) {
     try {
       await payload.sendEmail({
@@ -104,6 +109,9 @@ export async function submitContact(
       payload.logger.error({ err }, "Enquiry alert email failed");
     }
   }
+
+  // The person who wrote to us hears back immediately, before a human reads it.
+  await sendEnquiryAcknowledgement(payload, { topic, name, to: email });
 
   return {
     ok: true,

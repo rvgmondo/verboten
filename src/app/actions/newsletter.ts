@@ -5,7 +5,9 @@ import { headers } from "next/headers";
 import { getPayload } from "payload";
 import { z } from "zod";
 
+import { sendNewsletterConfirmation } from "@/lib/emails";
 import { clientKey, rateLimit } from "@/lib/rate-limit";
+import { SITE_URL } from "@/lib/seo";
 
 import config from "../../payload.config";
 
@@ -58,6 +60,8 @@ export async function subscribeToNewsletter(
     return { ok: true, message: "You are on the list." };
   }
 
+  const confirmToken = randomBytes(24).toString("hex");
+
   await payload.create({
     collection: "subscribers",
     data: {
@@ -65,10 +69,14 @@ export async function subscribeToNewsletter(
       status: "pending",
       source,
       consentAt: new Date().toISOString(),
-      confirmToken: randomBytes(24).toString("hex"),
+      confirmToken,
     },
     overrideAccess: true,
   });
 
-  return { ok: true, message: "You are on the list." };
+  // Double opt-in: nobody is mailed until they click the link. Under POPIA
+  // that consent trail is the difference between a list and a liability.
+  await sendNewsletterConfirmation(payload, { to: email, token: confirmToken, siteUrl: SITE_URL });
+
+  return { ok: true, message: "Check your email to confirm." };
 }
