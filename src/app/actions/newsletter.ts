@@ -61,6 +61,9 @@ export async function subscribeToNewsletter(
   }
 
   const confirmToken = randomBytes(24).toString("hex");
+  // Minted once and kept for the life of the subscription, so every
+  // email we ever send this address can carry a working opt out.
+  const unsubscribeToken = randomBytes(24).toString("hex");
 
   await payload.create({
     collection: "subscribers",
@@ -70,6 +73,7 @@ export async function subscribeToNewsletter(
       source,
       consentAt: new Date().toISOString(),
       confirmToken,
+      unsubscribeToken,
     },
     overrideAccess: true,
   });

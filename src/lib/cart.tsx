@@ -35,6 +35,15 @@ type CartContextValue = CartState & {
   close: () => void;
   subtotalCents: number;
   count: number;
+  /**
+   * Has localStorage been read yet?
+   *
+   * The cart is client state, so the server always renders an empty one. A
+   * consumer that cannot tell "empty" from "not loaded yet" will confidently
+   * tell a shopper their cart is empty on the checkout page, which is what the
+   * checkout used to do to everyone on every visit.
+   */
+  hydrated: boolean;
 };
 
 const CartContext = React.createContext<CartContextValue | null>(null);
@@ -108,7 +117,19 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <CartContext.Provider
-      value={{ items, isOpen, add, remove, setQuantity, clear, open, close, subtotalCents, count }}
+      value={{
+        items,
+        isOpen,
+        add,
+        remove,
+        setQuantity,
+        clear,
+        open,
+        close,
+        subtotalCents,
+        count,
+        hydrated,
+      }}
     >
       {children}
     </CartContext.Provider>

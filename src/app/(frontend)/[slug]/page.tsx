@@ -1,5 +1,5 @@
+import { NOT_FOUND_METADATA, NotFoundPanel } from "@/components/brand/not-found-panel";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 
 import { RichText } from "@/components/rich-text";
 import { getPageBySlug } from "@/lib/data";
@@ -15,7 +15,7 @@ type Params = { params: Promise<{ slug: string }> };
 export const generateMetadata = async ({ params }: Params): Promise<Metadata> => {
   const { slug } = await params;
   const page = await getPageBySlug(slug);
-  if (!page) return {};
+  if (!page) return NOT_FOUND_METADATA;
   return {
     title: page.title,
     description: page.intro ?? undefined,
@@ -26,7 +26,7 @@ export const generateMetadata = async ({ params }: Params): Promise<Metadata> =>
 export default async function CmsPage({ params }: Params) {
   const { slug } = await params;
   const page = await getPageBySlug(slug);
-  if (!page) notFound();
+  if (!page) return <NotFoundPanel />;
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-16 lg:py-24">

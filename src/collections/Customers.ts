@@ -24,6 +24,27 @@ export const Customers: CollectionConfig = {
    * "your email is your account" safe to say.
    */
   auth: {
+    /**
+     * Payload's default reset link points at /admin/reset, which is the staff
+     * panel. Customers have no access to it, so every "forgot your password"
+     * ended at a login screen they could never get past. Send them to the
+     * shop's own page instead.
+     */
+    forgotPassword: {
+      generateEmailSubject: () => "Reset your Verboten password",
+      generateEmailHTML: ({ token } = {}) => {
+        const link = `${siteUrl()}/account/reset?token=${encodeURIComponent(String(token))}`;
+        return [
+          "<p>Someone asked to reset the password on this account.</p>",
+          "<p>If that was you, choose a new one here. The link is single use.</p>",
+          `<p><a href="${link}">${link}</a></p>`,
+          "<p>If it was not you, ignore this email. Nothing changes unless the",
+          "link above is used.</p>",
+          "<p>Verboten Spirits, Pretoria<br>",
+          "Drink responsibly. Not for sale to persons under 18.</p>",
+        ].join("\n");
+      },
+    },
     verify: {
       generateEmailSubject: () => "Confirm your Verboten account",
       generateEmailHTML: ({ token }) => {

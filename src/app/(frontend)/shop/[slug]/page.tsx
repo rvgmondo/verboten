@@ -1,6 +1,6 @@
+import { NOT_FOUND_METADATA, NotFoundPanel } from "@/components/brand/not-found-panel";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 
 import { Price } from "@/components/brand/price";
 import { StockBadge } from "@/components/brand/stock-badge";
@@ -28,7 +28,7 @@ export const generateStaticParams = async () => {
 export const generateMetadata = async ({ params }: Params): Promise<Metadata> => {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
-  if (!product) return {};
+  if (!product) return NOT_FOUND_METADATA;
   // Fold the age into titles without doubling the word "brandy".
   const title = product.specs?.ageYears
     ? `${product.name}, Aged ${product.specs.ageYears} Years`
@@ -62,7 +62,14 @@ export default async function ProductPage({ params }: Params) {
     getSiteSettings(),
     getProducts(),
   ]);
-  if (!product) notFound();
+  if (!product) {
+    return (
+      <NotFoundPanel
+        title="That bottle is not here."
+        lead="It may have been renamed, or it may never have existed. Everything the house currently makes is one tap away."
+      />
+    );
+  }
 
   const availability = getAvailability(product);
   const image = productImage(product);
@@ -72,7 +79,10 @@ export default async function ProductPage({ params }: Params) {
   const related = (product.relatedProducts ?? [])
     .map((r) => (typeof r === "object" ? (r as Product) : null))
     .filter((p): p is Product => Boolean(p))
-    .slice(0, 2);
+    // Three fits the row without crowding the page. Two was leaving authored
+    // cross-sells unseen, and on the flagship one of the two was the set,
+    // which is the biggest lever on order value the shop has.
+    .slice(0, 3);
   const specs = specRows(product);
   const notes = product.tastingNotes;
   const hasNotes = notes?.nose || notes?.palate || notes?.finish;

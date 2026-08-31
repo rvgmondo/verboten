@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 
 import { PageMasthead } from "@/components/brand/page-masthead";
 import { JsonLd } from "@/components/json-ld";
 import { CmsImage } from "@/components/media/cms-image";
 import { RichText } from "@/components/rich-text";
+import { NOT_FOUND_METADATA, NotFoundPanel } from "@/components/brand/not-found-panel";
 import { Button } from "@/components/ui/button";
 import { getJournalPostBySlug, getJournalPosts } from "@/lib/data";
 import { articleLd, breadcrumbLd } from "@/lib/seo";
@@ -27,7 +27,7 @@ export const generateStaticParams = async () => {
 export const generateMetadata = async ({ params }: Params): Promise<Metadata> => {
   const { slug } = await params;
   const post = await getJournalPostBySlug(slug);
-  if (!post) return {};
+  if (!post) return NOT_FOUND_METADATA;
   return {
     title: post.title,
     description: post.excerpt ?? undefined,
@@ -38,7 +38,14 @@ export const generateMetadata = async ({ params }: Params): Promise<Metadata> =>
 export default async function JournalPostPage({ params }: Params) {
   const { slug } = await params;
   const post = await getJournalPostBySlug(slug);
-  if (!post) notFound();
+  if (!post) {
+    return (
+      <NotFoundPanel
+        title="That entry is not here."
+        lead="It may have been renamed since you saved the link. The journal is still worth a read."
+      />
+    );
+  }
 
   const hero = post.hero && typeof post.hero === "object" ? (post.hero as Media) : null;
   const date = post.publishedAt

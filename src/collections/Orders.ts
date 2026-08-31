@@ -263,7 +263,23 @@ export const Orders: CollectionConfig = {
       // whether the change came from the payment webhook or a staff member
       // in the admin. Creation (pending_payment) sends nothing.
       async ({ doc, previousDoc, operation, req }) => {
-        if (operation === "update" && previousDoc && doc.status !== previousDoc.status) {
+        if (operation !== "update" || !previousDoc) return doc;
+
+        const statusChanged = doc.status !== previousDoc.status;
+
+        // Marking an order shipped and pasting the tracking number in are two
+        // separate saves in the admin, and staff naturally do them in that
+        // order: the number only exists once the courier has collected. Only
+        // watching the status meant the customer got "on its way" with no
+        // number, and the number itself never reached them. A tracking number
+        // arriving on an already-shipped order is worth an email of its own.
+        const trackingArrived =
+          doc.status === "shipped" &&
+          !statusChanged &&
+          Boolean(doc.trackingNumber) &&
+          doc.trackingNumber !== previousDoc.trackingNumber;
+
+        if (statusChanged || trackingArrived) {
           await sendOrderStatusEmail(req.payload, doc);
         }
         return doc;

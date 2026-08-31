@@ -32,7 +32,11 @@ export const getProducts = unstable_cache(
     const res = await payload.find({
       collection: "products",
       where: { _status: { equals: "published" } },
-      depth: 2,
+      // Three hops, not two. A related product's bundle components sit at
+      // depth 2 and their batches at depth 3, so at depth 2 a cross-sold set
+      // could not see its own stock. This query is cached for five minutes and
+      // capped at 50 rows, so the extra hop is cheap.
+      depth: 3,
       limit: 50,
       sort: "createdAt",
     });

@@ -93,7 +93,7 @@ export const CheckoutForm = ({
   flatRateCents: number;
   freeThresholdCents: number;
 }) => {
-  const { items, subtotalCents } = useCart();
+  const { items, subtotalCents, hydrated } = useCart();
   const [state, action] = React.useActionState<CheckoutResult | null, FormData>(
     createCheckout,
     null,
@@ -142,6 +142,20 @@ export const CheckoutForm = ({
     if (!res.ok) setDiscount({ cents: 0, message: res.message });
     setApplying(false);
   };
+
+  // The cart lives in localStorage, so the server renders it empty every time.
+  // Announcing that as fact meant every shopper who reached the checkout was
+  // told their cart was empty, with "Browse the shop" as the only way out,
+  // until the bundle finished hydrating. On mobile data that window is seconds
+  // long, and anyone who believed it lost the sale. Say nothing until we have
+  // actually looked.
+  if (!hydrated && !(state && state.ok)) {
+    return (
+      <div className="border border-line bg-coal p-10 text-center" aria-busy="true">
+        <p className="text-sm text-parch">Fetching your cart.</p>
+      </div>
+    );
+  }
 
   if (items.length === 0 && !(state && state.ok)) {
     return (

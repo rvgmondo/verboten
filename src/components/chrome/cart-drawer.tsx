@@ -23,7 +23,7 @@ type Props = {
 };
 
 export const CartDrawer = ({ flatRateCents, freeThresholdCents, offers }: Props) => {
-  const { items, isOpen, close, add, remove, setQuantity, subtotalCents } = useCart();
+  const { items, isOpen, close, add, remove, setQuantity, subtotalCents, hydrated } = useCart();
 
   // The cart carries no discount yet, so this is the same sum the checkout
   // will reach, from the same function.
@@ -75,7 +75,11 @@ export const CartDrawer = ({ flatRateCents, freeThresholdCents, offers }: Props)
           </SheetDescription>
         </div>
 
-        {items.length === 0 ? (
+        {!hydrated ? (
+          <div className="flex flex-1 items-center justify-center p-6" aria-busy="true">
+            <p className="text-sm text-parch">Fetching your cart.</p>
+          </div>
+        ) : items.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-4 p-6 text-center">
             <p className="text-sm text-parch">Empty, for now.</p>
             <Button variant="outline" size="sm" asChild onClick={close}>

@@ -78,6 +78,13 @@ const COLUMNS = [
   },
   // Customer accounts now require a confirmed email address before they are
   // usable, because the account page shows orders matched on that address.
+  // Every marketing email must carry a working unsubscribe link, so the token
+  // has to outlive the confirmation token that is spent on signup.
+  {
+    table: "subscribers",
+    column: "unsubscribe_token",
+    ddl: "ALTER TABLE `subscribers` ADD COLUMN `unsubscribe_token` text",
+  },
   {
     table: "customers",
     column: "_verified",

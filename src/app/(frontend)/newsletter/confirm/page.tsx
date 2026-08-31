@@ -44,7 +44,9 @@ export default async function ConfirmPage({
         overrideAccess: true,
       });
       confirmed = true;
-      await sendNewsletterWelcome(payload, subscriber.email);
+      // The welcome is the first marketing email this address gets, so it is
+      // the first that has to carry a working way out.
+      await sendNewsletterWelcome(payload, subscriber.email, subscriber.unsubscribeToken);
     }
   }
 

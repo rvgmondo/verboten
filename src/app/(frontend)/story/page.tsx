@@ -4,10 +4,10 @@ import Link from "next/link";
 import { Motto } from "@/components/brand/motto";
 import { PageMasthead } from "@/components/brand/page-masthead";
 import { RichText } from "@/components/rich-text";
+import { NotFoundPanel } from "@/components/brand/not-found-panel";
 import { Button } from "@/components/ui/button";
 import { CrestDivider } from "@/components/ui/separator";
 import { getPageBySlug } from "@/lib/data";
-import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Our Story",
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default async function StoryPage() {
   const page = await getPageBySlug("story");
-  if (!page) notFound();
+  if (!page) return <NotFoundPanel />;
 
   return (
     <main>

@@ -55,5 +55,16 @@ export const Subscribers: CollectionConfig = {
       type: "text",
       admin: { hidden: true },
     },
+    {
+      // Separate from confirmToken, which is spent and cleared the moment the
+      // address is confirmed. This one lives as long as the subscription does,
+      // because every email has to carry a working unsubscribe link: the
+      // footer of the site promises "unsubscribe any time" and the privacy
+      // policy states it in writing.
+      name: "unsubscribeToken",
+      type: "text",
+      index: true,
+      admin: { hidden: true },
+    },
   ],
 };

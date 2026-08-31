@@ -60,3 +60,6 @@ Thumbs.db
 verboten.db
 verboten.db-shm
 verboten.db-wal
+
+# Rendered email previews, a local dev aid (scripts/preview-emails.mjs)
+.email-preview/

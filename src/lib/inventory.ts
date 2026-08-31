@@ -47,6 +47,16 @@ export const getAvailability = (product: Product): Availability => {
   const batch = asBatch(product.batch);
   const mode = product.inventory?.mode ?? "own";
 
+  // A batch-mode product whose batch relation came back as a bare id means the
+  // query simply did not reach that deep, not that the batch is empty. Falling
+  // through to stockQty here reads 0 and prints "Sold out" on a product that is
+  // sitting in the store room. Nested bundles hit this first, which is how the
+  // R850 set came to advertise itself as unavailable on the flagship's own
+  // page. Unknown is the honest answer, and the bundle loop already skips it.
+  if (mode === "batch" && !batch) {
+    return { available: null, soldOut: false, lowStock: false };
+  }
+
   if (mode === "batch" && batch) {
     const available = Math.max(0, batch.bottlesRemaining);
     const soldOut = available <= 0 || batch.status === "sold_out";

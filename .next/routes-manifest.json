@@ -243,6 +243,14 @@
         "nxtPslug": "nxtPslug"
       },
       "namedRegex": "^/(?<nxtPslug>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/[...notfound]",
+      "regex": "^/(.+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPnotfound": "nxtPnotfound"
+      },
+      "namedRegex": "^/(?<nxtPnotfound>.+?)(?:/)?$"
     }
   ],
   "staticRoutes": [
@@ -269,6 +277,12 @@
       "regex": "^/account(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/account(?:/)?$"
+    },
+    {
+      "page": "/account/reset",
+      "regex": "^/account/reset(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/account/reset(?:/)?$"
     },
     {
       "page": "/account/verify",
@@ -341,6 +355,12 @@
       "regex": "^/newsletter/confirm(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/newsletter/confirm(?:/)?$"
+    },
+    {
+      "page": "/newsletter/unsubscribe",
+      "regex": "^/newsletter/unsubscribe(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/newsletter/unsubscribe(?:/)?$"
     },
     {
       "page": "/opengraph-image-4usi79",

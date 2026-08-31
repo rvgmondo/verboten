@@ -815,6 +815,7 @@ export interface Subscriber {
    */
   consentAt?: string | null;
   confirmToken?: string | null;
+  unsubscribeToken?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1341,6 +1342,7 @@ export interface SubscribersSelect<T extends boolean = true> {
   source?: T;
   consentAt?: T;
   confirmToken?: T;
+  unsubscribeToken?: T;
   updatedAt?: T;
   createdAt?: T;
 }
