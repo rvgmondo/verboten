@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import * as React from "react";
 
+import { AUTH_CHANGED } from "@/components/chrome/account-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -82,6 +83,7 @@ export const AccountAuth = () => {
         setBusy(false);
         return;
       }
+      window.dispatchEvent(new Event(AUTH_CHANGED));
       router.refresh();
     } catch {
       setError("Something went wrong. Try again.");
@@ -184,6 +186,7 @@ export const LogoutButton = () => {
       size="sm"
       onClick={async () => {
         await fetch("/api/customers/logout", { method: "POST" });
+        window.dispatchEvent(new Event(AUTH_CHANGED));
         router.refresh();
       }}
     >

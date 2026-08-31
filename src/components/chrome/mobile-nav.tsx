@@ -1,7 +1,7 @@
 "use client";
 
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { Menu, X } from "lucide-react";
+import { Menu, User, X } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
 
@@ -25,7 +25,7 @@ export const MobileNav = () => {
       <DialogPrimitive.Trigger asChild>
         <button
           type="button"
-          className="p-2 text-parch transition-colors hover:text-bone lg:hidden"
+          className="flex h-11 w-11 items-center justify-center text-parch transition-colors hover:text-bone lg:hidden"
           aria-label="Open menu"
         >
           <Menu className="h-5 w-5" aria-hidden="true" />
@@ -42,7 +42,7 @@ export const MobileNav = () => {
             <DialogPrimitive.Close asChild>
               <button
                 type="button"
-                className="p-2 text-parch transition-colors hover:text-bone"
+                className="flex h-11 w-11 items-center justify-center text-parch transition-colors hover:text-bone"
                 aria-label="Close menu"
               >
                 <X className="h-5 w-5" aria-hidden="true" />
@@ -64,7 +64,15 @@ export const MobileNav = () => {
               ))}
             </ul>
           </nav>
-          <div className="border-t border-line p-8">
+          <div className="space-y-8 border-t border-line p-8">
+            <Link
+              href="/account"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-3 text-sm uppercase tracking-[0.18em] text-parch transition-colors hover:text-bone"
+            >
+              <User className="h-4 w-4" aria-hidden="true" />
+              Your account
+            </Link>
             <Motto />
           </div>
         </DialogPrimitive.Content>

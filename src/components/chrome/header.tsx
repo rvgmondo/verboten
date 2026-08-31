@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { AccountButton } from "@/components/chrome/account-button";
 import { BrandCrest } from "@/components/brand/brand-crest";
 import { CartButton } from "@/components/chrome/cart-button";
 import { MobileNav } from "@/components/chrome/mobile-nav";
@@ -23,7 +24,10 @@ export const Header = () => (
         aria-label="Verboten Spirits, home"
       >
         <BrandCrest className="h-8 w-8 text-gold" />
-        <span className="font-display text-lg tracking-[0.08em]">VERBOTEN</span>
+        {/* League Spartan is a variable font, so the wordmark can carry real
+            weight without loading anything extra. Tracking eases in as the
+            weight goes up, or bold caps set this wide start to look gappy. */}
+        <span className="font-display text-lg font-bold tracking-[0.06em]">VERBOTEN</span>
       </Link>
 
       <nav aria-label="Main" className="hidden lg:block">
@@ -41,7 +45,8 @@ export const Header = () => (
         </ul>
       </nav>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1">
+        <AccountButton />
         <CartButton />
         <MobileNav />
       </div>
