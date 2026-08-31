@@ -2,6 +2,8 @@ import { unstable_cache } from "next/cache";
 import { getPayload } from "payload";
 
 import config from "../payload.config";
+import { getAvailability } from "@/lib/inventory";
+import { mediaSrc, mediaSrcAt } from "@/lib/media";
 
 /**
  * The public site's read layer. Every query is cached under a tag that the
@@ -159,3 +161,77 @@ export const getGalleryItems = unstable_cache(
   ["gallery-list"],
   { tags: ["gallery"], revalidate: 3600 },
 );
+
+export type BundleOffer = {
+  productId: number;
+  slug: string;
+  name: string;
+  priceCents: number;
+  maxAvailable: number | null;
+  imageUrl?: string;
+  imageAlt?: string;
+  /** The single products this bundle stands in for, and how many of each. */
+  contains: { productId: number; quantity: number }[];
+  /** Saving against buying the contents one by one. Always positive here. */
+  savingCents: number;
+};
+
+/**
+ * Bundles that are cheaper than their own contents, shaped for the cart.
+ *
+ * Read straight off each bundle's bundleItems, so adding a set in the admin
+ * makes it offer itself. Nothing about the catalogue is hardcoded, and a
+ * bundle priced at or above its parts is simply never suggested.
+ */
+export const getBundleOffers = async (): Promise<BundleOffer[]> => {
+  const products = await getProducts();
+  const offers: BundleOffer[] = [];
+
+  for (const product of products) {
+    if (product.productType !== "bundle") continue;
+    const items = product.bundleItems ?? [];
+    if (items.length === 0) continue;
+
+    let partsCents = 0;
+    const contains: { productId: number; quantity: number }[] = [];
+    let resolvable = true;
+
+    for (const item of items) {
+      const component = typeof item.product === "object" ? item.product : null;
+      if (!component) {
+        resolvable = false;
+        break;
+      }
+      const quantity = item.quantity ?? 1;
+      partsCents += component.priceCents * quantity;
+      contains.push({ productId: component.id, quantity });
+    }
+    if (!resolvable) continue;
+
+    const savingCents = partsCents - product.priceCents;
+    if (savingCents <= 0) continue;
+
+    const availability = getAvailability(product);
+    if (availability.soldOut) continue;
+
+    const first = product.gallery?.[0]?.image;
+    const image = typeof first === "object" && first !== null ? first : null;
+
+    offers.push({
+      productId: product.id,
+      slug: product.slug,
+      name: product.name,
+      priceCents: product.priceCents,
+      maxAvailable: availability.available,
+      // A 64px cart thumbnail, so the 400px variant rather than the full
+      // studio original. getBundleOffers runs in the root layout, so the
+      // wrong URL here would sit in every page's payload.
+      imageUrl: (image ? mediaSrcAt(image, 200) : null) ?? undefined,
+      imageAlt: image?.alt ?? product.name,
+      contains,
+      savingCents,
+    });
+  }
+
+  return offers;
+};

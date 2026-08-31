@@ -5,7 +5,7 @@ import { getPayload } from "payload";
 import { z } from "zod";
 
 import { nextOrderNumber } from "@/lib/commerce/atomic";
-import { checkDiscount } from "@/lib/commerce/discounts";
+import { checkDiscount, claimDiscount, releaseDiscount } from "@/lib/commerce/discounts";
 import { findStockProblems } from "@/lib/commerce/stock";
 import { getPaymentProvider } from "@/lib/payments";
 import { clientKey, rateLimit } from "@/lib/rate-limit";
@@ -63,6 +63,8 @@ const schema = z.object({
   postalCode: z.string().trim().min(4, "Enter a postal code.").max(10),
   discountCode: z.string().trim().max(40).optional().or(z.literal("")),
   customerNote: z.string().trim().max(1000).optional().or(z.literal("")),
+  /** The total the buyer was shown, reconciled against ours before paying. */
+  quotedTotalCents: z.coerce.number().int().nonnegative().optional(),
   /** Honeypot: humans never see or fill this field. */
   fax: z.string().max(0).optional().or(z.literal("")),
 });
@@ -103,6 +105,7 @@ export async function createCheckout(
     email: formData.get("email"),
     phone: formData.get("phone") ?? "",
     dateOfBirth: formData.get("dateOfBirth"),
+    quotedTotalCents: formData.get("quotedTotalCents") ?? undefined,
     line1: formData.get("line1"),
     line2: formData.get("line2") ?? "",
     suburb: formData.get("suburb") ?? "",
@@ -194,6 +197,36 @@ export async function createCheckout(
 
   const totalCents = subtotalCents - discountCents + shippingCents;
 
+  // Nobody gets sent to PayFast for a number they were not shown. The cart
+  // lives in localStorage and the discount preview lives in React state, so a
+  // stale price, an expired code or a cleared code box can all leave the
+  // buyer looking at one total while the server computes another. Rather than
+  // quietly charging ours, stop and make them look again.
+  //
+  // Only a total that went UP is a problem. Paying less than the screen said
+  // is never a complaint, and it is the normal outcome when someone types a
+  // code and submits without pressing Apply, so refusing on any difference at
+  // all would reject good checkouts to no purpose.
+  if (
+    typeof input.quotedTotalCents === "number" &&
+    totalCents > input.quotedTotalCents
+  ) {
+    return {
+      ok: false,
+      message:
+        "Your total changed while you were checking out. Have a look at the updated amount, then place the order again.",
+    };
+  }
+
+  // Take the discount use here, in the same statement that tests the cap, and
+  // only once everything else has passed. Reading the cap during validation
+  // and counting the redemption after payment leaves a window in which every
+  // concurrent checkout sees the same code as unused.
+  if (discountCode && !(await claimDiscount(payload, discountCode))) {
+    const reason = "That code has been fully used.";
+    return { ok: false, message: reason, fieldErrors: { discountCode: reason } };
+  }
+
   // Sequence-backed, collision-free even under concurrent checkouts or after
   // an admin deletes an order (count()+1 would reuse a live number).
   const orderNumber = await nextOrderNumber(payload, new Date().getFullYear());
@@ -202,7 +235,9 @@ export async function createCheckout(
   const { user } = await payload.auth({ headers: hdrs });
   const customerId = user && user.collection === "customers" ? user.id : undefined;
 
-  const order = await payload.create({
+  let order;
+  try {
+    order = await payload.create({
     collection: "orders",
     overrideAccess: true,
     data: {
@@ -240,7 +275,17 @@ export async function createCheckout(
       customerNote: input.customerNote || undefined,
       payment: { provider: "payfast" },
     },
-  });
+    });
+  } catch (err) {
+    // The order never existed, so the discount use it claimed must go back.
+    // Otherwise a database hiccup silently burns a single-use code.
+    if (discountCode) await releaseDiscount(payload, discountCode);
+    payload.logger.error({ err, orderNumber }, "Order creation failed at checkout");
+    return {
+      ok: false,
+      message: "Your order could not be placed just then. Try again in a moment.",
+    };
+  }
 
   const base = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001";
   const provider = getPaymentProvider();

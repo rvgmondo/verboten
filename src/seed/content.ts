@@ -17,7 +17,7 @@ export const PAGES = [
     content: doc(
       h2("The start"),
       p(
-        "In 2020, in Pretoria, while the world was following orders, two founders were quietly breaking convention. Technical precision, and the kind of creativity that only thrives in secrecy.",
+        "Verboten started in Pretoria in 2020. Two founders, technical precision, and a refusal to accept that brandy has to taste the way brandy has always tasted.",
       ),
       p(
         "What came out of it was a spirit smooth enough to make you question what you thought you knew about premium drinks.",
@@ -240,7 +240,7 @@ export const SERVES = [
 
 export const JOURNAL_POSTS = [
   {
-    slug: "batch-no-01-is-open",
+    slug: "the-first-verboten-brandy-is-shipping",
     title: "The first Verboten brandy is shipping",
     category: "releases" as const,
     excerpt:

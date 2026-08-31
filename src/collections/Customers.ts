@@ -9,9 +9,38 @@ import { SA_PROVINCES } from "./Orders";
  * auth collection from staff Users; customers can never reach the admin panel
  * (access.admin is false and they carry no roles).
  */
+const siteUrl = () =>
+  process.env.NEXT_PUBLIC_SERVER_URL ||
+  (process.env.NODE_ENV === "production" ? "https://verboten.co.za" : "http://localhost:3001");
+
 export const Customers: CollectionConfig = {
   slug: "customers",
-  auth: true,
+  /**
+   * Email ownership must be proven before the account is usable.
+   *
+   * The account page shows guest orders matched on email address, so an
+   * unverified signup would hand anyone the purchase history, delivery address
+   * and date of birth of whoever owns that address. Verification is what makes
+   * "your email is your account" safe to say.
+   */
+  auth: {
+    verify: {
+      generateEmailSubject: () => "Confirm your Verboten account",
+      generateEmailHTML: ({ token }) => {
+        const link = `${siteUrl()}/account/verify?token=${encodeURIComponent(String(token))}`;
+        return [
+          "<p>One step left.</p>",
+          "<p>Confirm this address and your account is open. Every order you have",
+          "placed with it, guest orders included, appears under your name.</p>",
+          `<p><a href="${link}">${link}</a></p>`,
+          "<p>If you did not create this account, ignore this email. Nothing is",
+          "opened and nothing is shared until the link above is used.</p>",
+          "<p>Verboten Spirits, Pretoria<br>",
+          "Drink responsibly. Not for sale to persons under 18.</p>",
+        ].join("\n");
+      },
+    },
+  },
   admin: {
     useAsTitle: "email",
     defaultColumns: ["email", "name", "createdAt"],

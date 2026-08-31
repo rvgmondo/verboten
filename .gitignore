@@ -52,3 +52,11 @@ Thumbs.db
 
 # deploy bundle (generated artifacts + prod env; never commit)
 /deploy/
+
+# Runtime data. The database holds staff password hashes and, once the site has
+# taken orders, customer names, addresses, phone numbers and dates of birth.
+# It must never travel to the remote. The cPanel deploy excludes it too, so the
+# live database is the only copy that matters.
+verboten.db
+verboten.db-shm
+verboten.db-wal

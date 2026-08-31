@@ -370,6 +370,11 @@
         "source": "/shop/batch-no-01-premium-set-2-bottle",
         "destination": "/shop/verboten-premium-set-2-bottle",
         "permanent": true
+      },
+      {
+        "source": "/journal/batch-no-01-is-open",
+        "destination": "/journal/the-first-verboten-brandy-is-shipping",
+        "permanent": true
       }
     ]
   },

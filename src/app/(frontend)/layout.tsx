@@ -10,7 +10,7 @@ import { AgeGate } from "@/components/compliance/age-gate";
 import { JsonLd } from "@/components/json-ld";
 import { organizationLd } from "@/lib/seo";
 import { CartProvider } from "@/lib/cart";
-import { getSiteSettings } from "@/lib/data";
+import { getBundleOffers, getSiteSettings } from "@/lib/data";
 import { lato, leagueSpartan } from "@/lib/fonts";
 
 import "../globals.css";
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
 };
 
 export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
-  const settings = await getSiteSettings();
+  const [settings, bundleOffers] = await Promise.all([getSiteSettings(), getBundleOffers()]);
 
   return (
     <html lang="en-ZA" className={`${leagueSpartan.variable} ${lato.variable}`}>
@@ -65,7 +65,11 @@ export default async function FrontendLayout({ children }: { children: React.Rea
             {children}
           </div>
           <Footer />
-          <CartDrawer />
+          <CartDrawer
+            flatRateCents={settings.shipping?.flatRateCents ?? 0}
+            freeThresholdCents={settings.shipping?.freeThresholdCents ?? 0}
+            offers={bundleOffers}
+          />
           <AgeGate />
           <JsonLd data={organizationLd()} />
         </CartProvider>

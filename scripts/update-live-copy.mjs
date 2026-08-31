@@ -148,6 +148,9 @@ const NEW_PRODUCTS = [
 
 const JOURNAL_UPDATES = {
   "batch-no-01-is-open": {
+    // Batch numbering is retired everywhere shoppers see, and a slug is the
+    // most permanent public surface there is. next.config.ts 301s the old URL.
+    slug: "the-first-verboten-brandy-is-shipping",
     title: "The first Verboten brandy is shipping",
     excerpt:
       "Three years in oak, finished in French casks, bottled at 43% in Pretoria. Verboten Premium Brandy is shipping now.",
@@ -210,7 +213,10 @@ const STORY_PAGE = {
     "Pretoria, 2020. Two founders, a conviction that the best traditions start with someone breaking the rules, and a spirit made to prove it.",
   content: doc(
     h2("The start"),
-    p("In 2020, in Pretoria, while the world was following orders, two founders were quietly breaking convention. Technical precision, and the kind of creativity that only thrives in secrecy."),
+    // No lockdown framing, and no implication that the spirit was made in
+    // secret: both are banned, and the second invites the very suspicion the
+    // old site was defensively answering.
+    p("Verboten started in Pretoria in 2020. Two founders, technical precision, and a refusal to accept that brandy has to taste the way brandy has always tasted."),
     p("What came out of it was a spirit smooth enough to make you question what you thought you knew about premium drinks."),
     h2("A quiet rebellion"),
     p("Verboten is German for forbidden. The name is a promise about restraint: nothing leaves this house unless it earns the label. South African soul, a German sounding surname, and an Afrikaans undercurrent for the ones who know."),
@@ -353,7 +359,11 @@ const run = async () => {
 
   // 4. Journal: update the release post, create the two new posts.
   for (const [slug, data] of Object.entries(JOURNAL_UPDATES)) {
-    const found = await findBySlug("journal-posts", slug);
+    // Look for the new slug first, so re-running after a rename is a no-op
+    // rather than a warning.
+    const found =
+      (data.slug ? await findBySlug("journal-posts", data.slug) : null) ||
+      (await findBySlug("journal-posts", slug));
     if (!found) {
       console.warn(`SKIP: journal post ${slug} not found`);
       continue;

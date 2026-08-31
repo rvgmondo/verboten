@@ -31,7 +31,32 @@ export const Events: CollectionConfig = {
       type: "date",
       admin: { date: { pickerAppearance: "dayAndTime" } },
     },
-    { name: "location", type: "text", required: true },
+    {
+      name: "location",
+      type: "text",
+      required: true,
+      admin: { description: "Venue name as people say it, e.g. Lavender Kontrei Mark." },
+    },
+    {
+      name: "address",
+      type: "group",
+      // Google requires a postal address on an Event with a physical location.
+      // With only a venue name the Event fails validation outright and the
+      // listing is ineligible for the events rich result, which for a house
+      // that lives on markets and tastings forfeits the whole surface.
+      admin: { description: "Needed for the event to appear in Google's event results." },
+      fields: [
+        { name: "streetAddress", type: "text" },
+        { name: "addressLocality", type: "text", admin: { description: "Town or city." } },
+        {
+          name: "addressRegion",
+          type: "text",
+          admin: { description: "Province, e.g. Gauteng." },
+        },
+        { name: "postalCode", type: "text" },
+        { name: "addressCountry", type: "text", defaultValue: "ZA" },
+      ],
+    },
     { name: "description", type: "textarea" },
     { name: "url", type: "text", admin: { description: "Tickets or event page link." } },
     {

@@ -185,6 +185,34 @@
 }
 
 /* ------------------------------------------------------------------ */
+/* Scroll reveal                                                       */
+/* ------------------------------------------------------------------ */
+
+/* Decorative only, so it exists only where the browser can drive it from the
+   scroll position with no JavaScript. Everywhere else the content is simply
+   visible, which is the correct failure mode: motion must never be the thing
+   that decides whether a price or a buy button can be read. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: fade-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 55%;
+    }
+  }
+
+  /* Printing has no scroll position, so the timeline is inactive and the fill
+     mode would otherwise hold every un-entered block at opacity 0, printing
+     blank pages. */
+  @media print {
+    .reveal {
+      animation: none;
+      opacity: 1;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ */
 /* Brand utilities                                                     */
 /* ------------------------------------------------------------------ */
 

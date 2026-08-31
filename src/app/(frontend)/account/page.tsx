@@ -55,12 +55,17 @@ export default async function AccountPage() {
   const orders = await payload.find({
     collection: "orders",
     // Orders placed as a guest carry no customer link, only an email. Matching
-    // on either means signing up hands you every order you ever placed with
-    // that address, instead of an empty page and a lost history.
+    // on the address too means signing up hands you every order you ever placed
+    // with it, instead of an empty page and a lost history.
+    //
+    // That branch is only safe once the address has been proven to belong to
+    // this person. Without the check, registering with someone else's email
+    // would display their purchase history and delivery address. Login already
+    // requires verification, so this is the second lock on the same door.
     where: {
       or: [
         { customer: { equals: customer.id } },
-        { email: { equals: customer.email } },
+        ...(customer._verified ? [{ email: { equals: customer.email } }] : []),
       ],
     },
     sort: "-createdAt",

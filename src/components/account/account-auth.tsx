@@ -56,6 +56,14 @@ export const AccountAuth = () => {
           setBusy(false);
           return;
         }
+        // No automatic sign-in: the address has to be proven first, because
+        // the account shows orders matched on it. Payload has already sent
+        // the confirmation link.
+        setNotice(
+          "Check your email. There is a link waiting that opens your account, and your orders appear the moment you use it.",
+        );
+        setBusy(false);
+        return;
       }
 
       const loginRes = await fetch("/api/customers/login", {
@@ -64,7 +72,13 @@ export const AccountAuth = () => {
         body: JSON.stringify({ email, password }),
       });
       if (!loginRes.ok) {
-        setError("Email or password did not match.");
+        const data = await loginRes.json().catch(() => null);
+        const message = String(data?.errors?.[0]?.message ?? "");
+        setError(
+          /verif/i.test(message)
+            ? "This account is not confirmed yet. Use the link in the email we sent you, then sign in."
+            : "Email or password did not match.",
+        );
         setBusy(false);
         return;
       }

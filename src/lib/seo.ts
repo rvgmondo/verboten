@@ -93,15 +93,38 @@ export const articleLd = (post: JournalPost) => {
   };
 };
 
-export const eventLd = (event: Event) => ({
-  "@context": "https://schema.org",
-  "@type": "Event",
-  name: event.title,
-  startDate: event.startDate,
-  endDate: event.endDate ?? undefined,
-  location: { "@type": "Place", name: event.location },
-  description: event.description ?? undefined,
-  url: event.url ?? undefined,
-  organizer: { "@id": abs("/#organization") },
-  eventStatus: "https://schema.org/EventScheduled",
-});
+export const eventLd = (event: Event) => {
+  const a = event.address;
+  // Google treats address as required on a physical Event. Emit it only when
+  // there is something real to say, since a half-empty PostalAddress is worse
+  // than none: it validates and then sends people to the wrong place.
+  const address =
+    a && (a.streetAddress || a.addressLocality)
+      ? {
+          "@type": "PostalAddress",
+          streetAddress: a.streetAddress ?? undefined,
+          addressLocality: a.addressLocality ?? undefined,
+          addressRegion: a.addressRegion ?? undefined,
+          postalCode: a.postalCode ?? undefined,
+          addressCountry: a.addressCountry ?? "ZA",
+        }
+      : undefined;
+
+  const image =
+    typeof event.image === "object" && event.image?.url ? abs(event.image.url) : undefined;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    name: event.title,
+    startDate: event.startDate,
+    endDate: event.endDate ?? undefined,
+    location: { "@type": "Place", name: event.location, address },
+    description: event.description ?? undefined,
+    url: event.url ?? undefined,
+    image,
+    organizer: { "@id": abs("/#organization") },
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+  };
+};

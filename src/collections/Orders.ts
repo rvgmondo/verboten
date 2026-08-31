@@ -1,6 +1,6 @@
 import type { CollectionConfig } from "payload";
 
-import { isAdmin, isAdminOrEditor, serverOnly, staffOrOwnCustomer } from "../access/access";
+import { isAdmin, isAdminOrEditor, isStaffField, serverOnly, staffOrOwnCustomer } from "../access/access";
 import { sendOrderStatusEmail } from "../lib/emails";
 
 export const ORDER_STATUSES = [
@@ -206,6 +206,12 @@ export const Orders: CollectionConfig = {
         {
           name: "raw",
           type: "json",
+          // Field access, not just an admin label. A signed-in customer can GET
+          // their own order over the REST API, and this holds the whole
+          // verified ITN, signature included. That digest is taken over the
+          // notification body plus the merchant passphrase, and the body is
+          // right beside it, so handing it out is offline guessing material.
+          access: { read: isStaffField },
           admin: { description: "Verified webhook payload, stored for reconciliation." },
         },
       ],
@@ -221,6 +227,11 @@ export const Orders: CollectionConfig = {
     {
       name: "internalNotes",
       type: "textarea",
+      // "Staff only" has to be enforced, not merely written down. The webhook
+      // writes reconciliation language here ("AMOUNT MISMATCH on ITN", "PAYMENT
+      // RECEIVED on a cancelled order, reconcile manually") that the buyer must
+      // never read on their own order.
+      access: { read: isStaffField },
       admin: { description: "Staff only; never shown to the customer." },
     },
     {

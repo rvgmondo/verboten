@@ -46,7 +46,18 @@ const Field = ({
 }) => (
   <div className="space-y-2">
     <Label htmlFor={`co-${name}`}>{label}</Label>
-    {children}
+    {/* The error is tied to the control here rather than at each call site, so
+        no field can ship without it. Doing it by hand had already gone wrong:
+        street address and city announced nothing but their own name, and
+        province never received aria-invalid at all, which also meant the
+        focus-the-first-error routine could not find it and the form appeared
+        to do nothing when province was the only thing wrong. */}
+    {React.isValidElement(children)
+      ? React.cloneElement(children as React.ReactElement<Record<string, unknown>>, {
+          "aria-invalid": error ? true : undefined,
+          "aria-describedby": error ? `co-${name}-error` : undefined,
+        })
+      : children}
     {error && (
       <p id={`co-${name}-error`} className="text-xs text-danger">
         {error}
@@ -162,6 +173,10 @@ export const CheckoutForm = ({
   return (
     <form ref={formRef} action={action} noValidate className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr]">
       <input type="hidden" name="items" value={JSON.stringify(items.map((i) => ({ productId: i.productId, quantity: i.quantity })))} />
+      {/* The total this person was actually shown. The server recomputes its
+          own and refuses to send anyone to PayFast when the two disagree, so
+          nobody is ever charged a number they did not see. */}
+      <input type="hidden" name="quotedTotalCents" value={totalCents} />
 
       <div className="space-y-10">
         <fieldset className="space-y-6">
@@ -308,7 +323,13 @@ export const CheckoutForm = ({
               id="co-discountCode"
               name="discountCode"
               value={discountInput}
-              onChange={(e) => setDiscountInput(e.target.value)}
+              // Editing the code throws away the preview it produced. Without
+              // this the summary keeps showing a discount for a code that is
+              // no longer in the box, and the box is what gets submitted.
+              onChange={(e) => {
+                setDiscountInput(e.target.value);
+                setDiscount(null);
+              }}
               aria-invalid={errors?.discountCode ? true : undefined}
               className="uppercase"
             />

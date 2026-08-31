@@ -1,6 +1,6 @@
 import type { Payload } from "payload";
 
-import { incrementDiscountUse } from "@/lib/commerce/atomic";
+import { claimDiscountUse, releaseDiscountUse } from "@/lib/commerce/atomic";
 import type { DiscountCode } from "@/payload-types";
 
 export type DiscountCheck =
@@ -51,9 +51,8 @@ export const checkDiscount = async (
   return { ok: true, code: doc, discountCents };
 };
 
-/** Count a successful (paid) redemption. */
-export const redeemDiscount = async (payload: Payload, code: string): Promise<void> => {
-  const doc = (
+const findCode = async (payload: Payload, code: string) =>
+  (
     await payload.find({
       collection: "discount-codes",
       where: { code: { equals: code.trim().toUpperCase() } },
@@ -61,6 +60,26 @@ export const redeemDiscount = async (payload: Payload, code: string): Promise<vo
       overrideAccess: true,
     })
   ).docs[0];
+
+/**
+ * Take the use at checkout, not at payment.
+ *
+ * checkDiscount only reads the cap, and minutes can pass between that read and
+ * the payment landing, so the cap has to be claimed the moment the order is
+ * created. The trade-off is deliberate: an abandoned checkout holds its claim
+ * until the payment explicitly fails, so a single-use code can sit spent for a
+ * sale that never happened. Honouring a code once too few is a support email;
+ * honouring it ten times too many is money.
+ */
+export const claimDiscount = async (payload: Payload, code: string): Promise<boolean> => {
+  const doc = await findCode(payload, code);
+  if (!doc) return false;
+  return claimDiscountUse(payload, doc.id);
+};
+
+/** Give the claim back when the payment fails or the order is cancelled. */
+export const releaseDiscount = async (payload: Payload, code: string): Promise<void> => {
+  const doc = await findCode(payload, code);
   if (!doc) return;
-  await incrementDiscountUse(payload, doc.id);
+  await releaseDiscountUse(payload, doc.id);
 };

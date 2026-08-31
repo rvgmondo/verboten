@@ -26,6 +26,18 @@ const isStaff = (user: unknown): boolean =>
   (user as { collection?: string } | null)?.collection === "users";
 
 /**
+ * Field-level staff gate. Collection `Access` and field `FieldAccess` have
+ * different signatures, so a field that needs hiding cannot reuse
+ * isAdminOrEditor. Without this, a field marked "staff only" in its admin
+ * description is still returned in full over the REST API to anyone allowed to
+ * read the document.
+ */
+export const isStaffField: FieldAccess = ({ req: { user } }) => {
+  const roles = rolesOf(user);
+  return roles.includes("admin") || roles.includes("editor");
+};
+
+/**
  * Admins see all staff users; a signed-in staff member may read/update only
  * their own record.
  *

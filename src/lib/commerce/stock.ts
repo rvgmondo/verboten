@@ -29,7 +29,15 @@ const collectDecrements = (product: Product, units: number, acc: Decrement[]): v
   }
 };
 
-export const decrementStockForOrder = async (payload: Payload, order: Order): Promise<void> => {
+/**
+ * What an order took that was not there. Empty in the normal case.
+ */
+export type Oversell = { kind: "batch" | "product"; id: number; units: number };
+
+export const decrementStockForOrder = async (
+  payload: Payload,
+  order: Order,
+): Promise<Oversell[]> => {
   const decrements: Decrement[] = [];
 
   for (const item of order.items) {
@@ -54,12 +62,13 @@ export const decrementStockForOrder = async (payload: Payload, order: Order): Pr
   // Atomic SQL decrements (see atomic.ts): safe when two paid orders touch the
   // same batch concurrently, where a read-modify-write would lose an update
   // and oversell a numbered batch.
+  const oversold: Oversell[] = [];
   for (const d of merged.values()) {
-    if (d.kind === "batch") {
-      await decrementBatch(payload, d.id, d.units);
-    } else {
-      await decrementProductStock(payload, d.id, d.units);
-    }
+    const short =
+      d.kind === "batch"
+        ? await decrementBatch(payload, d.id, d.units)
+        : await decrementProductStock(payload, d.id, d.units);
+    if (short > 0) oversold.push({ kind: d.kind, id: d.id, units: short });
   }
 
   // Reflect a now-empty batch as sold out (a status the SQL update cannot set).
@@ -74,6 +83,8 @@ export const decrementStockForOrder = async (payload: Payload, order: Order): Pr
       });
     }
   }
+
+  return oversold;
 };
 
 /** Authoritative stock check at checkout: requested vs live availability. */

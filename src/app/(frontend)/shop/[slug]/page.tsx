@@ -119,8 +119,15 @@ export default async function ProductPage({ params }: Params) {
             {gallery.length > 0 ? (
               <ProductGallery
                 images={gallery
-                  .map((m) => ({ url: mediaSrcAt(m, 1200), alt: m.alt }))
-                  .filter((m): m is { url: string; alt: string } => Boolean(m.url))}
+                  .map((m) => ({
+                    url: mediaSrcAt(m, 1200),
+                    thumbUrl: mediaSrcAt(m, 300) ?? undefined,
+                    alt: m.alt,
+                  }))
+                  .filter(
+                    (m): m is { url: string; thumbUrl: string | undefined; alt: string } =>
+                      Boolean(m.url),
+                  )}
               />
             ) : (
               <ArtPlaceholder

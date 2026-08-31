@@ -1,7 +1,7 @@
 import { getPayload } from "payload";
 
 import { decrementStockForOrder } from "@/lib/commerce/stock";
-import { redeemDiscount } from "@/lib/commerce/discounts";
+import { releaseDiscount } from "@/lib/commerce/discounts";
 import { sendStaffNewOrderAlert } from "@/lib/emails";
 import { getPaymentProvider } from "@/lib/payments";
 
@@ -106,10 +106,35 @@ export async function POST(request: Request): Promise<Response> {
       return new Response("ok", { status: 200 });
     }
 
-    await decrementStockForOrder(payload, updated);
-    if (updated.discountCode) {
-      await redeemDiscount(payload, updated.discountCode);
+    const oversold = await decrementStockForOrder(payload, updated);
+    // The discount use was already claimed when the order was created, so
+    // there is nothing to count here. Counting again would spend the code
+    // twice for one sale.
+
+    // Money has already changed hands, so this cannot be refused. It can be
+    // made impossible to miss. Nothing holds stock between order creation and
+    // payment, so two buyers can pay for the same last bottle; when that
+    // happens the order says so on its face instead of surfacing at packing.
+    if (oversold.length > 0) {
+      const detail = oversold
+        .map((o) => `${o.units} more than ${o.kind} ${o.id} had`)
+        .join("; ");
+      payload.logger.error({ orderNumber: updated.orderNumber, oversold }, "Oversold on paid order");
+      await payload.update({
+        collection: "orders",
+        id: updated.id,
+        overrideAccess: true,
+        data: {
+          internalNotes: [
+            updated.internalNotes,
+            `OVERSOLD: this paid order took ${detail}. Stock was not reserved between checkout and payment. Confirm you can fulfil it before promising a date.`,
+          ]
+            .filter(Boolean)
+            .join("\n\n"),
+        },
+      });
     }
+
     await sendStaffNewOrderAlert(payload, updated);
     // The customer's "paid" confirmation email is sent by the Orders
     // afterChange hook, which also covers staff-made status changes.
@@ -128,6 +153,10 @@ export async function POST(request: Request): Promise<Response> {
         payment: { provider: "payfast", reference: verified.reference, raw: verified.raw },
       },
     });
+    // The sale is off, so hand the discount use back to the pool.
+    if (order.discountCode) {
+      await releaseDiscount(payload, order.discountCode);
+    }
     return new Response("ok", { status: 200 });
   }
 

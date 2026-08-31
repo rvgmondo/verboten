@@ -82,6 +82,12 @@
       "destination": "/shop/verboten-premium-set-2-bottle",
       "statusCode": 308,
       "regex": "^(?!/_next)/shop/batch-no-01-premium-set-2-bottle(?:/)?$"
+    },
+    {
+      "source": "/journal/batch-no-01-is-open",
+      "destination": "/journal/the-first-verboten-brandy-is-shipping",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/journal/batch-no-01-is-open(?:/)?$"
     }
   ],
   "headers": [
@@ -263,6 +269,12 @@
       "regex": "^/account(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/account(?:/)?$"
+    },
+    {
+      "page": "/account/verify",
+      "regex": "^/account/verify(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/account/verify(?:/)?$"
     },
     {
       "page": "/book-the-bar",

@@ -555,6 +555,8 @@ export interface Customer {
   resetPasswordExpiration?: string | null;
   salt?: string | null;
   hash?: string | null;
+  _verified?: boolean | null;
+  _verificationToken?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
   sessions?:
@@ -724,7 +726,26 @@ export interface Event {
   title: string;
   startDate: string;
   endDate?: string | null;
+  /**
+   * Venue name as people say it, e.g. Lavender Kontrei Mark.
+   */
   location: string;
+  /**
+   * Needed for the event to appear in Google's event results.
+   */
+  address?: {
+    streetAddress?: string | null;
+    /**
+     * Town or city.
+     */
+    addressLocality?: string | null;
+    /**
+     * Province, e.g. Gauteng.
+     */
+    addressRegion?: string | null;
+    postalCode?: string | null;
+    addressCountry?: string | null;
+  };
   description?: string | null;
   /**
    * Tickets or event page link.
@@ -1161,6 +1182,8 @@ export interface CustomersSelect<T extends boolean = true> {
   resetPasswordExpiration?: T;
   salt?: T;
   hash?: T;
+  _verified?: T;
+  _verificationToken?: T;
   loginAttempts?: T;
   lockUntil?: T;
   sessions?:
@@ -1272,6 +1295,15 @@ export interface EventsSelect<T extends boolean = true> {
   startDate?: T;
   endDate?: T;
   location?: T;
+  address?:
+    | T
+    | {
+        streetAddress?: T;
+        addressLocality?: T;
+        addressRegion?: T;
+        postalCode?: T;
+        addressCountry?: T;
+      };
   description?: T;
   url?: T;
   image?: T;

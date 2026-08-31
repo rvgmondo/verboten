@@ -3,23 +3,28 @@ import { cn } from "@/lib/utils";
 
 /**
  * An art-directed stand-in for photography that has not been shot yet.
- * Atmospheric on purpose (candle glow, grain, a faint crest) so the page
- * reads as designed rather than broken, with a quiet slot label naming the
- * shot it is holding space for. Swap for a CmsImage when the photo lands.
+ * Atmospheric on purpose (candle glow, grain, a faint crest) so the page reads
+ * as designed rather than broken. Swap for a CmsImage when the photo lands.
+ *
+ * The `shot` prop is an authoring note and is never rendered. It used to be
+ * painted into the frame, which put internal art direction ("Heavy tumbler,
+ * one clear cube, side light") on the live home page as customer-facing copy
+ * and read it out to screen readers. The frame is decoration: every place it
+ * appears already carries a real heading beside it, so it is hidden from
+ * assistive technology rather than described to it.
  */
 export const ArtPlaceholder = ({
-  shot,
+  shot: _shot,
   aspect = "aspect-[4/3]",
   className,
 }: {
-  /** The photograph this frame is waiting for, e.g. "Cans on ice at dusk". */
-  shot: string;
+  /** Authoring note naming the photograph this frame awaits. Never rendered. */
+  shot?: string;
   aspect?: string;
   className?: string;
 }) => (
   <div
-    role="img"
-    aria-label={`Placeholder for photography: ${shot}`}
+    aria-hidden="true"
     className={cn(
       "inverse relative flex items-end overflow-hidden border border-line bg-ink",
       aspect,
@@ -39,8 +44,5 @@ export const ArtPlaceholder = ({
       aria-hidden="true"
       className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.55),transparent_45%)]"
     />
-    <p className="relative z-10 p-4 text-[0.625rem] uppercase tracking-[0.2em] text-parch">
-      {shot}
-    </p>
   </div>
 );

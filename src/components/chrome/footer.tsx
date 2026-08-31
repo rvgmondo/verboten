@@ -14,6 +14,7 @@ const SHOP_LINKS = [
 
 const HOUSE_LINKS = [
   { href: "/story", label: "Our story" },
+  { href: "/serves", label: "How to pour it" },
   { href: "/gallery", label: "Gallery" },
   { href: "/journal", label: "Journal" },
   { href: "/contact", label: "Contact" },

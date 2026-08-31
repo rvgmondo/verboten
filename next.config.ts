@@ -121,6 +121,14 @@ const nextConfig: NextConfig = {
         destination: "/shop/verboten-premium-set-2-bottle",
         permanent: true,
       },
+      // The journal post's title was normalised when batch numbering was
+      // retired, but its slug was not, so the batch framing stayed live in the
+      // URL, the sitemap and the article's own structured data.
+      {
+        source: "/journal/batch-no-01-is-open",
+        destination: "/journal/the-first-verboten-brandy-is-shipping",
+        permanent: true,
+      },
     ];
   },
 };

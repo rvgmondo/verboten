@@ -21,6 +21,11 @@
 <priority>0.7</priority>
 </url>
 <url>
+<loc>https://verboten.co.za/serves</loc>
+<changefreq>monthly</changefreq>
+<priority>0.6</priority>
+</url>
+<url>
 <loc>https://verboten.co.za/gallery</loc>
 <changefreq>weekly</changefreq>
 <priority>0.6</priority>
@@ -103,8 +108,8 @@
 <priority>0.5</priority>
 </url>
 <url>
-<loc>https://verboten.co.za/journal/batch-no-01-is-open</loc>
-<lastmod>2026-08-31T07:39:10.953Z</lastmod>
+<loc>https://verboten.co.za/journal/the-first-verboten-brandy-is-shipping</loc>
+<lastmod>2026-08-31T10:07:54.508Z</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>

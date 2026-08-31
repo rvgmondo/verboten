@@ -6,7 +6,8 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-export type GalleryImage = { url: string; alt: string };
+/** `url` is the full shot, `thumbUrl` the small variant behind each button. */
+export type GalleryImage = { url: string; thumbUrl?: string; alt: string };
 
 /**
  * Product gallery with a quiet crossfade between shots. Thumbnails are real
@@ -55,7 +56,17 @@ export const ProductGallery = ({ images }: { images: GalleryImage[] }) => {
                 i === index ? "border-gold" : "border-line hover:border-gold-dim",
               )}
             >
-              <Image src={img.url} alt="" fill sizes="150px" className="object-cover" />
+              {/* The 400px variant, not the feature file. images.unoptimized
+                  is on for this host, so next/image is a pass-through and
+                  `sizes` buys nothing: four thumbnails were pulling four
+                  1280px photographs while the main image was still loading. */}
+              <Image
+                src={img.thumbUrl ?? img.url}
+                alt=""
+                fill
+                sizes="150px"
+                className="object-cover"
+              />
             </button>
           ))}
         </div>

@@ -66,26 +66,66 @@ export const nextOrderNumber = async (payload: Payload, year: number): Promise<s
   return `VB-${year}-${String(n).padStart(4, "0")}`;
 };
 
-/** Atomic `bottles_remaining = max(0, bottles_remaining - units)`. */
-export const decrementBatch = async (payload: Payload, batchId: number, units: number): Promise<void> => {
-  const floorExpr = isPostgres()
-    ? sql`GREATEST(0, bottles_remaining - ${units})`
-    : sql`MAX(0, bottles_remaining - ${units})`;
-  await exec(payload, sql`UPDATE batches SET bottles_remaining = ${floorExpr} WHERE id = ${batchId}`);
+/**
+ * Take `units` off a counter, never below zero, reporting what could not be
+ * taken.
+ *
+ * Two statements, and the order matters. The first only fires when there is
+ * genuinely enough, so the ordinary case is a single atomic guarded update and
+ * two concurrent sales can never both succeed on the last bottle. Only when
+ * that guard refuses do we fall back to draining what is left, and the
+ * difference is the oversell.
+ *
+ * Flooring at zero is still right: stock must not go negative. Flooring
+ * silently was not. Nothing reserves stock between order creation and the
+ * payment landing, so two buyers can both clear the checkout stock check and
+ * both pay for the last bottle. Clamping and saying nothing left staff to
+ * discover it at packing time, with a customer already told the order was
+ * confirmed.
+ */
+const takeFrom = async (
+  payload: Payload,
+  table: "batches" | "products",
+  id: number,
+  units: number,
+): Promise<number> => {
+  const col = table === "batches" ? sql`bottles_remaining` : sql`inventory_stock_qty`;
+  const cur = table === "batches" ? sql`bottles_remaining` : sql`COALESCE(inventory_stock_qty, 0)`;
+  const tbl = table === "batches" ? sql`batches` : sql`products`;
+
+  // Enough in stock: take it in one guarded, atomic statement.
+  const ok = await queryOne(
+    payload,
+    sql`UPDATE ${tbl} SET ${col} = ${cur} - ${units}
+        WHERE id = ${id} AND ${cur} >= ${units}
+        RETURNING ${col}`,
+  );
+  if (ok) return 0;
+
+  // Not enough, so this order is taking stock that is not there. Read what
+  // remains, drain it, and report the difference. The read and the drain are
+  // not one statement, but this path is only ever reached once the counter is
+  // already short, and its output is a staff alert rather than a price.
+  const row = await queryOne(payload, sql`SELECT ${cur} AS remaining FROM ${tbl} WHERE id = ${id}`);
+  if (!row) return units;
+  const left = Number(row.remaining ?? 0);
+  await exec(payload, sql`UPDATE ${tbl} SET ${col} = 0 WHERE id = ${id}`);
+  return Math.max(0, units - (Number.isFinite(left) ? left : 0));
 };
 
-/** Atomic `inventory_stock_qty = max(0, inventory_stock_qty - units)`. */
+/** Atomic decrement of a batch. Returns units that could not be taken. */
+export const decrementBatch = async (
+  payload: Payload,
+  batchId: number,
+  units: number,
+): Promise<number> => takeFrom(payload, "batches", batchId, units);
+
+/** Atomic decrement of a product's own stock. Returns units not taken. */
 export const decrementProductStock = async (
   payload: Payload,
   productId: number,
   units: number,
-): Promise<void> => {
-  const cur = sql`COALESCE(inventory_stock_qty, 0)`;
-  const floorExpr = isPostgres()
-    ? sql`GREATEST(0, ${cur} - ${units})`
-    : sql`MAX(0, ${cur} - ${units})`;
-  await exec(payload, sql`UPDATE products SET inventory_stock_qty = ${floorExpr} WHERE id = ${productId}`);
-};
+): Promise<number> => takeFrom(payload, "products", productId, units);
 
 /** Atomic single-use-safe redemption counter for a discount code. */
 export const incrementDiscountUse = async (payload: Payload, codeId: number): Promise<void> => {
@@ -93,4 +133,34 @@ export const incrementDiscountUse = async (payload: Payload, codeId: number): Pr
     payload,
     sql`UPDATE discount_codes SET used_count = COALESCE(used_count, 0) + 1 WHERE id = ${codeId}`,
   );
+};
+
+/**
+ * Take one use of a discount code, or refuse because the cap is already met.
+ *
+ * The cap has to be claimed in the same statement that tests it. Reading
+ * usedCount and then incrementing it later leaves a window the buyer controls:
+ * ten people can all read "0 used" on a single-use code within the same
+ * second, and all ten get the discount. Here the WHERE clause does the testing,
+ * so exactly one of those ten updates a row and the rest get false.
+ *
+ * Returns true when the use is claimed.
+ */
+export const claimDiscountUse = async (payload: Payload, codeId: number): Promise<boolean> => {
+  const row = await queryOne(
+    payload,
+    sql`UPDATE discount_codes
+        SET used_count = COALESCE(used_count, 0) + 1
+        WHERE id = ${codeId}
+          AND (max_uses IS NULL OR COALESCE(used_count, 0) < max_uses)
+        RETURNING used_count`,
+  );
+  return Boolean(row);
+};
+
+/** Hand a claimed use back when the order it was claimed for never gets paid. */
+export const releaseDiscountUse = async (payload: Payload, codeId: number): Promise<void> => {
+  const cur = sql`COALESCE(used_count, 0)`;
+  const floorExpr = isPostgres() ? sql`GREATEST(0, ${cur} - 1)` : sql`MAX(0, ${cur} - 1)`;
+  await exec(payload, sql`UPDATE discount_codes SET used_count = ${floorExpr} WHERE id = ${codeId}`);
 };

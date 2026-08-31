@@ -77,6 +77,13 @@ export const HeroCinema = ({
   const [active, setActive] = React.useState(0);
   const [paused, setPaused] = React.useState(false);
   const [reduced, setReduced] = React.useState(false);
+  /**
+   * A deliberate stop, as opposed to the transient pause hovering gives you.
+   * WCAG 2.2.2 asks for a real mechanism to stop moving content that runs
+   * longer than five seconds, and hover does not count: it is unavailable on
+   * touch and to anyone reading with a magnifier or the keyboard.
+   */
+  const [stopped, setStopped] = React.useState(false);
 
   React.useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -87,10 +94,10 @@ export const HeroCinema = ({
   }, []);
 
   React.useEffect(() => {
-    if (paused || reduced) return;
+    if (paused || reduced || stopped) return;
     const t = setInterval(() => setActive((a) => (a + 1) % CHAPTERS.length), HOLD_MS);
     return () => clearInterval(t);
-  }, [paused, reduced]);
+  }, [paused, reduced, stopped, active]);
 
   const chapters = React.useMemo(() => {
     if (!soldOut) return CHAPTERS;
@@ -242,7 +249,12 @@ export const HeroCinema = ({
             <button
               key={c.key}
               type="button"
-              onClick={() => setActive(i)}
+              onClick={() => {
+                setActive(i);
+                // Picking a chapter is a request to read it. Without this the
+                // timer could move you on a fraction of a second later.
+                setStopped(true);
+              }}
               aria-label={c.label}
               aria-current={i === active ? "true" : undefined}
               className={`flex h-11 min-w-11 items-center justify-center px-2 font-display text-sm tracking-[0.2em] transition-colors ${
@@ -258,6 +270,14 @@ export const HeroCinema = ({
               />
             </button>
           ))}
+          <button
+            type="button"
+            onClick={() => setStopped((v) => !v)}
+            aria-pressed={stopped}
+            className="ml-2 flex h-11 items-center justify-center px-3 text-[0.625rem] uppercase tracking-[0.2em] text-parch/60 transition-colors hover:text-parch"
+          >
+            {stopped ? "Play" : "Pause"}
+          </button>
         </div>
       </div>
 

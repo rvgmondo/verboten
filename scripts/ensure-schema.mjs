@@ -76,6 +76,44 @@ const COLUMNS = [
     column: "gallery_items_id",
     ddl: "ALTER TABLE `payload_locked_documents_rels` ADD COLUMN `gallery_items_id` integer REFERENCES gallery_items(id)",
   },
+  // Customer accounts now require a confirmed email address before they are
+  // usable, because the account page shows orders matched on that address.
+  {
+    table: "customers",
+    column: "_verified",
+    ddl: "ALTER TABLE `customers` ADD COLUMN `_verified` integer",
+  },
+  {
+    table: "customers",
+    column: "_verificationtoken",
+    ddl: "ALTER TABLE `customers` ADD COLUMN `_verificationtoken` text",
+  },
+  // Structured address on events, required for Google's event rich result.
+  {
+    table: "events",
+    column: "address_street_address",
+    ddl: "ALTER TABLE `events` ADD COLUMN `address_street_address` text",
+  },
+  {
+    table: "events",
+    column: "address_address_locality",
+    ddl: "ALTER TABLE `events` ADD COLUMN `address_address_locality` text",
+  },
+  {
+    table: "events",
+    column: "address_address_region",
+    ddl: "ALTER TABLE `events` ADD COLUMN `address_address_region` text",
+  },
+  {
+    table: "events",
+    column: "address_postal_code",
+    ddl: "ALTER TABLE `events` ADD COLUMN `address_postal_code` text",
+  },
+  {
+    table: "events",
+    column: "address_address_country",
+    ddl: "ALTER TABLE `events` ADD COLUMN `address_address_country` text DEFAULT 'ZA'",
+  },
 ];
 
 const run = async () => {
