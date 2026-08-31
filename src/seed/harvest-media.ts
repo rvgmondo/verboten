@@ -20,14 +20,14 @@ const cacheDir = path.resolve(dirname, "../../.imgcache");
 
 const PRODUCT_SOURCES: Array<{ slug: string; oldUrl: string; alt: string }> = [
   {
-    slug: "verboten-premium-brandy-batch-no-01-3-year",
+    slug: "verboten-premium-brandy",
     oldUrl: "https://verboten.co.za/product/verboten-premium-brandy-batch-no-01-3-year/",
-    alt: "Verboten Premium Brandy Batch No. 01 bottle",
+    alt: "Verboten Premium Brandy bottle",
   },
   {
-    slug: "batch-no-01-premium-set-2-bottle",
+    slug: "verboten-premium-set-2-bottle",
     oldUrl: "https://verboten.co.za/product/batch-no-01-premium-set-2-bottle/",
-    alt: "Two bottles of Verboten Premium Brandy Batch No. 01",
+    alt: "Two bottles of Verboten Premium Brandy",
   },
   {
     slug: "verboten-brandy-cola",
