@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { SectionHeading } from "@/components/brand/section-heading";
+import { PageMasthead } from "@/components/brand/page-masthead";
 import { ContactForm } from "@/components/contact-form";
 import { getSiteSettings } from "@/lib/data";
 
@@ -16,15 +16,16 @@ export default async function ContactPage() {
   const { contact } = settings;
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-16 lg:py-24">
-      <div className="grid gap-14 lg:grid-cols-[1fr_1.2fr]">
+    <main>
+      <PageMasthead
+        eyebrow="Contact"
+        title="Talk to"
+        titleAccent="the house."
+        lead="Order questions, stockist enquiries, events, or anything else worth asking. We reply within one business day, and it is a person replying."
+      />
+
+      <div className="mx-auto grid max-w-6xl gap-14 px-6 py-16 lg:grid-cols-[1fr_1.2fr] lg:py-20">
         <div className="space-y-10">
-          <SectionHeading
-            as="h1"
-            eyebrow="Contact"
-            title="Talk to the house"
-            lead="Order questions, stockist enquiries, events, or anything else worth asking. We reply within one business day."
-          />
           <dl className="space-y-6 text-sm">
             {contact?.email && (
               <div>

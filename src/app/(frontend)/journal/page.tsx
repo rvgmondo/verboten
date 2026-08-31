@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { SectionHeading } from "@/components/brand/section-heading";
+import { PageMasthead } from "@/components/brand/page-masthead";
 import { CmsImage } from "@/components/media/cms-image";
 import { Badge } from "@/components/ui/badge";
 import { getJournalPosts } from "@/lib/data";
@@ -33,16 +33,17 @@ export default async function JournalPage() {
   const posts = await getJournalPosts(48);
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-16 lg:py-24">
-      <SectionHeading
-        as="h1"
+    <main>
+      <PageMasthead
         eyebrow="The journal"
-        title="Notes from the house"
+        title="Notes from"
+        titleAccent="the house."
         lead="Releases, recaps and the occasional opinion. Written when there is something worth saying."
       />
 
+      <div className="mx-auto max-w-6xl px-6 py-16 lg:py-20">
       {posts.length > 0 ? (
-        <ul className="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => {
             const hero =
               post.hero && typeof post.hero === "object" ? (post.hero as Media) : null;
@@ -78,10 +79,11 @@ export default async function JournalPage() {
           })}
         </ul>
       ) : (
-        <div className="mt-14 border border-line bg-coal p-8">
+        <div className="border border-line bg-coal p-8">
           <p className="text-sm text-parch">Nothing published yet. It will be worth the wait.</p>
         </div>
       )}
+      </div>
     </main>
   );
 }

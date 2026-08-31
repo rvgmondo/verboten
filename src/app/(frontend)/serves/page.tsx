@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { SectionHeading } from "@/components/brand/section-heading";
+import { PageMasthead } from "@/components/brand/page-masthead";
 import { CmsImage } from "@/components/media/cms-image";
 import { PlaceholderFrame } from "@/components/media/placeholder-frame";
 import { getServes } from "@/lib/data";
@@ -17,15 +17,15 @@ export default async function ServesPage() {
   const serves = await getServes();
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-16 lg:py-24">
-      <SectionHeading
-        as="h1"
+    <main>
+      <PageMasthead
         eyebrow="Serves"
-        title="How the house pours it"
+        title="How the house"
+        titleAccent="pours it."
         lead="Simple builds that respect the bottle. Nothing here needs a cocktail kit, or an audience."
       />
 
-      <div className="mt-14 space-y-16">
+      <div className="mx-auto max-w-6xl space-y-16 px-6 py-16 lg:py-20">
         {serves.map((serve, index) => {
           const image =
             serve.image && typeof serve.image === "object" ? (serve.image as Media) : null;

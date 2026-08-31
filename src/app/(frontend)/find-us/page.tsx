@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { SectionHeading } from "@/components/brand/section-heading";
+import { PageMasthead } from "@/components/brand/page-masthead";
 import { JsonLd } from "@/components/json-ld";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -62,19 +62,20 @@ export default async function FindUsPage() {
   ]);
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-16 lg:py-24">
+    <main>
       {events.map((event) => (
         <JsonLd key={event.id} data={eventLd(event)} />
       ))}
-      <SectionHeading
-        as="h1"
+      <PageMasthead
         eyebrow="Out in the world"
-        title="Where to find us"
+        title="Where to"
+        titleAccent="find us."
         lead="Quality bars that know their stuff. Restaurants that care about what they serve. Events worth showing up to. And direct to your door when you order online."
       />
 
+      <div className="mx-auto max-w-6xl px-6 py-16 lg:py-20">
       {/* Events */}
-      <section aria-labelledby="events-heading" className="mt-16">
+      <section aria-labelledby="events-heading">
         <h2 id="events-heading" className="eyebrow mb-6">
           Upcoming events and markets
         </h2>
@@ -197,6 +198,7 @@ export default async function FindUsPage() {
           </div>
         )}
       </section>
+      </div>
     </main>
   );
 }

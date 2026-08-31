@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { PageMasthead } from "@/components/brand/page-masthead";
 import { JsonLd } from "@/components/json-ld";
 import { CmsImage } from "@/components/media/cms-image";
 import { RichText } from "@/components/rich-text";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getJournalPostBySlug, getJournalPosts } from "@/lib/data";
 import { articleLd, breadcrumbLd } from "@/lib/seo";
@@ -50,7 +50,7 @@ export default async function JournalPostPage({ params }: Params) {
     : null;
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-16 lg:py-24">
+    <main>
       <JsonLd data={articleLd(post)} />
       <JsonLd
         data={breadcrumbLd([
@@ -59,33 +59,30 @@ export default async function JournalPostPage({ params }: Params) {
           { name: post.title, path: `/journal/${post.slug}` },
         ])}
       />
-      <header className="space-y-5">
-        <div className="flex items-center gap-3">
-          <Badge variant="gold">{CATEGORY_LABELS[post.category] ?? post.category}</Badge>
-          {date && <span className="text-xs text-parch">{date}</span>}
-        </div>
-        <h1 className="font-display text-4xl leading-[1.05] tracking-tight text-bone sm:text-5xl">
-          {post.title}
-        </h1>
-        {post.excerpt && <p className="text-lg leading-relaxed text-parch">{post.excerpt}</p>}
-      </header>
+      <PageMasthead
+        eyebrow={`${CATEGORY_LABELS[post.category] ?? post.category}${date ? ` | ${date}` : ""}`}
+        title={post.title}
+        lead={post.excerpt ?? undefined}
+      />
 
+      <div className="mx-auto max-w-3xl px-6 py-16 lg:py-20">
       {hero && (
         <CmsImage
           media={hero}
           aspect="aspect-[16/9]"
           sizes="(min-width: 768px) 768px, 100vw"
-          className="mt-10"
+          className="mb-10"
           priority
         />
       )}
 
-      <RichText data={post.content} className="mt-10 text-base" />
+      <RichText data={post.content} className="text-base" />
 
       <div className="mt-16 border-t border-line pt-8">
         <Button variant="ghost" size="sm" asChild>
           <Link href="/journal">All journal entries</Link>
         </Button>
+      </div>
       </div>
     </main>
   );
