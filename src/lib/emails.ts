@@ -33,7 +33,9 @@ const STATUS_EMAILS: Partial<
 > = {
   paid: (o, dispatch) => ({
     subject: `Order ${o.orderNumber} confirmed`,
-    body: `Payment received. ${o.orderNumber} is yours.\n\n${orderLines(o)}\n\n${totals(o)}\n\n${dispatch}, and you get a tracking number the moment it ships.\n\n${signoff}`,
+    body: `Payment received. ${o.orderNumber} is yours.\n\n${orderLines(o)}\n\n${totals(o)}\n\n${dispatch}, and you get a tracking number the moment it ships.
+
+You can look this order up any time at https://verboten.co.za/account, using this email address.\n\n${signoff}`,
   }),
   packed: (o) => ({
     subject: `Order ${o.orderNumber} is packed`,

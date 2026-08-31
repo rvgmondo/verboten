@@ -6,6 +6,8 @@ ${f(a)}
 
 ${b}, and you get a tracking number the moment it ships.
 
+You can look this order up any time at https://verboten.co.za/account, using this email address.
+
 ${g}`}),packed:a=>({subject:`Order ${a.orderNumber} is packed`,body:`${a.orderNumber} is boxed and waiting for the courier.
 
 You will get a tracking number when it is collected.

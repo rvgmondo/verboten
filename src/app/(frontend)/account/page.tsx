@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { getPayload } from "payload";
 
 import { AccountAuth, LogoutButton } from "@/components/account/account-auth";
-import { SectionHeading } from "@/components/brand/section-heading";
+import { PageMasthead } from "@/components/brand/page-masthead";
 import { Badge } from "@/components/ui/badge";
 import { formatZAR } from "@/lib/money";
 
@@ -37,49 +37,59 @@ export default async function AccountPage() {
 
   if (!customer) {
     return (
-      <main className="mx-auto max-w-3xl px-6 py-16 lg:py-24">
-        <SectionHeading
-          as="h1"
+      <main>
+        <PageMasthead
           align="center"
-          eyebrow="Your orders"
-          title="Sign in to see your orders"
-          lead="An account is optional; guest orders always land in your email. Signing in simply keeps the history in one place."
-          className="mb-12"
+          eyebrow="Your account"
+          title="Everything you have"
+          titleAccent="ordered."
+          lead="Create an account with the address you checked out with and every order you have placed appears here, including the ones you placed as a guest."
         />
-        <AccountAuth />
+        <div className="mx-auto max-w-3xl px-6 py-16 lg:py-20">
+          <AccountAuth />
+        </div>
       </main>
     );
   }
 
   const orders = await payload.find({
     collection: "orders",
-    where: { customer: { equals: customer.id } },
+    // Orders placed as a guest carry no customer link, only an email. Matching
+    // on either means signing up hands you every order you ever placed with
+    // that address, instead of an empty page and a lost history.
+    where: {
+      or: [
+        { customer: { equals: customer.id } },
+        { email: { equals: customer.email } },
+      ],
+    },
     sort: "-createdAt",
     limit: 50,
     overrideAccess: true,
   });
 
   return (
-    <main className="mx-auto max-w-4xl px-6 py-16 lg:py-24">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <SectionHeading
-          as="h1"
-          eyebrow="Your orders"
-          title={customer.name ? `Good to see you, ${customer.name.split(" ")[0]}` : "Your orders"}
-        />
+    <main>
+      <PageMasthead
+        eyebrow="Your account"
+        title={customer.name ? "Good to see you," : "Your"}
+        titleAccent={customer.name ? `${customer.name.split(" ")[0]}.` : "orders."}
+      />
+      <div className="mx-auto max-w-4xl px-6 py-16 lg:py-20">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <p className="text-sm text-parch">{customer.email}</p>
         <LogoutButton />
       </div>
 
       {orders.docs.length === 0 ? (
-        <div className="mt-12 border border-line bg-coal p-8">
+        <div className="mt-10 border border-line bg-coal p-8">
           <p className="text-sm text-parch">
-            No orders on this account yet. Orders placed as a guest with{" "}
-            {customer.email} stay in your email; future signed-in orders appear
-            here.
+            Nothing here yet. Any order placed with {customer.email} shows up
+            on this page, whether you were signed in at the time or not.
           </p>
         </div>
       ) : (
-        <ul className="mt-12 divide-y divide-line border-y border-line">
+        <ul className="mt-10 divide-y divide-line border-y border-line">
           {orders.docs.map((order) => (
             <li key={order.id} className="grid gap-3 py-6 sm:grid-cols-[1fr_auto_auto] sm:items-center sm:gap-8">
               <div>
@@ -102,6 +112,7 @@ export default async function AccountPage() {
           ))}
         </ul>
       )}
+      </div>
     </main>
   );
 }

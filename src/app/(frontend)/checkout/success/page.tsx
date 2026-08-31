@@ -39,6 +39,20 @@ export default async function CheckoutSuccessPage({
           the courier collects.
         </p>
       </div>
+      {/* The warmest moment to offer an account: they have just bought, and
+          the account instantly shows this order plus any earlier guest ones. */}
+      <div className="w-full max-w-md border border-gold-dim/40 bg-coal p-6 text-left">
+        <p className="eyebrow mb-3">Keep track of it</p>
+        <p className="text-sm leading-relaxed text-parch">
+          Create an account with the same email and this order appears under
+          your name, along with anything you ordered before. No account is
+          needed to receive it, only to look it up later.
+        </p>
+        <Button className="mt-5" asChild>
+          <Link href="/account">Set up your account</Link>
+        </Button>
+      </div>
+
       <div className="flex gap-4">
         <Button variant="outline" asChild>
           <Link href="/shop">Keep browsing</Link>
