@@ -9,8 +9,8 @@ export const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"in
       ref={ref}
       className={cn(
         // text-base on small screens: 16px stops iOS Safari zooming every field.
-        "h-11 w-full rounded-xs border border-line bg-coal px-4 text-base text-bone sm:text-sm",
-        "placeholder:text-parch/60",
+        "h-11 w-full rounded-xs border border-field bg-coal px-4 text-base text-bone sm:text-sm",
+        "placeholder:text-parch",
         "transition-colors duration-200 hover:border-gold-dim/60",
         "focus:border-gold",
         "aria-[invalid=true]:border-danger",

@@ -145,7 +145,7 @@ export default async function ShopPage() {
               <Link href="/find-us">Where to find us</Link>
             </Button>
           </div>
-          <p className="mx-auto max-w-lg pt-6 text-xs leading-relaxed text-parch/80">
+          <p className="mx-auto max-w-lg pt-6 text-xs leading-relaxed text-parch">
             Drink responsibly. Not for sale to persons under 18. Age is verified
             at checkout and on delivery.
           </p>

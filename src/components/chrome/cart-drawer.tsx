@@ -207,7 +207,7 @@ export const CartDrawer = ({ flatRateCents, freeThresholdCents, offers }: Props)
               <Button className="w-full" asChild onClick={close}>
                 <Link href="/checkout">Go to checkout</Link>
               </Button>
-              <p className="text-center text-[0.7rem] text-parch/70">
+              <p className="text-center text-[0.7rem] text-parch">
                 Discount codes apply at checkout.
               </p>
             </div>

@@ -1,6 +1,6 @@
 import type { CollectionConfig } from "payload";
 
-import { anyone, isAdmin, staffOrSelfCustomer } from "../access/access";
+import { anyone, isAdmin, isStaffField, staffOrSelfCustomer } from "../access/access";
 import { accountResetEmail, accountVerifyEmail } from "../lib/emails";
 import { SA_PROVINCES } from "./Orders";
 
@@ -59,6 +59,25 @@ export const Customers: CollectionConfig = {
     delete: isAdmin,
   },
   fields: [
+    {
+      /**
+       * Declared purely to lock it down.
+       *
+       * Requiring a confirmed address closed one route to a stranger's order
+       * history, and left another wide open: verify your own address, then
+       * change it to somebody else's. `_verified` stays true through an
+       * update, so the account page would then match on the new address and
+       * show their guest orders, delivery address and date of birth.
+       *
+       * A shop this size does not need self-service address changes. Staff can
+       * make the change, and the customer keeps their history. That is a
+       * smaller cost than the alternative, which is a working way to read
+       * somebody else's purchases.
+       */
+      name: "email",
+      type: "email",
+      access: { update: isStaffField },
+    },
     {
       name: "name",
       type: "text",

@@ -78,7 +78,7 @@ export default async function ServesPage() {
         })}
       </div>
 
-      <p className="mt-16 border-t border-line pt-6 text-xs leading-relaxed text-parch/80">
+      <p className="mt-16 border-t border-line pt-6 text-xs leading-relaxed text-parch">
         Drink responsibly. Not for sale to persons under 18.
       </p>
     </main>

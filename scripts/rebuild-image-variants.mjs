@@ -71,6 +71,12 @@ const run = async () => {
 
     const stem = String(doc.filename).replace(/\.[^.]+$/, "");
     const sourceWidth = Number(doc.width) || 0;
+    // Widths already produced for this file, so a source narrower than the
+    // larger named sizes fills the biggest applicable slot once at its own
+    // width instead of being skipped. Without that the only full-resolution
+    // candidate left is the raw upload, which is the thing we are trying to
+    // stop shipping.
+    const produced = new Set();
 
     for (const size of SIZES) {
       const col = `sizes_${size.name}`;
@@ -83,11 +89,13 @@ const run = async () => {
       // Already WebP: nothing to gain.
       if (row.mime === "image/webp") continue;
 
-      // Never upscale. A 1024px original has no business producing a 1920px
-      // "hero" variant, and Payload does not generate one either.
-      if (sourceWidth && sourceWidth < size.width) continue;
+      // Never upscale, but do not simply skip either: clamp to the source's
+      // own width and produce it once.
+      const targetWidth = sourceWidth ? Math.min(size.width, sourceWidth) : size.width;
+      if (produced.has(targetWidth)) continue;
+      produced.add(targetWidth);
 
-      const outName = `${stem}-${size.width}x${size.width}.webp`;
+      const outName = `${stem}-${targetWidth}x${targetWidth}.webp`;
       const outPath = path.join(MEDIA_DIR, outName);
 
       const before = Number(row.filesize) || 0;
@@ -95,7 +103,7 @@ const run = async () => {
 
       if (WRITE) {
         const buf = await sharp(original)
-          .resize(size.width, size.width, { fit: "cover", position: "centre" })
+          .resize(targetWidth, targetWidth, { fit: "cover", position: "centre" })
           .webp({ quality: QUALITY })
           .toBuffer();
         fs.writeFileSync(outPath, buf);
@@ -108,8 +116,8 @@ const run = async () => {
                 WHERE id = ?`,
           args: [
             `/api/media/file/${outName}`,
-            size.width,
-            size.width,
+            targetWidth,
+            targetWidth,
             "image/webp",
             after,
             outName,
@@ -118,7 +126,7 @@ const run = async () => {
         });
       } else {
         const meta = await sharp(original)
-          .resize(size.width, size.width, { fit: "cover", position: "centre" })
+          .resize(targetWidth, targetWidth, { fit: "cover", position: "centre" })
           .webp({ quality: QUALITY })
           .toBuffer();
         after = meta.length;

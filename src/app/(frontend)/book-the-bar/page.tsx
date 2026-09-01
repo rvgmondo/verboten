@@ -184,7 +184,7 @@ export default async function BookTheBarPage() {
               travelling for.
             </p>
             <div className="border-t border-line pt-5">
-              <p className="text-xs leading-relaxed text-parch/80">
+              <p className="text-xs leading-relaxed text-parch">
                 We serve alcohol, so every event we pour at is 18+ and our team
                 checks identification. Drink responsibly. Not for sale to
                 persons under 18.

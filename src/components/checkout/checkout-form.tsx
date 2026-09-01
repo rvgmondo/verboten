@@ -284,7 +284,7 @@ export const CheckoutForm = ({
                   errors?.dateOfBirth ? "co-dateOfBirth-error co-dob-why" : "co-dob-why"
                 }
               />
-              <p id="co-dob-why" className="text-[0.6875rem] text-parch/80">
+              <p id="co-dob-why" className="text-[0.6875rem] text-parch">
                 Alcohol law: we confirm you are 18 or older.
               </p>
             </Field>
@@ -327,7 +327,7 @@ export const CheckoutForm = ({
                 {...bind("province")}
                 required
                 defaultValue="Gauteng"
-                className="h-11 w-full rounded-xs border border-line bg-coal px-3 text-base text-bone transition-colors hover:border-gold-dim/60 focus:border-gold sm:text-sm"
+                className="h-11 w-full rounded-xs border border-field bg-coal px-3 text-base text-bone transition-colors hover:border-gold focus:border-gold sm:text-sm"
               >
                 {PROVINCES.map((p) => (
                   <option key={p} value={p}>
@@ -446,7 +446,7 @@ export const CheckoutForm = ({
           Secure payment by PayFast: cards and Instant EFT. Your card details
           never touch our servers.
         </p>
-        <p className="text-[0.6875rem] leading-relaxed text-parch/80">
+        <p className="text-[0.6875rem] leading-relaxed text-parch">
           Drink responsibly. Not for sale to persons under 18. Someone 18 or
           older must receive the delivery.
         </p>

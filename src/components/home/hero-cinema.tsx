@@ -258,7 +258,7 @@ export const HeroCinema = ({
               aria-label={c.label}
               aria-current={i === active ? "true" : undefined}
               className={`flex h-11 min-w-11 items-center justify-center px-2 font-display text-sm tracking-[0.2em] transition-colors ${
-                i === active ? "text-gold" : "text-parch/60 hover:text-parch"
+                i === active ? "text-gold" : "text-parch hover:text-parch"
               }`}
             >
               {["I", "II", "III"][i]}
@@ -274,7 +274,7 @@ export const HeroCinema = ({
             type="button"
             onClick={() => setStopped((v) => !v)}
             aria-pressed={stopped}
-            className="ml-2 flex h-11 items-center justify-center px-3 text-[0.625rem] uppercase tracking-[0.2em] text-parch/60 transition-colors hover:text-parch"
+            className="ml-2 flex h-11 items-center justify-center px-3 text-[0.625rem] uppercase tracking-[0.2em] text-parch transition-colors hover:text-parch"
           >
             {stopped ? "Play" : "Pause"}
           </button>

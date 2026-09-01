@@ -115,7 +115,7 @@ export const Footer = async () => {
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className="text-xs text-parch/80 transition-colors hover:text-bone"
+                    className="text-xs text-parch transition-colors hover:text-bone"
                   >
                     {l.label}
                   </Link>
@@ -123,10 +123,10 @@ export const Footer = async () => {
               ))}
             </ul>
           </nav>
-          <p className="text-xs leading-relaxed text-parch/80">
+          <p className="text-xs leading-relaxed text-parch">
             Drink responsibly. Not for sale to persons under 18.
           </p>
-          <p className="text-xs text-parch/80">
+          <p className="text-xs text-parch">
             © {year} Verboten Pty Ltd. {settings.contact?.address ?? "Silverton, Pretoria"}.
           </p>
         </div>

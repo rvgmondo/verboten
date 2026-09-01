@@ -62,7 +62,7 @@ export default async function JournalPage() {
                   <div className="space-y-2">
                     <div className="flex items-center gap-3">
                       <Badge variant="quiet">{CATEGORY_LABELS[post.category] ?? post.category}</Badge>
-                      {date && <span className="text-xs text-parch/80">{date}</span>}
+                      {date && <span className="text-xs text-parch">{date}</span>}
                     </div>
                     <h2 className="font-display text-xl leading-snug text-bone transition-colors group-hover:text-gold-bright">
                       {post.title}

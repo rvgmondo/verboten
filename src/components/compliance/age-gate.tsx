@@ -82,7 +82,7 @@ export const AgeGate = () => {
               I am under 18
             </Button>
           </div>
-          <p className="mt-6 text-[0.6875rem] leading-relaxed text-parch/80">
+          <p className="mt-6 text-[0.6875rem] leading-relaxed text-parch">
             Drink responsibly. Not for sale to persons under 18.
           </p>
         </DialogPrimitive.Content>

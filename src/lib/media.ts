@@ -31,12 +31,22 @@ const variantsOf = (media: Media): Variant[] => {
     const url = mediaSrc(s?.url);
     if (url && s?.width) out.push({ url, width: s.width });
   }
-  const originalUrl = mediaSrc(media.url);
-  // The original is the widest candidate, but only when it is genuinely larger
-  // than the biggest variant; otherwise it just duplicates an entry.
-  if (originalUrl && media.width) {
-    const widest = out.length ? out[out.length - 1].width : 0;
-    if (media.width > widest) out.push({ url: originalUrl, width: media.width });
+  // The original upload is a fallback, never a display candidate, as long as
+  // any generated variant exists.
+  //
+  // It used to be offered as the widest entry in the srcset. That is fine when
+  // the upload is already a display format and wrong when it is not: a
+  // photograph uploaded as PNG was 1,485,953 bytes, and a 360px phone at DPR3
+  // asks for 1080, so it picked exactly that file over a 23KB WebP one step
+  // down. Generating variants is what stops the original shipping; offering it
+  // anyway undid the whole point.
+  //
+  // When a source is too small for the larger named sizes, the rebuild script
+  // fills the biggest applicable slot at the source's own width, so nothing is
+  // lost by leaving the original out.
+  if (out.length === 0) {
+    const originalUrl = mediaSrc(media.url);
+    if (originalUrl && media.width) out.push({ url: originalUrl, width: media.width });
   }
   return out.sort((a, b) => a.width - b.width);
 };
