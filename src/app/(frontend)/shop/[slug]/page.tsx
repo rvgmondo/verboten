@@ -126,19 +126,11 @@ export default async function ProductPage({ params }: Params) {
             className="pointer-events-none absolute left-1/2 top-1/2 h-[85%] w-[85%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(205,184,141,0.14),rgba(205,184,141,0.04)_50%,transparent_74%)]"
           />
           <div className="relative">
+            {/* The gallery takes the media documents, not one chosen width.
+                Resolving a single URL here is what shipped a 1.49 MB original
+                into a 280px slot on phones. */}
             {gallery.length > 0 ? (
-              <ProductGallery
-                images={gallery
-                  .map((m) => ({
-                    url: mediaSrcAt(m, 1200),
-                    thumbUrl: mediaSrcAt(m, 300) ?? undefined,
-                    alt: m.alt,
-                  }))
-                  .filter(
-                    (m): m is { url: string; thumbUrl: string | undefined; alt: string } =>
-                      Boolean(m.url),
-                  )}
-              />
+              <ProductGallery images={gallery} />
             ) : (
               <ArtPlaceholder
                 shot={`${product.name}, primary product photography`}

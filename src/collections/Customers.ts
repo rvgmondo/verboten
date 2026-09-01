@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
 import { anyone, isAdmin, staffOrSelfCustomer } from "../access/access";
+import { accountResetEmail, accountVerifyEmail } from "../lib/emails";
 import { SA_PROVINCES } from "./Orders";
 
 /**
@@ -31,35 +32,18 @@ export const Customers: CollectionConfig = {
      * shop's own page instead.
      */
     forgotPassword: {
-      generateEmailSubject: () => "Reset your Verboten password",
-      generateEmailHTML: ({ token } = {}) => {
-        const link = `${siteUrl()}/account/reset?token=${encodeURIComponent(String(token))}`;
-        return [
-          "<p>Someone asked to reset the password on this account.</p>",
-          "<p>If that was you, choose a new one here. The link is single use.</p>",
-          `<p><a href="${link}">${link}</a></p>`,
-          "<p>If it was not you, ignore this email. Nothing changes unless the",
-          "link above is used.</p>",
-          "<p>Verboten Spirits, Pretoria<br>",
-          "Drink responsibly. Not for sale to persons under 18.</p>",
-        ].join("\n");
-      },
+      generateEmailSubject: () => accountResetEmail("").subject,
+      generateEmailHTML: ({ token } = {}) =>
+        accountResetEmail(
+          `${siteUrl()}/account/reset?token=${encodeURIComponent(String(token))}`,
+        ).html,
     },
     verify: {
-      generateEmailSubject: () => "Confirm your Verboten account",
-      generateEmailHTML: ({ token }) => {
-        const link = `${siteUrl()}/account/verify?token=${encodeURIComponent(String(token))}`;
-        return [
-          "<p>One step left.</p>",
-          "<p>Confirm this address and your account is open. Every order you have",
-          "placed with it, guest orders included, appears under your name.</p>",
-          `<p><a href="${link}">${link}</a></p>`,
-          "<p>If you did not create this account, ignore this email. Nothing is",
-          "opened and nothing is shared until the link above is used.</p>",
-          "<p>Verboten Spirits, Pretoria<br>",
-          "Drink responsibly. Not for sale to persons under 18.</p>",
-        ].join("\n");
-      },
+      generateEmailSubject: () => accountVerifyEmail("").subject,
+      generateEmailHTML: ({ token }) =>
+        accountVerifyEmail(
+          `${siteUrl()}/account/verify?token=${encodeURIComponent(String(token))}`,
+        ).html,
     },
   },
   admin: {

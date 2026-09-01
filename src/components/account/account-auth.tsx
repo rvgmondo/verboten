@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import * as React from "react";
 
+import { registerCustomer } from "@/app/actions/account";
 import { AUTH_CHANGED } from "@/components/chrome/account-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,26 +44,15 @@ export const AccountAuth = () => {
       }
 
       if (mode === "register") {
-        const createRes = await fetch("/api/customers", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ email, password, name }),
-        });
-        if (!createRes.ok) {
-          const data = await createRes.json().catch(() => null);
-          setError(
-            data?.errors?.[0]?.message ??
-              "That account could not be created. The email may already be in use.",
-          );
-          setBusy(false);
-          return;
-        }
+        // Through a server action rather than the REST endpoint, so the row
+        // and the confirmation email succeed or fail together. See
+        // app/actions/account.ts: without that, a mail outage left an account
+        // nobody could confirm and nobody could re-register.
+        const res = await registerCustomer({ email, password, name });
+        if (!res.ok) setError(res.message);
         // No automatic sign-in: the address has to be proven first, because
-        // the account shows orders matched on it. Payload has already sent
-        // the confirmation link.
-        setNotice(
-          "Check your email. There is a link waiting that opens your account, and your orders appear the moment you use it.",
-        );
+        // the account shows orders matched on it.
+        else setNotice(res.message);
         setBusy(false);
         return;
       }

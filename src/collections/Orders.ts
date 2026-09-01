@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
 import { isAdmin, isAdminOrEditor, isStaffField, serverOnly, staffOrOwnCustomer } from "../access/access";
+import { applyCancelledSideEffects, applyPaidSideEffects } from "../lib/commerce/lifecycle";
 import { sendOrderStatusEmail } from "../lib/emails";
 
 export const ORDER_STATUSES = [
@@ -36,7 +37,10 @@ export const Orders: CollectionConfig = {
   slug: "orders",
   admin: {
     useAsTitle: "orderNumber",
-    defaultColumns: ["orderNumber", "status", "email", "totalCents", "createdAt"],
+    // needsAttention sits second on purpose. Abandoned checkouts pile up as
+    // pending_payment, so a real payment that failed to reconcile looked
+    // exactly like them in this list. Now it is visible without opening a row.
+    defaultColumns: ["orderNumber", "needsAttention", "status", "email", "totalCents", "createdAt"],
     group: "Orders",
     listSearchableFields: ["orderNumber", "email", "customerName", "payment.reference"],
   },
@@ -63,7 +67,55 @@ export const Orders: CollectionConfig = {
       options: [...ORDER_STATUSES],
       admin: {
         position: "sidebar",
-        description: "Changing this emails the customer the matching update.",
+        description:
+          "Paid also takes the stock off the shelf and emails the customer. Cancelled and Refunded hand any discount code back. Each of those happens once, however the status got here.",
+      },
+    },
+    {
+      /**
+       * The one field the owner should be able to scan a list for.
+       *
+       * Money that needs a human is otherwise indistinguishable from an
+       * abandoned cart: same status, same columns, and the explanation buried
+       * in a textarea near the foot of the record. The server log holds it too,
+       * but nobody running a shop from cPanel reads server logs.
+       */
+      name: "needsAttention",
+      type: "select",
+      defaultValue: "none",
+      options: [
+        { label: "Nothing to do", value: "none" },
+        { label: "Amount mismatch", value: "amount_mismatch" },
+        { label: "Paid after cancellation", value: "paid_after_cancel" },
+        { label: "Oversold", value: "oversold" },
+      ],
+      admin: {
+        position: "sidebar",
+        readOnly: true,
+        description: "Set automatically when a payment needs a person to look at it.",
+      },
+    },
+    {
+      // Guards, so a side effect runs exactly once no matter which path got
+      // the order here: the webhook, or a staff member marking it by hand
+      // after an EFT or a sale at a market.
+      name: "stockMoved",
+      type: "checkbox",
+      defaultValue: false,
+      admin: {
+        position: "sidebar",
+        readOnly: true,
+        description: "Stock has been taken off for this order.",
+      },
+    },
+    {
+      name: "discountReleased",
+      type: "checkbox",
+      defaultValue: false,
+      admin: {
+        position: "sidebar",
+        readOnly: true,
+        description: "The discount code claimed by this order has been handed back.",
       },
     },
     {
@@ -262,10 +314,26 @@ export const Orders: CollectionConfig = {
       // Every status transition emails the customer the matching update,
       // whether the change came from the payment webhook or a staff member
       // in the admin. Creation (pending_payment) sends nothing.
-      async ({ doc, previousDoc, operation, req }) => {
+      async ({ doc, previousDoc, operation, req, context }) => {
         if (operation !== "update" || !previousDoc) return doc;
+        // Bookkeeping writes from the lifecycle helpers themselves.
+        if (context?.skipLifecycle) return doc;
 
         const statusChanged = doc.status !== previousDoc.status;
+
+        // The dropdown is not a notification switch. Marking an order Paid by
+        // hand, which is what happens after an EFT or a sale at a market, has
+        // to move stock exactly as the webhook does, and cancelling has to
+        // hand the discount code back. Both are guarded on the order itself,
+        // so whichever path arrives first does the work and the other does
+        // nothing.
+        if (statusChanged) {
+          if (doc.status === "paid") {
+            await applyPaidSideEffects(req.payload, doc);
+          } else if (doc.status === "cancelled" || doc.status === "refunded") {
+            await applyCancelledSideEffects(req.payload, doc);
+          }
+        }
 
         // Marking an order shipped and pasting the tracking number in are two
         // separate saves in the admin, and staff naturally do them in that

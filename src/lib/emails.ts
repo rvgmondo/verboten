@@ -308,6 +308,62 @@ export const sendStaffNewOrderAlert = async (payload: Payload, order: Order): Pr
   }
 };
 
+
+/**
+ * Tells staff that a payment needs a person.
+ *
+ * These cases were only ever written to internalNotes and the server log. A
+ * flagged order then sat in the same list, with the same status, as every
+ * abandoned checkout, and nobody running a shop from cPanel reads server logs.
+ * This is real money going unreconciled, so it gets an email of its own.
+ */
+export const sendStaffReconcileAlert = async (
+  payload: Payload,
+  order: Order,
+  { headline, detail }: { headline: string; detail: string },
+): Promise<void> => {
+  const settings = await payload.findGlobal({ slug: "site-settings", overrideAccess: true });
+  const to =
+    settings.contact?.notificationsEmail ||
+    process.env.ADMIN_NOTIFICATIONS_EMAIL ||
+    settings.contact?.ordersEmail;
+  if (!to) {
+    payload.logger.error(
+      { order: order.orderNumber },
+      "Reconcile alert had nowhere to go: set a notifications email in Site Settings",
+    );
+    return;
+  }
+
+  try {
+    await payload.sendEmail({
+      to,
+      replyTo: order.email,
+      subject: `[ACTION NEEDED] ${order.orderNumber}: ${headline}`,
+      text: `${headline}\n\n${detail}\n\n${order.customerName} <${order.email}>\n\n${orderLines(order)}\n\n${totals(order)}\n\nOpen the order: ${SITE}/admin/collections/orders\n\nThis needs a person. Nothing was shipped and nothing was refunded automatically.`,
+      html: emailLayout({
+        title: headline,
+        preheader: `${order.orderNumber} needs a person to look at it.`,
+        body: [
+          panel(
+            `${eyebrow("Action needed")}<p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.6;color:${EMAIL_COLORS.BONE};">${esc(detail)}</p>`,
+          ),
+          orderPanel(order),
+          muted(`${esc(order.customerName)} &middot; ${esc(order.email)}`),
+          button(`${SITE}/admin/collections/orders`, "Open the order"),
+          muted(
+            "Nothing was shipped and nothing was refunded automatically. Reply to this email and it reaches the customer.",
+          ),
+        ].join(""),
+        footer: standardFooter(),
+      }),
+    });
+    payload.logger.info({ to, order: order.orderNumber, headline }, "Reconcile alert sent");
+  } catch (err) {
+    payload.logger.error({ err, order: order.orderNumber }, "Reconcile alert failed");
+  }
+};
+
 /* ------------------------------------------------------------------ */
 /* Acknowledgements: what the person on the other end receives.        */
 /*                                                                     */
@@ -522,4 +578,64 @@ export const sendNewsletterWelcome = async (
   } catch (err) {
     payload.logger.error({ err, to }, "Newsletter welcome failed");
   }
+};
+
+/* ------------------------------------------------------------------ */
+/* Account email. Shared with the Customers collection so the branded  */
+/* shell is not duplicated: Payload sends these itself for password    */
+/* resets, and registerCustomer sends the verification one by hand so  */
+/* it can undo the signup when the mail will not go.                   */
+/* ------------------------------------------------------------------ */
+
+export const accountVerifyEmail = (link: string) => ({
+  subject: "Confirm your Verboten account",
+  text: `One step left.\n\nConfirm this address and your account is open. Every order you have placed with it, guest orders included, appears under your name.\n\n${link}\n\nIf you did not create this account, ignore this email. Nothing is opened and nothing is shared until the link above is used.\n\n${signoff}`,
+  html: emailLayout({
+    title: "One step left.",
+    preheader: "Confirm this address and your account is open.",
+    body: [
+      paragraph(
+        "Confirm this address and your account is open. Every order you have placed with it, guest orders included, appears under your name.",
+      ),
+      button(link, "Confirm my account"),
+      muted(
+        "If you did not create this account, ignore this email. Nothing is opened and nothing is shared until the link above is used.",
+      ),
+    ].join(""),
+    footer: standardFooter(),
+  }),
+});
+
+export const accountResetEmail = (link: string) => ({
+  subject: "Reset your Verboten password",
+  text: `Someone asked to reset the password on this account.\n\nIf that was you, choose a new one here. The link is single use.\n\n${link}\n\nIf it was not you, ignore this email. Nothing changes unless the link above is used.\n\n${signoff}`,
+  html: emailLayout({
+    title: "Choose a new password.",
+    preheader: "The link is single use.",
+    body: [
+      paragraph("Someone asked to reset the password on this account."),
+      paragraph("If that was you, choose a new one. The link is single use."),
+      button(link, "Set a new password"),
+      muted(
+        "If it was not you, ignore this email. Nothing changes unless the link above is used.",
+      ),
+    ].join(""),
+    footer: standardFooter(),
+  }),
+});
+
+/**
+ * Sends the account confirmation, and lets the caller know if it failed.
+ *
+ * Unlike everything else here this one does NOT swallow the error. The signup
+ * that calls it has to be able to undo itself: without a transaction the
+ * customer row is already committed by the time the mail is attempted, and a
+ * row with no email sent is an address locked out of the shop for good.
+ */
+export const sendAccountVerification = async (
+  payload: Payload,
+  { to, link }: { to: string; link: string },
+): Promise<void> => {
+  const { subject, text, html } = accountVerifyEmail(link);
+  await payload.sendEmail({ to, subject, text, html });
 };

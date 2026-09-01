@@ -37,10 +37,13 @@ export const SheetContent = React.forwardRef<
     >
       {children}
       <DialogPrimitive.Close
-        className="absolute right-4 top-4 p-1 text-parch transition-colors hover:text-bone"
+        // p-1 around a 16px icon is a 24px target. On a phone the drawer is
+        // full bleed, so this is the only way out of it, and 24px is well
+        // under the 44px WCAG 2.5.8 asks for.
+        className="absolute right-2 top-2 flex h-11 w-11 items-center justify-center text-parch transition-colors hover:text-bone"
         aria-label="Close"
       >
-        <X className="h-4 w-4" aria-hidden="true" />
+        <X className="h-5 w-5" aria-hidden="true" />
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPrimitive.Portal>

@@ -423,9 +423,21 @@ export interface Order {
   id: number;
   orderNumber: string;
   /**
-   * Changing this emails the customer the matching update.
+   * Paid also takes the stock off the shelf and emails the customer. Cancelled and Refunded hand any discount code back. Each of those happens once, however the status got here.
    */
   status: 'pending_payment' | 'paid' | 'packed' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
+  /**
+   * Set automatically when a payment needs a person to look at it.
+   */
+  needsAttention?: ('none' | 'amount_mismatch' | 'paid_after_cancel' | 'oversold') | null;
+  /**
+   * Stock has been taken off for this order.
+   */
+  stockMoved?: boolean | null;
+  /**
+   * The discount code claimed by this order has been handed back.
+   */
+  discountReleased?: boolean | null;
   /**
    * Empty for guest checkouts.
    */
@@ -1101,6 +1113,9 @@ export interface DiscountCodesSelect<T extends boolean = true> {
 export interface OrdersSelect<T extends boolean = true> {
   orderNumber?: T;
   status?: T;
+  needsAttention?: T;
+  stockMoved?: T;
+  discountReleased?: T;
   customer?: T;
   email?: T;
   customerName?: T;

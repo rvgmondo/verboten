@@ -17,7 +17,13 @@ export const Batches: CollectionConfig = {
     group: "Shop",
   },
   access: {
-    read: anyone,
+    // Internal stock tracking, never a public surface. Read by anyone, this
+    // published live bottle counts and sales velocity for a competitor to
+    // poll, and served batch numbering and limited-edition framing that the
+    // copy rules bar and llms.txt explicitly says do not exist. The shop
+    // pages are unaffected: they read through the Local API in lib/data.ts,
+    // which bypasses access control and populates the relation regardless.
+    read: isAdminOrEditor,
     create: isAdminOrEditor,
     update: isAdminOrEditor,
     delete: isAdminOrEditor,

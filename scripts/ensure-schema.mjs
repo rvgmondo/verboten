@@ -80,6 +80,23 @@ const COLUMNS = [
   // usable, because the account page shows orders matched on that address.
   // Every marketing email must carry a working unsubscribe link, so the token
   // has to outlive the confirmation token that is spent on signup.
+  // Order lifecycle: what needs a person, and guards so a side effect runs
+  // exactly once whether the webhook or a staff member got there first.
+  {
+    table: "orders",
+    column: "needs_attention",
+    ddl: "ALTER TABLE `orders` ADD COLUMN `needs_attention` text DEFAULT 'none'",
+  },
+  {
+    table: "orders",
+    column: "stock_moved",
+    ddl: "ALTER TABLE `orders` ADD COLUMN `stock_moved` integer DEFAULT false",
+  },
+  {
+    table: "orders",
+    column: "discount_released",
+    ddl: "ALTER TABLE `orders` ADD COLUMN `discount_released` integer DEFAULT false",
+  },
   {
     table: "subscribers",
     column: "unsubscribe_token",

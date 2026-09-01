@@ -90,7 +90,21 @@ export default buildConfig({
     // Schema changes are applied deliberately, not auto-pushed: the live
     // database is a single file holding real orders. When a release adds a
     // collection, run scripts/ensure-schema.mjs on the server once.
-    : sqliteAdapter({ client: { url: process.env.DATABASE_URI || "file:./verboten.db" } }),
+    : sqliteAdapter({
+        client: { url: process.env.DATABASE_URI || "file:./verboten.db" },
+        // Transactions are OFF, and that is deliberate. Turning them on was
+        // tried: every write then fails with "database is locked", because the
+        // concurrency-safe statements in lib/commerce/atomic.ts go through
+        // drizzle on their own connection and SQLite's write transaction holds
+        // an exclusive lock. Those statements are what make the order counter
+        // gapless, the discount cap honest and the stock decrement safe under
+        // concurrent checkouts, so they win.
+        //
+        // The consequence is that a multi-step write cannot roll back. Nothing
+        // here may rely on one: anything that must not leave a half-finished
+        // row behind has to clean up after itself explicitly, the way
+        // registerCustomer does when the confirmation email will not send.
+      }),
   // Only configure SMTP when provided; otherwise Payload logs emails to the console.
   email: process.env.SMTP_HOST
     ? nodemailerAdapter({

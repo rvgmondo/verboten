@@ -1,8 +1,6 @@
 import { getPayload } from "payload";
 
-import { decrementStockForOrder } from "@/lib/commerce/stock";
-import { releaseDiscount } from "@/lib/commerce/discounts";
-import { sendStaffNewOrderAlert } from "@/lib/emails";
+import { sendStaffNewOrderAlert, sendStaffReconcileAlert } from "@/lib/emails";
 import { getPaymentProvider } from "@/lib/payments";
 
 import config from "../../../../payload.config";
@@ -19,13 +17,25 @@ export async function POST(request: Request): Promise<Response> {
   const rawBody = await request.text();
   const provider = getPaymentProvider();
 
+  const payload = await getPayload({ config });
+
   const verified = await provider.verifyWebhook(rawBody);
   if (!verified) {
-    // Unverifiable notification: acknowledge nothing, log nothing sensitive.
+    // Refusing is right: this could be anyone. Refusing in silence was not.
+    // The same rejection covers a forged notification and a real payment that
+    // failed verification because a passphrase drifted or PayFast could not
+    // be reached, and the second one is money quietly going missing. Log
+    // enough to tell the two apart, and nothing that could help an attacker.
+    payload.logger.error(
+      {
+        bytes: rawBody.length,
+        // The order reference only, never the signature or the payload.
+        orderNumber: new URLSearchParams(rawBody).get("m_payment_id") ?? "absent",
+      },
+      "ITN failed verification and was rejected",
+    );
     return new Response("invalid", { status: 400 });
   }
-
-  const payload = await getPayload({ config });
 
   const order = (
     await payload.find({
@@ -59,9 +69,14 @@ export async function POST(request: Request): Promise<Response> {
         id: order.id,
         overrideAccess: true,
         data: {
+          needsAttention: "paid_after_cancel",
           internalNotes: `${order.internalNotes ? order.internalNotes + "\n" : ""}PAYMENT RECEIVED on a ${order.status} order (PayFast ref ${verified.reference}, ${verified.amountCents} cents). Reconcile manually.`,
           payment: { ...order.payment, reference: verified.reference, raw: verified.raw },
         },
+      });
+      await sendStaffReconcileAlert(payload, order, {
+        headline: `Payment received on a ${order.status} order`,
+        detail: `PayFast reports ${(verified.amountCents / 100).toFixed(2)} rand taken against ${order.orderNumber}, which is already ${order.status}. Nothing was shipped and nothing was refunded automatically. Reference ${verified.reference}.`,
       });
     }
     return new Response("ok", { status: 200 });
@@ -78,9 +93,14 @@ export async function POST(request: Request): Promise<Response> {
         id: order.id,
         overrideAccess: true,
         data: {
+          needsAttention: "amount_mismatch",
           internalNotes: `AMOUNT MISMATCH on ITN: gateway reported ${verified.amountCents} cents, order total is ${order.totalCents} cents. Investigate before fulfilling.`,
           payment: { ...order.payment, reference: verified.reference, raw: verified.raw },
         },
+      });
+      await sendStaffReconcileAlert(payload, order, {
+        headline: "Payment does not match the order total",
+        detail: `PayFast reports ${(verified.amountCents / 100).toFixed(2)} rand against ${order.orderNumber}, which totals ${(order.totalCents / 100).toFixed(2)} rand. The order has been left pending and nothing has shipped.`,
       });
       return new Response("amount mismatch", { status: 400 });
     }
@@ -106,36 +126,21 @@ export async function POST(request: Request): Promise<Response> {
       return new Response("ok", { status: 200 });
     }
 
-    const oversold = await decrementStockForOrder(payload, updated);
-    // The discount use was already claimed when the order was created, so
-    // there is nothing to count here. Counting again would spend the code
-    // twice for one sale.
+    // Stock movement is NOT triggered from here. The status write above fires
+    // the Orders afterChange hook, which owns that transition so a staff
+    // member marking Paid by hand after an EFT gets identical behaviour.
+    // Calling it here as well would hand it a doc captured before the hook's
+    // own bookkeeping write and defeat the guard that makes it run once.
+    //
+    // The discount use was claimed when the order was created, so there is
+    // nothing to count here either.
 
-    // Money has already changed hands, so this cannot be refused. It can be
-    // made impossible to miss. Nothing holds stock between order creation and
-    // payment, so two buyers can pay for the same last bottle; when that
-    // happens the order says so on its face instead of surfacing at packing.
-    if (oversold.length > 0) {
-      const detail = oversold
-        .map((o) => `${o.units} more than ${o.kind} ${o.id} had`)
-        .join("; ");
-      payload.logger.error({ orderNumber: updated.orderNumber, oversold }, "Oversold on paid order");
-      await payload.update({
-        collection: "orders",
-        id: updated.id,
-        overrideAccess: true,
-        data: {
-          internalNotes: [
-            updated.internalNotes,
-            `OVERSOLD: this paid order took ${detail}. Stock was not reserved between checkout and payment. Confirm you can fulfil it before promising a date.`,
-          ]
-            .filter(Boolean)
-            .join("\n\n"),
-        },
-      });
-    }
-
-    await sendStaffNewOrderAlert(payload, updated);
+    // Re-read so the alert sees anything the hook just wrote, the oversold
+    // note in particular.
+    const settled =
+      (await payload.findByID({ collection: "orders", id: order.id, overrideAccess: true })) ??
+      updated;
+    await sendStaffNewOrderAlert(payload, settled);
     // The customer's "paid" confirmation email is sent by the Orders
     // afterChange hook, which also covers staff-made status changes.
 
@@ -153,10 +158,8 @@ export async function POST(request: Request): Promise<Response> {
         payment: { provider: "payfast", reference: verified.reference, raw: verified.raw },
       },
     });
-    // The sale is off, so hand the discount use back to the pool.
-    if (order.discountCode) {
-      await releaseDiscount(payload, order.discountCode);
-    }
+    // The discount use is handed back by the Orders hook on the transition
+    // into cancelled, for the same reason: one owner, one guard.
     return new Response("ok", { status: 200 });
   }
 

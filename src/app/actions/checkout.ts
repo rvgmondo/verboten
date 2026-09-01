@@ -288,12 +288,31 @@ export async function createCheckout(
   }
 
   const base = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001";
-  const provider = getPaymentProvider();
-  const redirect = provider.createRedirect(order, {
-    return: `${base}/checkout/success?order=${orderNumber}`,
-    cancel: `${base}/checkout/cancelled?order=${orderNumber}`,
-    notify: `${base}/api/payfast/notify`,
-  });
+  // Signing the redirect is the last thing that can fail, and by here the
+  // order exists and a discount use has been claimed. Letting a throw escape
+  // replaced the buyer's whole page with the generic error screen: name,
+  // address and date of birth gone, the code spent, an unpaid order in the
+  // admin, and no route to payment. On a host where env vars are set by hand
+  // and can be lost on a restart, that is the shape the shop fails in.
+  let redirect;
+  try {
+    const provider = getPaymentProvider();
+    redirect = provider.createRedirect(order, {
+      return: `${base}/checkout/success?order=${orderNumber}`,
+      cancel: `${base}/checkout/cancelled?order=${orderNumber}`,
+      notify: `${base}/api/payfast/notify`,
+    });
+  } catch (err) {
+    if (discountCode) await releaseDiscount(payload, discountCode);
+    payload.logger.error(
+      { err, orderNumber },
+      "Payment redirect could not be built; check the PayFast environment variables",
+    );
+    return {
+      ok: false,
+      message: `Payment could not be started just then, and nothing was charged. Try again, or contact us quoting order ${orderNumber}.`,
+    };
+  }
 
   return { ok: true, orderNumber, redirect };
 }

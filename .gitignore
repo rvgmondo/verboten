@@ -63,3 +63,6 @@ verboten.db-wal
 
 # Rendered email previews, a local dev aid (scripts/preview-emails.mjs)
 .email-preview/
+
+# Local server output when debugging
+.server.log
