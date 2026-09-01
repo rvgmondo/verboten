@@ -152,6 +152,24 @@ collection). The account page shows guest orders matched on email address, so
 an unverified signup would hand a stranger someone else's purchase history.
 This makes account signup depend on SMTP working.
 
+## Performance
+
+Measured, not guessed:
+
+```powershell
+node scripts/measure-weight.mjs
+```
+
+Reports what a 360px phone actually downloads per page, over the wire with
+compression on, following each srcset to the candidate a phone would pick. As
+of the last run the home page is 309KB, the shop 340KB and a product page
+331KB, with no single asset over 200KB.
+
+It was 1.36MB before, because one photograph had been uploaded as PNG and its
+768px variant alone was 1,063KB, more than everything else on the page put
+together. Media.ts writes WebP variants now; `rebuild-image-variants.mjs` fixes
+anything uploaded before that.
+
 ## Testing
 
 ```powershell
@@ -189,10 +207,22 @@ The build is committed, so the server never builds. Order matters.
    pkill -u "$(whoami)" -9 -f node
    ```
    then Stop and Start the app in cPanel.
-5. **If content changed**, run `scripts/update-live-copy.mjs` (needs
+5. **If the release touched image handling**, rebuild the variants on the
+   server, BEFORE restarting:
+   ```bash
+   node scripts/rebuild-image-variants.mjs           # report first
+   node scripts/rebuild-image-variants.mjs --write
+   ```
+   `media/` is gitignored and excluded from the deploy, so the real files only
+   exist on the server and this is the only place that can fix them. The build
+   bakes image URLs into the prerendered HTML, so the order matters: deploy,
+   rebuild the variants, then restart, or the pages will briefly ask for WebP
+   files that are not there yet. Idempotent, and it never touches the original
+   upload.
+6. **If content changed**, run `scripts/update-live-copy.mjs` (needs
    `ADMIN_EMAIL` and `ADMIN_PASSWORD`, talks to the live site over HTTPS, so the
    app must be up first).
-6. Purge the Cloudflare cache. Verify twice: the first response can come from a
+7. Purge the Cloudflare cache. Verify twice: the first response can come from a
    stale edge copy and look like a failure.
 
 The deploy excludes `verboten.db`, `media`, `.env` and `node_modules`, so live
