@@ -19,6 +19,7 @@ const isPostgres = (): boolean => (process.env.DATABASE_URI || "").startsWith("p
 type AnyDb = {
   execute?: (q: unknown) => Promise<{ rows: Array<Record<string, unknown>> }>;
   get?: (q: unknown) => Promise<Record<string, unknown> | undefined>;
+  all?: (q: unknown) => Promise<Array<Record<string, unknown>>>;
   run?: (q: unknown) => Promise<unknown>;
 };
 
@@ -29,6 +30,29 @@ const db = (payload: Payload): AnyDb =>
 const queryOne = async (payload: Payload, query: unknown): Promise<Record<string, unknown> | undefined> => {
   const d = db(payload);
   if (typeof d.get === "function") return d.get(query); // SQLite (libsql)
+  const res = await d.execute!(query); // Postgres (node-postgres)
+  return res.rows?.[0];
+};
+
+/**
+ * Run a statement that may legitimately match no rows, and say so.
+ *
+ * This is the whole point of a guarded UPDATE: the WHERE clause is the test,
+ * and matching nothing is the answer "no". Asking for it with get() does not
+ * work, because drizzle's libsql get() throws when there is no row rather than
+ * returning undefined, so the two cases these statements exist to handle, an
+ * oversell and a discount code claimed at its cap, both blew up instead of
+ * being handled. all() returns an empty array, which is the truthful shape.
+ */
+const queryMaybe = async (
+  payload: Payload,
+  query: unknown,
+): Promise<Record<string, unknown> | undefined> => {
+  const d = db(payload);
+  if (typeof d.all === "function") {
+    const rows = await d.all(query); // SQLite (libsql)
+    return rows?.[0];
+  }
   const res = await d.execute!(query); // Postgres (node-postgres)
   return res.rows?.[0];
 };
@@ -53,14 +77,17 @@ const exec = async (payload: Payload, query: unknown): Promise<void> => {
  */
 export const nextOrderNumber = async (payload: Payload, year: number): Promise<string> => {
   const bump = sql`UPDATE counters SET value = value + 1 WHERE name = 'order' RETURNING value`;
-  let row = await queryOne(payload, bump);
+  // queryMaybe, not queryOne: on a database where the counter row is missing
+  // this matches nothing, and get() would throw before the branch below ever
+  // ran, so the self-healing was unreachable and every checkout crashed.
+  let row = await queryMaybe(payload, bump);
   if (!row || !Number.isFinite(Number(row.value))) {
     try {
       await payload.create({ collection: "counters", data: { name: "order", value: 0 }, overrideAccess: true });
     } catch {
       // Another request created it first; the UPDATE below still succeeds.
     }
-    row = await queryOne(payload, bump);
+    row = await queryMaybe(payload, bump);
   }
   const n = Number(row?.value ?? 1);
   return `VB-${year}-${String(n).padStart(4, "0")}`;
@@ -94,7 +121,7 @@ const takeFrom = async (
   const tbl = table === "batches" ? sql`batches` : sql`products`;
 
   // Enough in stock: take it in one guarded, atomic statement.
-  const ok = await queryOne(
+  const ok = await queryMaybe(
     payload,
     sql`UPDATE ${tbl} SET ${col} = ${cur} - ${units}
         WHERE id = ${id} AND ${cur} >= ${units}
@@ -106,7 +133,7 @@ const takeFrom = async (
   // remains, drain it, and report the difference. The read and the drain are
   // not one statement, but this path is only ever reached once the counter is
   // already short, and its output is a staff alert rather than a price.
-  const row = await queryOne(payload, sql`SELECT ${cur} AS remaining FROM ${tbl} WHERE id = ${id}`);
+  const row = await queryMaybe(payload, sql`SELECT ${cur} AS remaining FROM ${tbl} WHERE id = ${id}`);
   if (!row) return units;
   const left = Number(row.remaining ?? 0);
   await exec(payload, sql`UPDATE ${tbl} SET ${col} = 0 WHERE id = ${id}`);
@@ -147,7 +174,7 @@ export const incrementDiscountUse = async (payload: Payload, codeId: number): Pr
  * Returns true when the use is claimed.
  */
 export const claimDiscountUse = async (payload: Payload, codeId: number): Promise<boolean> => {
-  const row = await queryOne(
+  const row = await queryMaybe(
     payload,
     sql`UPDATE discount_codes
         SET used_count = COALESCE(used_count, 0) + 1

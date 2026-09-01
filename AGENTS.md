@@ -120,6 +120,33 @@ and each one exists because breaking it cost something or nearly did.
    two people can still pay for the last bottle. That is a known, documented
    trade-off, not an oversight: make it visible, never hide it.
 
+5. **The order status dropdown is not a notification switch.** Moving an order
+   to `paid` takes the stock; moving it to `cancelled` or `refunded` hands the
+   discount use back. That lives in `src/lib/commerce/lifecycle.ts` and is
+   owned by the Orders `afterChange` hook, so the webhook and a staff member
+   marking an EFT by hand behave identically. Guards (`stockMoved`,
+   `discountReleased`) are on the order, not on the code path, so the work
+   happens exactly once. Never call the lifecycle helpers from the webhook as
+   well: it would hand them a document captured before the hook's own write.
+6. **Money that needs a person is visible in the order list.** The
+   `needsAttention` column plus a staff email, not just `internalNotes` and a
+   server log nobody reads.
+
+### Do not turn on SQLite transactions
+
+`transactionOptions` on the sqlite adapter looks like the obvious fix for the
+lack of rollback. It was tried, and every write then fails with **"database is
+locked"**: the concurrency-safe statements in `src/lib/commerce/atomic.ts` run
+through drizzle on their own connection, and SQLite's write transaction lock is
+exclusive. Those statements are what keep the order counter gapless, the
+discount cap honest and the stock decrement safe under concurrent checkouts.
+They win.
+
+The consequence is that a multi-step write cannot roll back, so anything that
+must not leave a half-finished row behind has to clean up after itself. See
+`registerCustomer` in `src/app/actions/account.ts`, which deletes the account it
+just made when the confirmation email will not send.
+
 Customer accounts require a **confirmed email** (`verify` on the Customers
 collection). The account page shows guest orders matched on email address, so
 an unverified signup would hand a stranger someone else's purchase history.

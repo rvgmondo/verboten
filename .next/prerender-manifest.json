@@ -30,35 +30,6 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/opengraph-image-4usi79": {
-      "initialHeaders": {
-        "cache-control": "public, immutable, no-transform, max-age=31536000",
-        "content-type": "image/png",
-        "x-next-cache-tags": "_N_T_/layout,_N_T_/(frontend)/layout,_N_T_/(frontend)/opengraph-image-4usi79/layout,_N_T_/(frontend)/opengraph-image-4usi79/route,_N_T_/opengraph-image-4usi79"
-      },
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "Next-Action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/opengraph-image-4usi79",
-      "dataRoute": null,
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
     "/robots.txt": {
       "initialHeaders": {
         "cache-control": "public, max-age=0, must-revalidate",
@@ -78,6 +49,35 @@
       ],
       "initialRevalidateSeconds": false,
       "srcRoute": "/robots.txt",
+      "dataRoute": null,
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/opengraph-image-4usi79": {
+      "initialHeaders": {
+        "cache-control": "public, immutable, no-transform, max-age=31536000",
+        "content-type": "image/png",
+        "x-next-cache-tags": "_N_T_/layout,_N_T_/(frontend)/layout,_N_T_/(frontend)/opengraph-image-4usi79/layout,_N_T_/(frontend)/opengraph-image-4usi79/route,_N_T_/opengraph-image-4usi79"
+      },
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/opengraph-image-4usi79",
       "dataRoute": null,
       "allowHeader": [
         "host",
@@ -173,7 +173,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/": {
+    "/serves": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -187,8 +187,8 @@
       ],
       "initialRevalidateSeconds": 300,
       "initialExpireSeconds": 31536000,
-      "srcRoute": "/",
-      "dataRoute": "/index.rsc",
+      "srcRoute": "/serves",
+      "dataRoute": "/serves.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -223,6 +223,56 @@
         "x-next-revalidate-tag-token"
       ]
     },
+    "/": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
+      "srcRoute": "/",
+      "dataRoute": "/index.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/story": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
+      "srcRoute": "/story",
+      "dataRoute": "/story.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/shop": {
       "experimentalBypassFor": [
         {
@@ -239,31 +289,6 @@
       "initialExpireSeconds": 31536000,
       "srcRoute": "/shop",
       "dataRoute": "/shop.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/serves": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "Next-Action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": 300,
-      "initialExpireSeconds": 31536000,
-      "srcRoute": "/serves",
-      "dataRoute": "/serves.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -423,7 +448,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/story": {
+    "/checkout": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -437,8 +462,33 @@
       ],
       "initialRevalidateSeconds": 300,
       "initialExpireSeconds": 31536000,
-      "srcRoute": "/story",
-      "dataRoute": "/story.rsc",
+      "srcRoute": "/checkout",
+      "dataRoute": "/checkout.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/contact": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": 300,
+      "initialExpireSeconds": 31536000,
+      "srcRoute": "/contact",
+      "dataRoute": "/contact.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -473,56 +523,6 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/checkout": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "Next-Action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": 300,
-      "initialExpireSeconds": 31536000,
-      "srcRoute": "/checkout",
-      "dataRoute": "/checkout.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/gallery": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "Next-Action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": 300,
-      "initialExpireSeconds": 31536000,
-      "srcRoute": "/gallery",
-      "dataRoute": "/gallery.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
     "/find-us": {
       "experimentalBypassFor": [
         {
@@ -548,7 +548,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/contact": {
+    "/gallery": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -562,8 +562,8 @@
       ],
       "initialRevalidateSeconds": 300,
       "initialExpireSeconds": 31536000,
-      "srcRoute": "/contact",
-      "dataRoute": "/contact.rsc",
+      "srcRoute": "/gallery",
+      "dataRoute": "/gallery.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
