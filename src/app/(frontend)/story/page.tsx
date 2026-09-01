@@ -4,15 +4,25 @@ import Link from "next/link";
 import { Motto } from "@/components/brand/motto";
 import { PageMasthead } from "@/components/brand/page-masthead";
 import { RichText } from "@/components/rich-text";
-import { NotFoundPanel } from "@/components/brand/not-found-panel";
+import { NOT_FOUND_METADATA, NotFoundPanel } from "@/components/brand/not-found-panel";
 import { Button } from "@/components/ui/button";
 import { CrestDivider } from "@/components/ui/separator";
 import { getPageBySlug } from "@/lib/data";
 
-export const metadata: Metadata = {
+/**
+ * Static metadata would keep claiming a canonical /story and an indexable page
+ * even when the CMS has no story to render, so search engines would be invited
+ * to index a not-found panel.
+ */
+export const generateMetadata = async (): Promise<Metadata> => {
+  const page = await getPageBySlug("story");
+  return page ? STORY_METADATA : { title: "Our Story", ...NOT_FOUND_METADATA };
+};
+
+const STORY_METADATA: Metadata = {
   title: "Our Story",
   description:
-    "Pretoria, 2020. Two founders quietly breaking convention, and the conviction that the best traditions often start with someone breaking the rules. The Verboten story.",
+    "Pretoria, 2020. A conviction that the best traditions often start with someone breaking the rules, and a spirit made to prove it. The Verboten story.",
   alternates: { canonical: "/story" },
 };
 

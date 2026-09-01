@@ -13,11 +13,11 @@ export const PAGES = [
     slug: "story",
     title: "Some rules are meant to be questioned",
     intro:
-      "Pretoria, 2020. Two founders, a conviction that the best traditions start with someone breaking the rules, and a spirit made to prove it.",
+      "Pretoria, 2020. A conviction that the best traditions start with someone breaking the rules, and a spirit made to prove it.",
     content: doc(
       h2("The start"),
       p(
-        "Verboten started in Pretoria in 2020. Two founders, technical precision, and a refusal to accept that brandy has to taste the way brandy has always tasted.",
+        "Verboten started in Pretoria in 2020. Technical precision, and a refusal to accept that brandy has to taste the way brandy has always tasted.",
       ),
       p(
         "What came out of it was a spirit smooth enough to make you question what you thought you knew about premium drinks.",
@@ -63,7 +63,7 @@ export const PAGES = [
       ),
       h2("Age restriction"),
       p(
-        "We sell alcohol. You must be 18 or older to buy from this site. We confirm age when you enter the site, again at checkout, and our couriers verify identification on delivery. Orders placed by persons under 18 are cancelled and refunded.",
+        "We sell alcohol. You must be 18 or older to buy from this site. We confirm age when you enter the site and again at checkout, alcohol is only handed to a person 18 or older, and the courier may ask for identification on delivery. Orders placed by persons under 18 are cancelled and refunded.",
       ),
       h2("Orders and payment"),
       p(

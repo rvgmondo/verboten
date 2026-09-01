@@ -32,7 +32,7 @@ export async function GET() {
   const body = `# Verboten Spirits
 
 > An independent South African brandy house in Silverton, Pretoria. Founded in
-> 2020 by two founders. Premium brandy and a ready to drink brandy and cola,
+> 2020. Premium brandy and a ready to drink brandy and cola,
 > sold online across South Africa and poured at bars, restaurants and events.
 > Tagline: Pure Spirit. Pure Mischief.
 

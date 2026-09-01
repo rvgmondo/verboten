@@ -7,6 +7,7 @@ import { z } from "zod";
 import { nextOrderNumber } from "@/lib/commerce/atomic";
 import { checkDiscount, claimDiscount, releaseDiscount } from "@/lib/commerce/discounts";
 import { orderTotals } from "@/lib/commerce/totals";
+import { formatZAR } from "@/lib/money";
 import { findStockProblems } from "@/lib/commerce/stock";
 import { getPaymentProvider } from "@/lib/payments";
 import { clientKey, rateLimit } from "@/lib/rate-limit";
@@ -72,7 +73,20 @@ const schema = z.object({
 
 export type CheckoutResult =
   | { ok: true; orderNumber: string; redirect: { action: string; fields: Record<string, string> } }
-  | { ok: false; message: string; fieldErrors?: Record<string, string> };
+  | {
+      ok: false;
+      message: string;
+      fieldErrors?: Record<string, string>;
+      /**
+       * Sent when the buyer's quoted total was too low, so the page can
+       * correct itself. Refusing without this was a dead end: the summary kept
+       * the stale figure, so pressing pay again reproduced the same refusal.
+       */
+      reprice?: {
+        items: Array<{ productId: number; priceCents: number }>;
+        totalCents: number;
+      };
+    };
 
 const yearsOld = (isoDate: string): number => {
   const dob = new Date(`${isoDate}T00:00:00`);
@@ -211,10 +225,22 @@ export async function createCheckout(
     typeof input.quotedTotalCents === "number" &&
     totalCents > input.quotedTotalCents
   ) {
+    // Hand back the authoritative prices with the refusal. The cart is a
+    // snapshot in localStorage that is never re-priced, and the discount
+    // preview is an absolute amount frozen when Apply was pressed, so a price
+    // change or an edited cart leaves the page quoting a number the server
+    // will not honour. Refusing alone left nothing on screen to change, and
+    // the buyer could press pay forever.
     return {
       ok: false,
-      message:
-        "Your total changed while you were checking out. Have a look at the updated amount, then place the order again.",
+      message: `Your total is now ${formatZAR(totalCents)}, not ${formatZAR(input.quotedTotalCents)}. Nothing has been charged. The amount below has been corrected, so check it and place the order again.`,
+      reprice: {
+        items: requested.map((r) => ({
+          productId: r.product.id,
+          priceCents: r.product.priceCents,
+        })),
+        totalCents,
+      },
     };
   }
 
@@ -303,7 +329,23 @@ export async function createCheckout(
       notify: `${base}/api/payfast/notify`,
     });
   } catch (err) {
-    if (discountCode) await releaseDiscount(payload, discountCode);
+    // Cancel the order rather than releasing the code by hand. The order still
+    // carries the discount code and its released guard, so a hand release
+    // here plus a later cancellation would hand the same use back twice and
+    // free the code past its cap. Cancelling lets the Orders hook do it once.
+    try {
+      await payload.update({
+        collection: "orders",
+        id: order.id,
+        overrideAccess: true,
+        data: {
+          status: "cancelled",
+          internalNotes: "Payment could not be started: the redirect could not be signed.",
+        },
+      });
+    } catch (cancelErr) {
+      payload.logger.error({ err: cancelErr, orderNumber }, "Could not cancel the stranded order");
+    }
     payload.logger.error(
       { err, orderNumber },
       "Payment redirect could not be built; check the PayFast environment variables",

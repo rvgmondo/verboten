@@ -59,7 +59,8 @@ export async function POST(request: Request): Promise<Response> {
     // with nothing on the order to reconcile against. Record it for staff
     // rather than swallowing it silently.
     const nonPayable = order.status === "cancelled" || order.status === "refunded";
-    if (verified.status === "complete" && nonPayable) {
+    const alreadyFlagged = order.needsAttention === "paid_after_cancel";
+    if (verified.status === "complete" && nonPayable && !alreadyFlagged) {
       payload.logger.error(
         { order: order.orderNumber, status: order.status, ref: verified.reference },
         "COMPLETE ITN for a non-payable order; flagged for manual reconciliation",
@@ -88,20 +89,34 @@ export async function POST(request: Request): Promise<Response> {
         { order: order.orderNumber, expected: order.totalCents, got: verified.amountCents },
         "ITN amount mismatch; order left pending for manual review",
       );
+      // A 400 tells PayFast to retry, and it will, for hours. Overwriting the
+      // notes each time destroyed anything staff had written on the order, and
+      // re-alerting each time trains them to ignore the alert. Record and warn
+      // once; the flag is what says it has already been seen.
+      const alreadyFlagged = order.needsAttention === "amount_mismatch";
       await payload.update({
         collection: "orders",
         id: order.id,
         overrideAccess: true,
         data: {
           needsAttention: "amount_mismatch",
-          internalNotes: `AMOUNT MISMATCH on ITN: gateway reported ${verified.amountCents} cents, order total is ${order.totalCents} cents. Investigate before fulfilling.`,
+          internalNotes: alreadyFlagged
+            ? order.internalNotes
+            : [
+                order.internalNotes,
+                `AMOUNT MISMATCH on ITN: gateway reported ${verified.amountCents} cents, order total is ${order.totalCents} cents. Investigate before fulfilling.`,
+              ]
+                .filter(Boolean)
+                .join("\n\n"),
           payment: { ...order.payment, reference: verified.reference, raw: verified.raw },
         },
       });
-      await sendStaffReconcileAlert(payload, order, {
-        headline: "Payment does not match the order total",
-        detail: `PayFast reports ${(verified.amountCents / 100).toFixed(2)} rand against ${order.orderNumber}, which totals ${(order.totalCents / 100).toFixed(2)} rand. The order has been left pending and nothing has shipped.`,
-      });
+      if (!alreadyFlagged) {
+        await sendStaffReconcileAlert(payload, order, {
+          headline: "Payment does not match the order total",
+          detail: `PayFast reports ${(verified.amountCents / 100).toFixed(2)} rand against ${order.orderNumber}, which totals ${(order.totalCents / 100).toFixed(2)} rand. The order has been left pending and nothing has shipped.`,
+        });
+      }
       return new Response("amount mismatch", { status: 400 });
     }
 

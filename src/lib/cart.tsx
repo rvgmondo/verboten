@@ -30,6 +30,8 @@ type CartContextValue = CartState & {
   add: (item: Omit<CartItem, "quantity">, quantity?: number) => void;
   remove: (productId: number) => void;
   setQuantity: (productId: number, quantity: number) => void;
+  /** Correct stored prices from an authoritative server list. */
+  reprice: (prices: Array<{ productId: number; priceCents: number }>) => void;
   clear: () => void;
   open: () => void;
   close: () => void;
@@ -108,6 +110,27 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     );
   }, []);
 
+  /**
+   * Bring stored prices back in line with the server's.
+   *
+   * Cart items are a snapshot taken when they were added, and localStorage
+   * keeps them for weeks. A price change in the admin leaves every existing
+   * cart quoting the old number, which the checkout then refuses because it
+   * will not charge more than it showed. Without a way to correct the display
+   * that refusal is a dead end: the summary keeps the stale figure, so
+   * pressing pay again reproduces it forever.
+   */
+  const reprice = React.useCallback((prices: Array<{ productId: number; priceCents: number }>) => {
+    setItems((prev) =>
+      prev.map((i) => {
+        const fresh = prices.find((p) => p.productId === i.productId);
+        return fresh && fresh.priceCents !== i.priceCents
+          ? { ...i, priceCents: fresh.priceCents }
+          : i;
+      }),
+    );
+  }, []);
+
   const clear = React.useCallback(() => setItems([]), []);
   const open = React.useCallback(() => setIsOpen(true), []);
   const close = React.useCallback(() => setIsOpen(false), []);
@@ -123,6 +146,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         add,
         remove,
         setQuantity,
+        reprice,
         clear,
         open,
         close,

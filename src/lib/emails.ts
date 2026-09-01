@@ -277,7 +277,7 @@ export const sendStaffNewOrderAlert = async (payload: Payload, order: Order): Pr
       to,
       replyTo: order.email,
       subject: `${oversold ? "[CHECK STOCK] " : ""}New paid order ${order.orderNumber} (${formatZAR(order.totalCents)})`,
-      text: `${order.customerName} <${order.email}>${order.phone ? `\n${order.phone}` : ""}\n\n${orderLines(order)}\n\n${totals(order)}\n\nShip to:\n  ${address.join("\n  ")}\n\n${oversold ? "WARNING: this order took stock that was not there. Check you can fill it before promising a date.\n\n" : ""}Open the admin to process it: ${SITE}/admin/collections/orders`,
+      text: `${order.customerName} <${order.email}>${order.phone ? `\n${order.phone}` : ""}\n\n${orderLines(order)}\n\n${totals(order)}\n\nShip to:\n  ${address.join("\n  ")}\n${order.customerNote ? `\nNote from the customer:\n  ${order.customerNote}\n` : ""}\n${oversold ? "WARNING: this order took stock that was not there. Check you can fill it before promising a date.\n\n" : ""}Open the admin to process it: ${SITE}/admin/collections/orders`,
       html: emailLayout({
         title: `New order, ${formatZAR(order.totalCents)}.`,
         preheader: `${order.customerName} ordered ${order.items.length} line${order.items.length === 1 ? "" : "s"}.`,
@@ -349,7 +349,7 @@ export const sendStaffReconcileAlert = async (
             `${eyebrow("Action needed")}<p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.6;color:${EMAIL_COLORS.BONE};">${esc(detail)}</p>`,
           ),
           orderPanel(order),
-          muted(`${esc(order.customerName)} &middot; ${esc(order.email)}`),
+          muted(`${esc(order.customerName)}, ${esc(order.email)}`),
           button(`${SITE}/admin/collections/orders`, "Open the order"),
           muted(
             "Nothing was shipped and nothing was refunded automatically. Reply to this email and it reaches the customer.",
@@ -394,7 +394,7 @@ const ackFooterHtml = (settings: {
     [settings.contact?.email ?? "info@verboten.co.za", settings.contact?.phone ?? ""]
       .filter(Boolean)
       .map(esc)
-      .join(" &middot; "),
+      .join("<br>"),
   );
 
 /** Confirms a contact or bar booking enquiry to the person who sent it. */
@@ -606,9 +606,13 @@ export const accountVerifyEmail = (link: string) => ({
   }),
 });
 
+/**
+ * HTML only, deliberately. Payload's forgotPassword hook takes a subject and an
+ * HTML body and has nowhere to put a plain text part, so carrying one here
+ * would be dead code pretending the two versions are in step.
+ */
 export const accountResetEmail = (link: string) => ({
   subject: "Reset your Verboten password",
-  text: `Someone asked to reset the password on this account.\n\nIf that was you, choose a new one here. The link is single use.\n\n${link}\n\nIf it was not you, ignore this email. Nothing changes unless the link above is used.\n\n${signoff}`,
   html: emailLayout({
     title: "Choose a new password.",
     preheader: "The link is single use.",

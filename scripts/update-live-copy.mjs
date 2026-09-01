@@ -210,13 +210,13 @@ const JOURNAL_NEW = [
 const STORY_PAGE = {
   title: "Some rules are meant to be questioned",
   intro:
-    "Pretoria, 2020. Two founders, a conviction that the best traditions start with someone breaking the rules, and a spirit made to prove it.",
+    "Pretoria, 2020. A conviction that the best traditions start with someone breaking the rules, and a spirit made to prove it.",
   content: doc(
     h2("The start"),
     // No lockdown framing, and no implication that the spirit was made in
     // secret: both are banned, and the second invites the very suspicion the
     // old site was defensively answering.
-    p("Verboten started in Pretoria in 2020. Two founders, technical precision, and a refusal to accept that brandy has to taste the way brandy has always tasted."),
+    p("Verboten started in Pretoria in 2020. Technical precision, and a refusal to accept that brandy has to taste the way brandy has always tasted."),
     p("What came out of it was a spirit smooth enough to make you question what you thought you knew about premium drinks."),
     h2("A quiet rebellion"),
     p("Verboten is German for forbidden. The name is a promise about restraint: nothing leaves this house unless it earns the label. South African soul, a German sounding surname, and an Afrikaans undercurrent for the ones who know."),
@@ -246,6 +246,16 @@ const TERMS_STOCK_FIX = {
   find: "Batches are limited by design",
   replacement:
     "Stock levels shown on the site are live, but they are not a reservation. A product is yours when your payment is confirmed, not when it enters your cart.",
+};
+
+// The Terms stated courier identity checks as a certainty while the shipping
+// page, the product page and the dispatch email all say the courier MAY ask.
+// Terms are the version that would be held against the house, so they have to
+// describe what actually happens.
+const TERMS_AGE_FIX = {
+  find: "our couriers verify identification on delivery",
+  replacement:
+    "alcohol is only handed to a person 18 or older, and the courier may ask for identification on delivery",
 };
 
 const SERVE_UPDATE = {
@@ -411,6 +421,10 @@ const run = async () => {
     let changed = false;
     const walk = (node) => {
       if (!node || typeof node !== "object") return;
+      if (node.type === "text" && typeof node.text === "string" && node.text.includes(TERMS_AGE_FIX.find)) {
+        node.text = node.text.replace(TERMS_AGE_FIX.find, TERMS_AGE_FIX.replacement);
+        changed = true;
+      }
       if (node.type === "text" && typeof node.text === "string" && node.text.includes(TERMS_STOCK_FIX.find)) {
         node.text = TERMS_STOCK_FIX.replacement;
         changed = true;

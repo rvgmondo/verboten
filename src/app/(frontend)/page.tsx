@@ -194,7 +194,7 @@ export default async function HomePage() {
               align="center"
               eyebrow="The house"
               title="Some rules are meant to be questioned."
-              lead="Pretoria, 2020. Two founders, quietly breaking convention, and the conviction that the best traditions often start with someone breaking the rules."
+              lead="Pretoria, 2020. A conviction that the best traditions often start with someone breaking the rules, and a spirit made to prove it."
             />
             <Button variant="outline" asChild>
               <Link href="/story">The whole story</Link>

@@ -1,3 +1,5 @@
+import { notFound } from "next/navigation";
+
 import { NOT_FOUND_METADATA, NotFoundPanel } from "@/components/brand/not-found-panel";
 import type { Metadata } from "next";
 
@@ -26,7 +28,13 @@ export const generateMetadata = async ({ params }: Params): Promise<Metadata> =>
 export default async function CmsPage({ params }: Params) {
   const { slug } = await params;
   const page = await getPageBySlug(slug);
-  if (!page) return <NotFoundPanel />;
+  if (!page) {
+    // A single segment that looks like a file, /favicon-2.png and the like,
+    // gets a real 404 rather than a 200 HTML page. Same reasoning as the
+    // catch-all: nobody reads those with their eyes.
+    if (/\.[a-z0-9]{2,5}$/i.test(slug)) notFound();
+    return <NotFoundPanel />;
+  }
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-16 lg:py-24">

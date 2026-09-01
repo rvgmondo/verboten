@@ -93,7 +93,7 @@ export const CheckoutForm = ({
   flatRateCents: number;
   freeThresholdCents: number;
 }) => {
-  const { items, subtotalCents, hydrated } = useCart();
+  const { items, subtotalCents, hydrated, reprice } = useCart();
   const [state, action] = React.useActionState<CheckoutResult | null, FormData>(
     createCheckout,
     null,
@@ -119,9 +119,44 @@ export const CheckoutForm = ({
     return d.toISOString().slice(0, 10);
   }, []);
 
+  /**
+   * The buyer's details, held in React rather than left to the DOM.
+   *
+   * React resets an uncontrolled form after a server action runs, so every
+   * rejected checkout, a mistyped email included, emptied the name, the whole
+   * delivery address and the date of birth. Retyping an address on a phone is
+   * where people give up, and this is the page that takes the money.
+   */
+  const [fields, setFields] = React.useState<Record<string, string>>({});
+  const bind = (name: string) => ({
+    value: fields[name] ?? "",
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+      setFields((prev) => ({ ...prev, [name]: e.target.value })),
+  });
+
   const [discountInput, setDiscountInput] = React.useState("");
   const [discount, setDiscount] = React.useState<{ cents: number; message: string } | null>(null);
   const [applying, setApplying] = React.useState(false);
+
+  // The preview is an absolute number of cents, worked out against the cart as
+  // it was when Apply was pressed. The cart drawer is reachable from this page,
+  // so removing a bottle leaves a percentage discount overstated and the
+  // summary describing an order that no longer exists. Clearing it on any cart
+  // change keeps the total on screen honest, and keeps it matching the total
+  // the server will compute.
+  React.useEffect(() => {
+    setDiscount(null);
+  }, [subtotalCents]);
+
+  // A refusal on price carries the authoritative figures with it. Apply them,
+  // so the summary shows what will actually be charged and the next attempt
+  // goes through, instead of repeating the same refusal forever.
+  React.useEffect(() => {
+    if (state && !state.ok && state.reprice) {
+      reprice(state.reprice.items);
+      setDiscount(null);
+    }
+  }, [state, reprice]);
 
   // Same function the server action uses, so the summary and the order can
   // never drift apart on arithmetic alone.
@@ -203,6 +238,7 @@ export const CheckoutForm = ({
               <Input
                 id="co-name"
                 name="name"
+                {...bind("name")}
                 required
                 autoComplete="name"
                 aria-invalid={errors?.name ? true : undefined}
@@ -213,6 +249,7 @@ export const CheckoutForm = ({
               <Input
                 id="co-email"
                 name="email"
+                {...bind("email")}
                 type="email"
                 required
                 autoComplete="email"
@@ -224,6 +261,7 @@ export const CheckoutForm = ({
               <Input
                 id="co-phone"
                 name="phone"
+                {...bind("phone")}
                 type="tel"
                 required
                 autoComplete="tel"
@@ -235,6 +273,7 @@ export const CheckoutForm = ({
               <Input
                 id="co-dateOfBirth"
                 name="dateOfBirth"
+                {...bind("dateOfBirth")}
                 type="date"
                 required
                 min="1900-01-01"
@@ -258,22 +297,24 @@ export const CheckoutForm = ({
             <Input
               id="co-line1"
               name="line1"
+              {...bind("line1")}
               required
               autoComplete="address-line1"
               aria-invalid={errors?.line1 ? true : undefined}
             />
           </Field>
           <Field label="Unit, complex or building (optional)" name="line2">
-            <Input id="co-line2" name="line2" autoComplete="address-line2" />
+            <Input id="co-line2" name="line2" autoComplete="address-line2" {...bind("line2")} />
           </Field>
           <div className="grid gap-6 sm:grid-cols-2">
             <Field label="Suburb" name="suburb">
-              <Input id="co-suburb" name="suburb" autoComplete="address-level3" />
+              <Input id="co-suburb" name="suburb" autoComplete="address-level3" {...bind("suburb")} />
             </Field>
             <Field label="City" name="city" error={errors?.city}>
               <Input
                 id="co-city"
                 name="city"
+                {...bind("city")}
                 required
                 autoComplete="address-level2"
                 aria-invalid={errors?.city ? true : undefined}
@@ -283,6 +324,7 @@ export const CheckoutForm = ({
               <select
                 id="co-province"
                 name="province"
+                {...bind("province")}
                 required
                 defaultValue="Gauteng"
                 className="h-11 w-full rounded-xs border border-line bg-coal px-3 text-base text-bone transition-colors hover:border-gold-dim/60 focus:border-gold sm:text-sm"
@@ -298,6 +340,7 @@ export const CheckoutForm = ({
               <Input
                 id="co-postalCode"
                 name="postalCode"
+                {...bind("postalCode")}
                 required
                 inputMode="numeric"
                 pattern="[0-9]{4}"
@@ -309,7 +352,7 @@ export const CheckoutForm = ({
             </Field>
           </div>
           <Field label="Delivery note (optional)" name="customerNote">
-            <Textarea id="co-customerNote" name="customerNote" className="min-h-20" />
+            <Textarea id="co-customerNote" name="customerNote" className="min-h-20" {...bind("customerNote")} />
           </Field>
         </fieldset>
 
