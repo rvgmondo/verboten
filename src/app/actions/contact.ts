@@ -20,7 +20,11 @@ const schema = z.object({
   // "sometime in March" is more useful than an empty required field.
   eventDate: z.string().trim().max(120).optional().or(z.literal("")),
   eventLocation: z.string().trim().max(200).optional().or(z.literal("")),
-  eventGuests: z.coerce.number().int().min(0).max(100000).optional(),
+  // Free text on purpose. The label asks "roughly how many people", which
+  // invites "80-100" or "about 80", and z.coerce.number() turned every one of
+  // those into a NaN rejection pointed at a field with no error slot to show
+  // it in. The number is pulled out below when there is a clean one.
+  eventGuests: z.string().trim().max(40).optional().or(z.literal("")),
   /** Honeypot: humans never see or fill this field. */
   website: z.string().max(0).optional().or(z.literal("")),
 });
@@ -28,7 +32,9 @@ const schema = z.object({
 export type ContactResult = {
   ok: boolean;
   message: string;
-  fieldErrors?: Partial<Record<"name" | "email" | "phone" | "message", string>>;
+  fieldErrors?: Partial<
+    Record<"name" | "email" | "phone" | "message" | "eventDate" | "eventLocation" | "eventGuests", string>
+  >;
 };
 
 /** Stores the enquiry and alerts staff by email (console in dev). */
@@ -63,7 +69,18 @@ export async function submitContact(
       const field = issue.path[0] as keyof NonNullable<ContactResult["fieldErrors"]>;
       if (!fieldErrors[field]) fieldErrors[field] = issue.message;
     }
-    return { ok: false, message: "Check the highlighted fields.", fieldErrors };
+    // A field with no error slot would otherwise produce "Check the
+    // highlighted fields" with nothing highlighted, and no way to find out
+    // what was wrong.
+    const shown = new Set(["name", "email", "phone", "message", "eventDate", "eventLocation", "eventGuests"]);
+    const unshown = parsed.error.issues.filter((i) => !shown.has(String(i.path[0])));
+    return {
+      ok: false,
+      message: unshown.length
+        ? (unshown[0]?.message ?? "Something in that form could not be read. Check it and try again.")
+        : "Check the highlighted fields.",
+      fieldErrors,
+    };
   }
 
   const payload = await getPayload({ config });

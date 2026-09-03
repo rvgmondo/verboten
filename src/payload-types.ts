@@ -604,7 +604,10 @@ export interface Enquiry {
      */
     date?: string | null;
     location?: string | null;
-    guests?: number | null;
+    /**
+     * As the enquirer typed it.
+     */
+    guests?: string | null;
   };
   status: 'new' | 'handled';
   updatedAt: string;

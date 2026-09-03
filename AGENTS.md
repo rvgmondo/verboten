@@ -152,6 +152,40 @@ collection). The account page shows guest orders matched on email address, so
 an unverified signup would hand a stranger someone else's purchase history.
 This makes account signup depend on SMTP working.
 
+## Backups
+
+The whole business is one file. Orders, customer addresses, enquiries and the
+staff logins live in `verboten.db`, which is deliberately outside git and
+outside the deploy, so nothing anywhere else holds a copy.
+
+```bash
+cd ~/verboten && node scripts/backup-db.mjs
+```
+
+Uses SQLite's own `VACUUM INTO`, which is safe while the app is serving: `cp`
+is not, because a write in progress leaves the copy torn. Every snapshot is
+reopened, integrity-checked and row-counted against the source before it is
+kept, because an unverified backup is a guess. Keeps the last 14; set
+`BACKUP_KEEP` or `BACKUP_DIR` to change that.
+
+Worth a nightly cPanel cron job:
+```
+cd ~/verboten && ~/nodevenv/verboten/[version]/bin/node scripts/backup-db.mjs
+```
+
+**To restore**, with the app stopped:
+```bash
+pkill -u "$(whoami)" -9 -f node
+cd ~/verboten
+mv verboten.db verboten.db.before-restore
+cp backups/verboten-<stamp>.db verboten.db
+```
+then Start the app in cPanel. Keep the displaced file until the restore is
+confirmed good.
+
+Snapshots sit on the same disk as the database they protect, which is half a
+backup. Download them periodically, or point `BACKUP_DIR` off the machine.
+
 ## Performance
 
 Measured, not guessed:

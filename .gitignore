@@ -66,3 +66,7 @@ verboten.db-wal
 
 # Local server output when debugging
 .server.log
+
+# Database snapshots (scripts/backup-db.mjs). Never commit these: they hold
+# customer addresses, dates of birth and staff password hashes.
+/backups/

@@ -54,6 +54,12 @@ export default buildConfig({
     meta: {
       titleSuffix: " | Verboten Spirits",
     },
+    components: {
+      // The admin otherwise opens on a list of collection names, which tells
+      // someone running the shop alone nothing about what needs doing. This
+      // puts the answer at the top of the dashboard and links straight to it.
+      beforeDashboard: ["@/components/admin/today#Today"],
+    },
   },
   collections: [
     Products,

@@ -84,21 +84,40 @@ export const BookingForm = () => {
         </div>
         <div className="space-y-2">
           <Label htmlFor="bk-date">When is it</Label>
-          <Input id="bk-date" name="eventDate" placeholder="12 December, or a rough month" />
+          <Input
+            id="bk-date"
+            name="eventDate"
+            placeholder="12 December, or a rough month"
+            aria-invalid={errors?.eventDate ? true : undefined}
+            aria-describedby={errors?.eventDate ? "bk-date-error" : undefined}
+          />
+          <FieldError id="bk-date-error" message={errors?.eventDate} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="bk-location">Where is it</Label>
-          <Input id="bk-location" name="eventLocation" placeholder="Town or suburb" />
+          <Input
+            id="bk-location"
+            name="eventLocation"
+            placeholder="Town or suburb"
+            aria-invalid={errors?.eventLocation ? true : undefined}
+            aria-describedby={errors?.eventLocation ? "bk-location-error" : undefined}
+          />
+          <FieldError id="bk-location-error" message={errors?.eventLocation} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="bk-guests">Roughly how many people</Label>
+          {/* No numeric pattern. The question invites "80-100" and "about 80",
+              and the form is noValidate, so the browser never enforced it
+              anyway: it just sailed through to a server rejection the form
+              had nowhere to display. */}
           <Input
             id="bk-guests"
             name="eventGuests"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            placeholder="80"
+            placeholder="80, or 80 to 100"
+            aria-invalid={errors?.eventGuests ? true : undefined}
+            aria-describedby={errors?.eventGuests ? "bk-guests-error" : undefined}
           />
+          <FieldError id="bk-guests-error" message={errors?.eventGuests} />
         </div>
       </div>
 

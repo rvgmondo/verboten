@@ -47,7 +47,14 @@ export const Enquiries: CollectionConfig = {
       fields: [
         { name: "date", type: "text", admin: { description: "As the enquirer typed it." } },
         { name: "location", type: "text" },
-        { name: "guests", type: "number", min: 0 },
+        {
+          // Text, like the date beside it. People answer "roughly how many
+          // people" with "80-100" or "about 80", and a number field turned
+          // every one of those into a rejection the form could not even show.
+          name: "guests",
+          type: "text",
+          admin: { description: "As the enquirer typed it." },
+        },
       ],
     },
     {

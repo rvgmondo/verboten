@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import * as React from "react";
 
-import { registerCustomer } from "@/app/actions/account";
+import { registerCustomer, requestPasswordReset } from "@/app/actions/account";
 import { AUTH_CHANGED } from "@/components/chrome/account-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,12 +33,11 @@ export const AccountAuth = () => {
 
     try {
       if (mode === "forgot") {
-        await fetch("/api/customers/forgot-password", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ email }),
-        });
-        setNotice("If that address has an account, a reset email is on its way.");
+        // Through the action, so it is rate limited and so a failure to send
+        // is reported rather than papered over with a cheerful lie.
+        const res = await requestPasswordReset(email);
+        if (res.ok) setNotice(res.message);
+        else setError(res.message);
         setBusy(false);
         return;
       }
@@ -83,7 +82,13 @@ export const AccountAuth = () => {
 
   return (
     <div className="mx-auto max-w-md space-y-8">
-      <div className="flex gap-6 border-b border-line pb-4" role="tablist" aria-label="Account">
+      {/* Not tabs. The ARIA tab pattern promises a tabpanel each one controls
+          and arrow-key movement between them, and there was neither: one form
+          changes shape underneath. Plain buttons describe what actually
+          happens. aria-pressed carries the state, and an underline carries it
+          visually, because the previous cue was colour alone at 1.13:1 and a
+          third mode existed that left neither button looking selected. */}
+      <div className="flex gap-6 border-b border-line pb-4">
         {(
           [
             ["login", "Sign in"],
@@ -92,21 +97,28 @@ export const AccountAuth = () => {
         ).map(([key, label]) => (
           <button
             key={key}
-            role="tab"
-            aria-selected={mode === key}
+            type="button"
+            aria-pressed={mode === key}
             onClick={() => {
               setMode(key);
               setError(null);
               setNotice(null);
             }}
-            className={`text-xs uppercase tracking-[0.18em] transition-colors ${
-              mode === key ? "text-gold" : "text-parch hover:text-bone"
+            className={`border-b-2 pb-2 text-xs uppercase tracking-[0.18em] transition-colors ${
+              mode === key
+                ? "border-gold text-gold"
+                : "border-transparent text-parch hover:text-bone"
             }`}
           >
             {label}
           </button>
         ))}
       </div>
+      {mode === "forgot" && (
+        <p className="text-xs text-parch">
+          Resetting your password. Pick Sign in above to go back.
+        </p>
+      )}
 
       <form onSubmit={submit} className="space-y-6">
         {mode === "register" && (

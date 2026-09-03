@@ -125,3 +125,51 @@ export async function registerCustomer(input: {
       "Check your email. There is a link waiting that opens your account, and your orders appear the moment you use it.",
   };
 }
+
+/**
+ * Ask for a password reset link.
+ *
+ * Through a server action rather than the REST endpoint, for two reasons. It
+ * was the one public form on the site with no rate limit at all, and it sends
+ * an email on every hit, so anyone could use it to post mail at an address
+ * repeatedly. And the client fired it without looking at the answer, so a mail
+ * outage still told the customer a link was on its way, leaving them waiting
+ * for something that was never sent.
+ *
+ * The reply still does not say whether the address has an account: that would
+ * turn this form into a way of finding out who shops here. It only separates
+ * "sent, or there was nothing to send to" from "our end failed".
+ */
+export async function requestPasswordReset(email: string): Promise<RegisterResult> {
+  const hdrs = await headers();
+  if (!rateLimit(clientKey(hdrs, "reset"), { limit: 3, windowMs: 15 * 60 * 1000 })) {
+    return { ok: false, message: "Too many requests. Wait a few minutes and try again." };
+  }
+
+  const parsed = z.string().trim().toLowerCase().email().safeParse(email);
+  if (!parsed.success) {
+    return { ok: false, message: "Enter a valid email address." };
+  }
+
+  const payload = await getPayload({ config });
+  try {
+    await payload.forgotPassword({
+      collection: "customers",
+      data: { email: parsed.data },
+      disableEmail: false,
+    });
+  } catch (err) {
+    // Payload stays quiet about an address it does not know, so anything
+    // thrown here is our problem, not the customer's.
+    payload.logger.error({ err, email: parsed.data }, "Password reset email failed");
+    return {
+      ok: false,
+      message: "We could not send that email just then. Try again in a few minutes.",
+    };
+  }
+
+  return {
+    ok: true,
+    message: "If that address has an account, a reset link is on its way.",
+  };
+}

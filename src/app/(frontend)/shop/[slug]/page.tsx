@@ -231,7 +231,17 @@ export default async function ProductPage({ params }: Params) {
           <h2 id="related" className="eyebrow mb-8">
             Also from the house
           </h2>
-          <div className="grid gap-8 sm:grid-cols-2">
+          {/* Column count follows the number of cards, so three never leaves
+              an orphan stretched across half the page. */}
+          <div
+            className={`grid gap-8 ${
+              related.length === 1
+                ? "sm:grid-cols-2 lg:grid-cols-3"
+                : related.length === 2
+                  ? "sm:grid-cols-2"
+                  : "sm:grid-cols-2 lg:grid-cols-3"
+            }`}
+          >
             {related.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}

@@ -78,9 +78,14 @@ export default async function ServesPage() {
         })}
       </div>
 
-      <p className="mt-16 border-t border-line pt-6 text-xs leading-relaxed text-parch">
-        Drink responsibly. Not for sale to persons under 18.
-      </p>
+      {/* Inside the page container. It sat outside it, so on a phone the one
+          line the law requires ran edge to edge while everything above it was
+          properly inset. */}
+      <div className="mx-auto max-w-6xl px-6 pb-16">
+        <p className="border-t border-line pt-6 text-xs leading-relaxed text-parch">
+          Drink responsibly. Not for sale to persons under 18.
+        </p>
+      </div>
     </main>
   );
 }
