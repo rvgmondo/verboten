@@ -70,9 +70,9 @@ const run = async () => {
     sku: "VB-B01-750",
     priceCents: 45000,
     shortDescription:
-      "A three year South African brandy, finished in French oak and bottled at 43% ABV. Born in Pretoria, made for the world.",
+      "A three year South African brandy, finished in French oak casks. Born in Pretoria, made for the world.",
     description: paragraphs(
-      "Three years in oak, then a finish in French casks. Bottled at 43% ABV in Pretoria.",
+      "Three years in oak, then a finish in French casks. Bottled in Pretoria, in 750ml.",
       "Neat, it holds its own next to anything on the shelf. Tall, over ice with cola, it is South Africa in a glass. Either way, it was built to be poured far from home.",
     ),
     specs: {
@@ -102,11 +102,11 @@ const run = async () => {
     sku: "VB-RTD-CAN",
     priceCents: 4500,
     shortDescription:
-      "The same spirit with its collar loosened. 440ml at 5%, pre-mixed and ready. Cold, easy, and unmistakably South African.",
+      "The same spirit with its collar loosened, pre-mixed in a 440ml can. Cold, easy, and unmistakably South African.",
     description: paragraphs(
-      "The flagship brandy, cut with cola and canned at 5%, in a 440ml can. Made to be drunk cold, straight from the can or over ice.",
+      "The flagship brandy, cut with cola and sealed in a 440ml can. Made to be drunk cold, straight from the can or over ice.",
       "Brandy and Coke is South Africa's drink, and most of the time it gets poured badly. Warm glass, flat cola, brandy chosen on price alone. This is the same pour made properly and sealed, so it tastes the way it should at a braai, a market, or the back of a bakkie.",
-      "The brandy underneath is the same three year spirit we bottle at 43%, finished in French oak. Cola is loud, and a thin brandy disappears under it. This one holds its shape: caramel and dried fruit through the cola instead of just sugar.",
+      "The brandy underneath is the same three year spirit, finished in French oak. Cola is loud, and a thin brandy disappears under it. This one holds its shape: caramel and dried fruit through the cola instead of just sugar.",
       "Serve it colder than you think it needs. Over ice if the day is long.",
     ),
     // Confirmed from the can label: 440ml, 5% alcohol.
@@ -122,9 +122,9 @@ const run = async () => {
     productType: "bottle",
     sku: "VB-NYX-750",
     priceCents: 25000,
-    shortDescription: "Liquorice and anise in the Greek style, bottled at 43%. Very cold and neat, or long with cola.",
+    shortDescription: "Liquorice and anise in the Greek style. Very cold and neat, or long with cola.",
     description: paragraphs(
-      "A liquorice liqueur in the Greek style, made in Pretoria and bottled at 43% ABV in 750ml.",
+      "A liquorice liqueur in the Greek style, made in Pretoria and bottled in 750ml.",
       "Anise up front, liquorice through the middle, and a finish that runs longer than you expect. Over ice it turns cloudy, the way it is supposed to.",
       "Serve it very cold and neat, or long with cola. A canned premix with cola is on the way.",
     ),
@@ -163,7 +163,7 @@ const run = async () => {
     shortDescription:
       "Two bottles of Verboten Premium Brandy for R850, fifty rand under buying them one at a time.",
     description: paragraphs(
-      "Two bottles of the same three year brandy: matured in oak, finished in French casks, bottled at 43% ABV in Pretoria.",
+      "Two bottles of the same three year brandy: matured in oak, finished in French casks, bottled in Pretoria.",
       "R850 for the pair, fifty rand under buying them one at a time. Open one now, and keep the second for the night that earns it.",
       "It travels well as a gift, for the kind of person who notices what is in the glass and does not need to say so.",
     ),

@@ -1,4 +1,5 @@
 import { getProducts, getSiteSettings } from "@/lib/data";
+import { RESPONSIBILITY_LINE } from "@/lib/compliance";
 import { formatZAR } from "@/lib/money";
 import { SITE_URL } from "@/lib/seo";
 
@@ -70,7 +71,7 @@ Delivery is ${settings.shipping?.flatRateCents ? `${formatZAR(settings.shipping.
 - Facts above are generated from the live catalogue. Prices are in South
   African Rand and include VAT.
 
-Drink responsibly. Not for sale to persons under 18.
+${RESPONSIBILITY_LINE}
 `;
 
   return new Response(body, {

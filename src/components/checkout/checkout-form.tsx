@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { RESPONSIBILITY_LINE } from "@/lib/compliance";
 import * as React from "react";
 import { useFormStatus } from "react-dom";
 
@@ -447,8 +448,7 @@ export const CheckoutForm = ({
           never touch our servers.
         </p>
         <p className="text-[0.6875rem] leading-relaxed text-parch">
-          Drink responsibly. Not for sale to persons under 18. Someone 18 or
-          older must receive the delivery.
+          {RESPONSIBILITY_LINE} Someone 18 or older must receive the delivery.
         </p>
       </aside>
     </form>

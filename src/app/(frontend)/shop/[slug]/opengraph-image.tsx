@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { RESPONSIBILITY_MESSAGES } from "@/lib/compliance";
 
 import { getProductBySlug } from "@/lib/data";
 import { formatZAR } from "@/lib/money";
@@ -66,7 +67,7 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
           )}
         </div>
         <div style={{ color: "#8a784f", fontSize: 22, letterSpacing: 4 }}>
-          Drink responsibly. Not for sale to persons under 18.
+          {RESPONSIBILITY_MESSAGES.underAge.toUpperCase()}
         </div>
       </div>
     ),

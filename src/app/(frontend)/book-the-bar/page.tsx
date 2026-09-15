@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { RESPONSIBILITY_LINE } from "@/lib/compliance";
 import { pageMeta } from "@/lib/metadata";
 import Link from "next/link";
 
@@ -184,8 +185,7 @@ export default async function BookTheBarPage() {
             <div className="border-t border-line pt-5">
               <p className="text-xs leading-relaxed text-parch">
                 We serve alcohol, so every event we pour at is 18+ and our team
-                checks identification. Drink responsibly. Not for sale to
-                persons under 18.
+                checks identification. {RESPONSIBILITY_LINE}
               </p>
             </div>
           </aside>

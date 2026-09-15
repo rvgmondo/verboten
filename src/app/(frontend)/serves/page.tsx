@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { RESPONSIBILITY_LINE } from "@/lib/compliance";
 import { pageMeta } from "@/lib/metadata";
 
 import { PageMasthead } from "@/components/brand/page-masthead";
@@ -84,7 +85,7 @@ export default async function ServesPage() {
           properly inset. */}
       <div className="mx-auto max-w-6xl px-6 pb-16">
         <p className="border-t border-line pt-6 text-xs leading-relaxed text-parch">
-          Drink responsibly. Not for sale to persons under 18.
+          {RESPONSIBILITY_LINE}
         </p>
       </div>
     </main>

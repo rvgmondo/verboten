@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     title: "Verboten Spirits | Premium South African Brandy",
     shareTitle: "Verboten Spirits | Premium South African Brandy",
     description:
-      "An independent South African brandy house in Pretoria. Three years in oak, finished in French casks, 43%. Delivered anywhere in South Africa.",
+      "An independent South African brandy house in Pretoria. Three years in oak, finished in French casks. Delivered anywhere in South Africa.",
     path: "/",
   }),
 };

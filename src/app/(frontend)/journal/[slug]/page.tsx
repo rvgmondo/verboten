@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { pageMeta } from "@/lib/metadata";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 import { PageMasthead } from "@/components/brand/page-masthead";
 import { JsonLd } from "@/components/json-ld";
@@ -42,6 +43,8 @@ export default async function JournalPostPage({ params }: Params) {
   const { slug } = await params;
   const post = await getJournalPostBySlug(slug);
   if (!post) {
+    // Same rule as the catch-all: a path that looks like a file is a real 404.
+    if (/\.[a-z0-9]{2,5}$/i.test(slug)) notFound();
     return (
       <NotFoundPanel
         title="That entry is not here."

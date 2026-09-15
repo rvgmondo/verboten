@@ -289,7 +289,7 @@ export const HeroCinema = ({
               [
                 ["Age", "3 years in oak"],
                 ["Finish", "French casks"],
-                ["Strength", "43%"],
+                ["Made in", "Pretoria"],
                 ["Bottle", "750ml"],
               ] as const
             ).map(([label, value]) => (

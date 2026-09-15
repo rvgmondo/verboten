@@ -25,7 +25,6 @@ const facts = (product: Product): Array<[string, string]> => {
   const s = product.specs;
   if (s?.ageYears) rows.push(["Age", `${s.ageYears} years`]);
   if (s?.caskFinish) rows.push(["Finish", s.caskFinish]);
-  if (s?.abv) rows.push(["Strength", `${s.abv}%`]);
   if (s?.volumeMl) rows.push(["Size", `${s.volumeMl}ml`]);
   if (product.productType === "bundle") rows.push(["Contents", "2 bottles"]);
   return rows.slice(0, 4);

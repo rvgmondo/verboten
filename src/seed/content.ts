@@ -29,7 +29,7 @@ export const PAGES = [
       p("Today Verboten is not just a spirit. It is a quiet rebellion in a glass."),
       h2("What we make"),
       p(
-        "The flagship is a three year brandy, matured in oak and finished in French casks, bottled at 43%. Made to a standard, not to a schedule.",
+        "The flagship is a three year brandy, matured in oak and finished in French casks. Made to a standard, not to a schedule.",
       ),
       p(
         "Brandy & Cola is the same spirit with its collar loosened. Pre-mixed, canned, and served colder than strictly necessary at the markets and events where we pour.",
@@ -190,7 +190,7 @@ export const PAGES = [
         "Alcoholics Anonymous South Africa: 0861 435 722",
         "SANCA (South African National Council on Alcoholism): 011 892 3829",
       ),
-      p("Drink responsibly. Not for sale to persons under 18."),
+      p("Not for Persons Under the Age of 18. Don't Drink and Drive. Pregnant Women Should Not Drink Alcohol."),
     ),
   },
 ] as const;
@@ -205,7 +205,7 @@ export const SERVES = [
       { amount: "1", item: "Large clear ice cube, optional" },
     ],
     method:
-      "Pour into a heavy tumbler. Add the cube if you want the edges rounded off, skip it if you want the full 43%. Give it two minutes in the glass before the first sip.",
+      "Pour into a heavy tumbler. Add the cube if you want the edges rounded off, skip it if you want it exactly as it left the cask. Give it two minutes in the glass before the first sip.",
     sortOrder: 1,
   },
   {
@@ -244,13 +244,13 @@ export const JOURNAL_POSTS = [
     title: "The first Verboten brandy is shipping",
     category: "releases" as const,
     excerpt:
-      "Three years in oak, finished in French casks, bottled at 43% in Pretoria. Verboten Premium Brandy is shipping now.",
+      "Three years in oak, finished in French casks, bottled in Pretoria. Verboten Premium Brandy is shipping now.",
     content: doc(
       p(
         "The first release from this house is a brandy we are prepared to put our name on, which is the whole point of the name.",
       ),
       p(
-        "Verboten Premium Brandy spends a minimum of three years in oak before a finish in French casks. It bottles at 43%, in 750ml. Made to a standard we hold without apology.",
+        "Verboten Premium Brandy spends a minimum of three years in oak before a finish in French casks, and it bottles in 750ml. Made to a standard we hold without apology.",
       ),
       h2("What it tastes like"),
       p(
@@ -295,26 +295,43 @@ export const JOURNAL_POSTS = [
     slug: "what-makes-a-south-african-brandy",
     title: "What makes a South African brandy",
     category: "stories" as const,
+    // Checked against regulations 12, 13 and 14 under the Liquor Products Act,
+    // as amended by GN R.5976 (14 March 2025), and the SA Brandy Foundation's
+    // guide. The earlier version said all South African brandy is pot stilled
+    // and rested three years, which is only true of one class of three. Keep
+    // this in step with scripts/update-live-copy.mjs, which carries it live.
     excerpt:
-      "South African brandy has beaten the big names in blind tastings for years. What makes it different, why the law here is stricter than cognac's, and how to taste the difference.",
+      "South African law sorts brandy into three classes, and the word on the label tells you how the spirit was made and how long it rested. What each class means, what changed in 2025, and how to taste the difference.",
     content: doc(
       p(
-        "Here is something most people at the braai do not know: South African law holds brandy to a standard stricter than France holds cognac. Pot-stilled, matured at least three years in oak, nothing rushed. The world's blind tastings have noticed, even when the world's shelves have not caught up yet.",
+        "In South Africa, brandy is not a loose word. The regulations under the Liquor Products Act decide what may be called brandy, and they sort it into three classes. The class printed on the label tells you more about what is in the bottle than anything written on the back of it.",
       ),
-      h2("The law is the floor"),
+      h2("Pot still brandy"),
       p(
-        "To call itself South African brandy, the spirit must be distilled from wine and rested in oak for a minimum of three years. That is not marketing. It is the legal floor, and it is why a properly made local brandy drinks smoother than plenty of imports at twice the price.",
+        "Pot still brandy is distilled in a pot still from fermented grape juice, and all of it is pot still spirit. It has to mature for at least three years in oak casks of no more than 340 litres. It is the class the local industry points to when it talks about South African brandy at its most serious.",
+      ),
+      h2("Vintage brandy"),
+      p(
+        "Vintage brandy blends pot still spirit, between 30 and 80 per cent of it, with wine spirit or grape spirit making up the rest. Every part of it matures for at least eight years in the same small oak casks. On a label, an age in years may stand in for the word vintage, and that age describes the youngest spirit in the bottle.",
+      ),
+      h2("Brandy"),
+      p(
+        "The class simply called brandy is the blended one, and it is the bottle most people mean. At least 30 per cent of it has to be pot still brandy, which has done its three years in oak. The rest, up to 70 per cent, may be wine spirit that has not been matured at all. The SA Brandy Foundation describes it as the style made for mixing, with cola, ginger ale or fruit juice.",
+      ),
+      h2("What changed in 2025"),
+      p(
+        "In March 2025, Government Notice R.5976 amended the rules for blended brandy. Its minimum alcohol content came down to 40 per cent, or 35 per cent for a flavoured brandy, and residual sugar is now capped at 15 grams a litre, or 100 grams if flavoured. Plenty of pages online still quote the old figure, so check the date on anything you read about it.",
       ),
       h2("What oak actually does"),
       p(
-        "Three years in a barrel is where a brandy earns its colour and most of its character. The wood breathes, the spirit rounds, the sharp edges go. A finish in French casks on top of that adds the quiet vanilla and spice you taste at the end of a sip. Time is the one ingredient nobody can fake.",
+        "Time in a barrel is where a brandy earns its colour and most of its character. The wood breathes, the spirit rounds out, the sharp edges go. A finish in a different cask on top of that adds the quiet vanilla and spice you notice at the end of a sip. Time is the one ingredient nobody can fake, which is why the law measures it.",
       ),
       h2("How to taste it"),
       p(
-        "Pour a small glass neat. Let it sit for two minutes, because the first nose out of the bottle is always the roughest. Then look for three things: fruit up front, warmth without burn in the middle, and a finish that stays after you swallow. If all three show up, someone made that brandy with intent.",
+        "Pour a small measure neat. Let it sit for two minutes, because the first nose out of the bottle is always the roughest. Then look for three things: fruit up front, warmth without burn in the middle, and a finish that stays after you swallow. If all three show up, someone made that brandy with intent.",
       ),
       p(
-        "That is the standard we hold ours to. Made in Pretoria, aged three years, finished in French oak, and built to stand next to anything in the world.",
+        "The rules themselves are published by the Department of Agriculture, and the SA Brandy Foundation explains the classes for drinkers at sabrandy.co.za.",
       ),
     ),
     publishedAt: "2026-08-20T08:00:00.000Z",

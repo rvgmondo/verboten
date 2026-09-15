@@ -58,6 +58,10 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
           <div style={{ color: "#f5f1e6", fontSize: 28, letterSpacing: 6, fontWeight: 700 }}>
             VERBOTEN
           </div>
+          {/* Shared images carry the code's token (DF-SA 2026, 7.8.2). */}
+          <div style={{ marginLeft: "auto", color: "#8a784f", fontSize: 18, letterSpacing: 4 }}>
+            NOT FOR PERSONS UNDER THE AGE OF 18
+          </div>
         </div>
       </div>
     ),

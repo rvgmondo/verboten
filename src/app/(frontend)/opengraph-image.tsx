@@ -67,6 +67,17 @@ export default function OgImage() {
         >
           VIR DIÉ WAT WEET
         </div>
+        {/* Shared images carry the code's token (DF-SA 2026, 7.8.2). */}
+        <div
+          style={{
+            marginTop: 36,
+            color: "#8a784f",
+            fontSize: 18,
+            letterSpacing: 4,
+          }}
+        >
+          NOT FOR PERSONS UNDER THE AGE OF 18
+        </div>
       </div>
     ),
     size,

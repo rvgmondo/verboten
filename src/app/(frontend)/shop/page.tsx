@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { RESPONSIBILITY_LINE } from "@/lib/compliance";
 import { pageMeta } from "@/lib/metadata";
 import Link from "next/link";
 
@@ -146,8 +147,7 @@ export default async function ShopPage() {
             </Button>
           </div>
           <p className="mx-auto max-w-lg pt-6 text-xs leading-relaxed text-parch">
-            Drink responsibly. Not for sale to persons under 18. Age is verified
-            at checkout and on delivery.
+            {RESPONSIBILITY_LINE} Age is verified at checkout and on delivery.
           </p>
         </div>
       </section>

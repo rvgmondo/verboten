@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { RESPONSIBILITY_MESSAGES } from "@/lib/compliance";
 
 import { AccountButton } from "@/components/chrome/account-button";
 import { BrandCrest } from "@/components/brand/brand-crest";
@@ -51,5 +52,14 @@ export const Header = () => (
         <MobileNav />
       </div>
     </div>
+    {/* The industry code (DF-SA 2026, 7.8.1) wants a responsibility message
+        that stays on screen while people browse, not one waiting at the foot
+        of the page. The header is the one thing that is always there. */}
+    <p className="border-t border-line/60 px-6 py-1 text-center text-[0.625rem] uppercase tracking-[0.16em] text-parch">
+      {/* One authorised message is enough (7.8.3), and on a phone the second
+          would wrap the sticky header onto another line for good. */}
+      {RESPONSIBILITY_MESSAGES.underAge}.
+      <span className="hidden sm:inline"> {RESPONSIBILITY_MESSAGES.driving}</span>
+    </p>
   </header>
 );

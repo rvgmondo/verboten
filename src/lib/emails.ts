@@ -9,6 +9,7 @@ import {
   muted,
   panel,
   paragraph,
+  identityText,
   rows,
   standardFooter,
 } from "@/lib/email-layout";
@@ -91,7 +92,7 @@ const totals = (order: Order): string => {
   return lines.join("\n");
 };
 
-const signoff = "Verboten Spirits, Pretoria\nDrink responsibly. Not for sale to persons under 18.";
+const signoff = identityText();
 
 type Rendered = { subject: string; body: string; html: string };
 
@@ -372,30 +373,15 @@ export const sendStaffReconcileAlert = async (
 /* submission now answers back in the house voice.                     */
 /* ------------------------------------------------------------------ */
 
-const ACK_SIGNOFF = (settings: {
-  contact?: { email?: string | null; phone?: string | null } | null;
-}) =>
-  [
-    "Verboten Spirits",
-    "Silverton, Pretoria",
-    settings.contact?.email ?? "info@verboten.co.za",
-    settings.contact?.phone ?? "",
-    "",
-    "Drink responsibly. Not for sale to persons under 18.",
-  ]
-    .filter(Boolean)
-    .join("\n");
+type ContactSettings = {
+  contact?: { email?: string | null; phone?: string | null; address?: string | null } | null;
+};
+
+const ACK_SIGNOFF = (settings: ContactSettings) => identityText(settings.contact ?? undefined);
 
 /** Contact details as an HTML footer, mirroring ACK_SIGNOFF. */
-const ackFooterHtml = (settings: {
-  contact?: { email?: string | null; phone?: string | null } | null;
-}) =>
-  standardFooter(
-    [settings.contact?.email ?? "info@verboten.co.za", settings.contact?.phone ?? ""]
-      .filter(Boolean)
-      .map(esc)
-      .join("<br>"),
-  );
+const ackFooterHtml = (settings: ContactSettings) =>
+  standardFooter(undefined, settings.contact ?? undefined);
 
 /** Confirms a contact or bar booking enquiry to the person who sent it. */
 export const sendEnquiryAcknowledgement = async (
@@ -557,6 +543,7 @@ export const sendNewsletterWelcome = async (
       unsubscribe
         ? `<a href="${esc(unsubscribe)}" style="color:${EMAIL_COLORS.PARCH};">Unsubscribe</a>`
         : undefined,
+      settings.contact ?? undefined,
     ),
   });
 

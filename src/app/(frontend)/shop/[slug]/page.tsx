@@ -2,6 +2,7 @@ import { NOT_FOUND_METADATA, NotFoundPanel } from "@/components/brand/not-found-
 import { pageMeta } from "@/lib/metadata";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 import { Price } from "@/components/brand/price";
 import { StockBadge } from "@/components/brand/stock-badge";
@@ -62,6 +63,8 @@ export default async function ProductPage({ params }: Params) {
     getProducts(),
   ]);
   if (!product) {
+    // Same rule as the catch-all: a path that looks like a file is a real 404.
+    if (/\.[a-z0-9]{2,5}$/i.test(slug)) notFound();
     return (
       <NotFoundPanel
         title="That bottle is not here."

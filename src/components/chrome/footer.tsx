@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { RESPONSIBILITY_MESSAGES } from "@/lib/compliance";
 
 import { BrandCrest } from "@/components/brand/brand-crest";
 import { Motto } from "@/components/brand/motto";
@@ -125,7 +126,8 @@ export const Footer = async () => {
             </ul>
           </nav>
           <p className="text-xs leading-relaxed text-parch">
-            Drink responsibly. Not for sale to persons under 18.
+            {RESPONSIBILITY_MESSAGES.underAge}. {RESPONSIBILITY_MESSAGES.driving}{" "}
+            {RESPONSIBILITY_MESSAGES.pregnancy}
           </p>
           <p className="text-xs text-parch">
             © {year} Verboten Pty Ltd. {settings.contact?.address ?? "Silverton, Pretoria"}.

@@ -17,6 +17,8 @@
  * globals.css, so an email looks like the shop it came from.
  */
 
+import { RESPONSIBILITY_LINE } from "@/lib/compliance";
+
 const INK = "#141414"; // page
 const COAL = "#1b1b19"; // raised panel
 const LINE = "#33312b"; // hairline
@@ -141,13 +143,57 @@ export const emailLayout = ({ title, body, preheader, footer }: LayoutOptions): 
 </body>
 </html>`;
 
+/**
+ * Who is writing, in full, as the law now asks.
+ *
+ * Since the Consumer Protection Act regulations of 15 April 2026 (GN R.7380,
+ * regulation 4(7)), anyone sending direct marketing has to let the recipient
+ * identify them by name, email address, physical address and phone number, in
+ * the message itself. It costs nothing to put the same block on transactional
+ * mail too, and it means no template can be the one that forgot.
+ *
+ * Callers with Site Settings to hand pass them in, so a changed number is
+ * changed here as well. The defaults are the house's current details.
+ */
+export type HouseIdentity = {
+  email?: string | null;
+  phone?: string | null;
+  address?: string | null;
+};
+
+const HOUSE_DEFAULTS = {
+  name: "Verboten Pty Ltd, trading as Verboten Spirits",
+  email: "info@verboten.co.za",
+  phone: "+27 75 387 3456",
+  address: "Silverton, Pretoria, Gauteng, 0184",
+};
+
+export const houseIdentity = (from?: HouseIdentity) => ({
+  name: HOUSE_DEFAULTS.name,
+  email: from?.email || HOUSE_DEFAULTS.email,
+  phone: from?.phone || HOUSE_DEFAULTS.phone,
+  address: from?.address || HOUSE_DEFAULTS.address,
+});
+
+/** The same identity block for the plain text part. */
+export const identityText = (from?: HouseIdentity): string => {
+  const h = houseIdentity(from);
+  return [h.name, h.address, `${h.email}, ${h.phone}`, "verboten.co.za", "", RESPONSIBILITY_LINE].join("\n");
+};
+
 /** The footer every email carries, with anything extra appended. */
-export const standardFooter = (extra?: string): string =>
-  [
-    "Verboten Spirits, Silverton, Pretoria",
+export const standardFooter = (extra?: string, from?: HouseIdentity): string => {
+  const h = houseIdentity(from);
+  return [
+    esc(h.name),
+    esc(h.address),
+    `${esc(h.email)}, ${esc(h.phone)}`,
     '<a href="https://verboten.co.za" style="color:' + GOLD + ';text-decoration:none;">verboten.co.za</a>',
-    "Drink responsibly. Not for sale to persons under 18.",
+    // The industry code's authorised wording (DF-SA 2026, 7.8.3), which its
+    // illustrations apply to email campaigns as well.
+    esc(RESPONSIBILITY_LINE),
     extra ?? "",
   ]
     .filter(Boolean)
     .join("<br>");
+};

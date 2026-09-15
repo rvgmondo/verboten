@@ -51,9 +51,9 @@ const PRODUCTS = [
       name: "Verboten Premium Brandy",
       slug: "verboten-premium-brandy",
       shortDescription:
-        "A three year South African brandy, finished in French oak and bottled at 43% ABV. Born in Pretoria, made for the world.",
+        "A three year South African brandy, finished in French oak casks. Born in Pretoria, made for the world.",
       description: paragraphs(
-        "Three years in oak, then a finish in French casks. Bottled at 43% ABV in Pretoria.",
+        "Three years in oak, then a finish in French casks. Bottled in Pretoria, in 750ml.",
         "Neat, it holds its own next to anything on the shelf. Tall, over ice with cola, it is South Africa in a glass. Either way, it was built to be poured far from home.",
       ),
       _status: "published",
@@ -64,11 +64,11 @@ const PRODUCTS = [
     slug: "verboten-brandy-cola",
     data: {
       shortDescription:
-        "The same spirit with its collar loosened. 440ml at 5%, pre-mixed and ready. Cold, easy, and unmistakably South African.",
+        "The same spirit with its collar loosened, pre-mixed in a 440ml can. Cold, easy, and unmistakably South African.",
       description: paragraphs(
-        "The flagship brandy, cut with cola and canned at 5%, in a 440ml can. Made to be drunk cold, straight from the can or over ice.",
+        "The flagship brandy, cut with cola and sealed in a 440ml can. Made to be drunk cold, straight from the can or over ice.",
         "Brandy and Coke is South Africa's drink, and most of the time it gets poured badly. Warm glass, flat cola, brandy chosen on price alone. This is the same pour made properly and sealed, so it tastes the way it should at a braai, a market, or the back of a bakkie.",
-        "The brandy underneath is the same three year spirit we bottle at 43%, finished in French oak. Cola is loud, and a thin brandy disappears under it. This one holds its shape: caramel and dried fruit through the cola instead of just sugar.",
+        "The brandy underneath is the same three year spirit, finished in French oak. Cola is loud, and a thin brandy disappears under it. This one holds its shape: caramel and dried fruit through the cola instead of just sugar.",
         "Serve it colder than you think it needs. Over ice if the day is long.",
       ),
       specs: { abv: 5, volumeMl: 440, origin: "South Africa" },
@@ -84,7 +84,7 @@ const PRODUCTS = [
       shortDescription:
         "Two bottles of Verboten Premium Brandy for R850, fifty rand under buying them one at a time.",
       description: paragraphs(
-        "Two bottles of the same three year brandy: matured in oak, finished in French casks, bottled at 43% ABV in Pretoria.",
+        "Two bottles of the same three year brandy: matured in oak, finished in French casks, bottled in Pretoria.",
         "R850 for the pair, fifty rand under buying them one at a time. Open one now, and keep the second for the night that earns it.",
         "It travels well as a gift, for the kind of person who notices what is in the glass and does not need to say so.",
       ),
@@ -111,9 +111,9 @@ const NEW_PRODUCTS = [
     },
     data: {
       shortDescription:
-        "Liquorice and anise in the Greek style, bottled at 43%. Very cold and neat, or long with cola.",
+        "Liquorice and anise in the Greek style. Very cold and neat, or long with cola.",
       description: paragraphs(
-        "A liquorice liqueur in the Greek style, made in Pretoria and bottled at 43% ABV in 750ml.",
+        "A liquorice liqueur in the Greek style, made in Pretoria and bottled in 750ml.",
         "Anise up front, liquorice through the middle, and a finish that runs longer than you expect. Over ice it turns cloudy, the way it is supposed to.",
         "Serve it very cold and neat, or long with cola. A canned premix with cola is on the way.",
       ),
@@ -153,10 +153,10 @@ const JOURNAL_UPDATES = {
     slug: "the-first-verboten-brandy-is-shipping",
     title: "The first Verboten brandy is shipping",
     excerpt:
-      "Three years in oak, finished in French casks, bottled at 43% in Pretoria. Verboten Premium Brandy is shipping now.",
+      "Three years in oak, finished in French casks, bottled in Pretoria. Verboten Premium Brandy is shipping now.",
     content: doc(
       p("The first release from this house is a brandy we are prepared to put our name on, which is the whole point of the name."),
-      p("Verboten Premium Brandy spends a minimum of three years in oak before a finish in French casks. It bottles at 43%, in 750ml. Made to a standard we hold without apology."),
+      p("Verboten Premium Brandy spends a minimum of three years in oak before a finish in French casks, and it bottles in 750ml. Made to a standard we hold without apology."),
       h2("What it tastes like"),
       p("Warm oak, dried apricot and vanilla on the nose. Caramel, toasted nuts and a quiet spice on the palate. The finish is long and does not need help."),
       h2("How to get one"),
@@ -191,16 +191,22 @@ const JOURNAL_NEW = [
     title: "What makes a South African brandy",
     category: "stories",
     excerpt:
-      "South African brandy has beaten the big names in blind tastings for years. What makes it different, why the law here is stricter than cognac's, and how to taste the difference.",
+      "South African law sorts brandy into three classes, and the word on the label tells you how the spirit was made and how long it rested. What each class means, what changed in 2025, and how to taste the difference.",
     content: doc(
-      p("Here is something most people at the braai do not know: South African law holds brandy to a standard stricter than France holds cognac. Pot-stilled, matured at least three years in oak, nothing rushed. The world's blind tastings have noticed, even when the world's shelves have not caught up yet."),
-      h2("The law is the floor"),
-      p("To call itself South African brandy, the spirit must be distilled from wine and rested in oak for a minimum of three years. That is not marketing. It is the legal floor, and it is why a properly made local brandy drinks smoother than plenty of imports at twice the price."),
+      p("In South Africa, brandy is not a loose word. The regulations under the Liquor Products Act decide what may be called brandy, and they sort it into three classes. The class printed on the label tells you more about what is in the bottle than anything written on the back of it."),
+      h2("Pot still brandy"),
+      p("Pot still brandy is distilled in a pot still from fermented grape juice, and all of it is pot still spirit. It has to mature for at least three years in oak casks of no more than 340 litres. It is the class the local industry points to when it talks about South African brandy at its most serious."),
+      h2("Vintage brandy"),
+      p("Vintage brandy blends pot still spirit, between 30 and 80 per cent of it, with wine spirit or grape spirit making up the rest. Every part of it matures for at least eight years in the same small oak casks. On a label, an age in years may stand in for the word vintage, and that age describes the youngest spirit in the bottle."),
+      h2("Brandy"),
+      p("The class simply called brandy is the blended one, and it is the bottle most people mean. At least 30 per cent of it has to be pot still brandy, which has done its three years in oak. The rest, up to 70 per cent, may be wine spirit that has not been matured at all. The SA Brandy Foundation describes it as the style made for mixing, with cola, ginger ale or fruit juice."),
+      h2("What changed in 2025"),
+      p("In March 2025, Government Notice R.5976 amended the rules for blended brandy. Its minimum alcohol content came down to 40 per cent, or 35 per cent for a flavoured brandy, and residual sugar is now capped at 15 grams a litre, or 100 grams if flavoured. Plenty of pages online still quote the old figure, so check the date on anything you read about it."),
       h2("What oak actually does"),
-      p("Three years in a barrel is where a brandy earns its colour and most of its character. The wood breathes, the spirit rounds, the sharp edges go. A finish in French casks on top of that adds the quiet vanilla and spice you taste at the end of a sip. Time is the one ingredient nobody can fake."),
+      p("Time in a barrel is where a brandy earns its colour and most of its character. The wood breathes, the spirit rounds out, the sharp edges go. A finish in a different cask on top of that adds the quiet vanilla and spice you notice at the end of a sip. Time is the one ingredient nobody can fake, which is why the law measures it."),
       h2("How to taste it"),
-      p("Pour a small glass neat. Let it sit for two minutes, because the first nose out of the bottle is always the roughest. Then look for three things: fruit up front, warmth without burn in the middle, and a finish that stays after you swallow. If all three show up, someone made that brandy with intent."),
-      p("That is the standard we hold ours to. Made in Pretoria, aged three years, finished in French oak, and built to stand next to anything in the world."),
+      p("Pour a small measure neat. Let it sit for two minutes, because the first nose out of the bottle is always the roughest. Then look for three things: fruit up front, warmth without burn in the middle, and a finish that stays after you swallow. If all three show up, someone made that brandy with intent."),
+      p("The rules themselves are published by the Department of Agriculture, and the SA Brandy Foundation explains the classes for drinkers at sabrandy.co.za."),
     ),
     publishedAt: "2026-08-20T08:00:00.000Z",
     _status: "published",
@@ -222,7 +228,7 @@ const STORY_PAGE = {
     p("Verboten is German for forbidden. The name is a promise about restraint: nothing leaves this house unless it earns the label. South African soul, a German sounding surname, and an Afrikaans undercurrent for the ones who know."),
     p("Today Verboten is not just a spirit. It is a quiet rebellion in a glass."),
     h2("What we make"),
-    p("The flagship is a three year brandy, matured in oak and finished in French casks, bottled at 43%. Made to a standard, not to a schedule."),
+    p("The flagship is a three year brandy, matured in oak and finished in French casks. Made to a standard, not to a schedule."),
     p("Brandy & Cola is the same spirit with its collar loosened. Pre-mixed, canned, and served colder than strictly necessary at the markets and events where we pour."),
     p("Alongside the brandy there is NYX, a liquorice liqueur in the Greek style, and a blood orange gin. Both are bottled at 750ml and poured on tap at the markets and events where we set up."),
     p("A beer is in development. It will announce itself when it is ready."),
@@ -262,6 +268,19 @@ const SERVE_UPDATE = {
   name: "Neat, one cube",
   description:
     "The house serve. The brandy was finished in French oak so you could taste it, not bury it.",
+  // The industry code keeps alcohol strength out of anything that is not the
+  // label (DF-SA 2026, 2.6.2), and a serve that sells the strength is exactly
+  // what it has in mind.
+  methodFind: "skip it if you want the full 43%",
+  methodReplacement: "skip it if you want it exactly as it left the cask",
+};
+
+// The responsibility line has to be the code's own wording (DF-SA 2026, 7.8.3),
+// not a paraphrase of it.
+const RESPONSIBLE_PAGE_FIX = {
+  find: "Drink responsibly. Not for sale to persons under 18.",
+  replacement:
+    "Not for Persons Under the Age of 18. Don't Drink and Drive. Pregnant Women Should Not Drink Alcohol.",
 };
 
 /* ---- REST helpers ---- */
@@ -448,11 +467,42 @@ const run = async () => {
     `/api/serves?where[name][equals]=${encodeURIComponent(SERVE_UPDATE.name)}&depth=0&limit=1`,
   );
   if (serves?.docs?.[0]) {
-    await api(`/api/serves/${serves.docs[0].id}`, {
+    const serve = serves.docs[0];
+    await api(`/api/serves/${serve.id}`, {
       method: "PATCH",
-      body: { description: SERVE_UPDATE.description },
+      body: {
+        description: SERVE_UPDATE.description,
+        ...(typeof serve.method === "string" && serve.method.includes(SERVE_UPDATE.methodFind)
+          ? { method: serve.method.replace(SERVE_UPDATE.methodFind, SERVE_UPDATE.methodReplacement) }
+          : {}),
+      },
     });
     console.log("House serve description updated");
+  }
+
+  // 7. The responsible enjoyment page's closing line, swapped in place.
+  const responsible = await findBySlug("pages", "responsible-enjoyment");
+  if (responsible) {
+    const full = await api(`/api/pages/${responsible.id}?depth=0`);
+    let changed = false;
+    const walk = (node) => {
+      if (!node || typeof node !== "object") return;
+      if (node.type === "text" && typeof node.text === "string" && node.text.includes(RESPONSIBLE_PAGE_FIX.find)) {
+        node.text = node.text.replace(RESPONSIBLE_PAGE_FIX.find, RESPONSIBLE_PAGE_FIX.replacement);
+        changed = true;
+      }
+      for (const child of node.children ?? []) walk(child);
+    };
+    walk(full?.content?.root);
+    if (changed) {
+      await api(`/api/pages/${responsible.id}`, {
+        method: "PATCH",
+        body: { content: full.content, _status: "published" },
+      });
+      console.log("Responsible enjoyment page wording updated");
+    } else {
+      console.log("Responsible enjoyment page already current; skipping");
+    }
   }
 
   console.log("\nDone. The live site refreshes itself within a few minutes.");
