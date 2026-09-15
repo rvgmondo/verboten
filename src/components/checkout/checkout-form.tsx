@@ -6,11 +6,13 @@ import * as React from "react";
 import { useFormStatus } from "react-dom";
 
 import { createCheckout, previewDiscount, type CheckoutResult } from "@/app/actions/checkout";
+import { MEASUREMENT_READY_EVENT, readMeasurementIds } from "@/components/analytics/measurement";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { orderTotals } from "@/lib/commerce/totals";
+import { readAttribution, trackShop } from "@/lib/analytics";
 import { useCart } from "@/lib/cart";
 import { formatZAR } from "@/lib/money";
 
@@ -90,9 +92,11 @@ const PayfastRedirect = ({
 export const CheckoutForm = ({
   flatRateCents,
   freeThresholdCents,
+  gaId,
 }: {
   flatRateCents: number;
   freeThresholdCents: number;
+  gaId?: string | null;
 }) => {
   const { items, subtotalCents, hydrated, reprice } = useCart();
   const [state, action] = React.useActionState<CheckoutResult | null, FormData>(
@@ -100,6 +104,50 @@ export const CheckoutForm = ({
     null,
   );
   const formRef = React.useRef<HTMLFormElement>(null);
+
+  // Where the visit came from and what the buyer allowed, sent with the order
+  // so a sale confirmed later by PayFast can still be credited. Read once the
+  // page is up and again if the cookie choice changes while it is open.
+  const [measurement, setMeasurement] = React.useState("{}");
+  React.useEffect(() => {
+    let live = true;
+    const refresh = async () => {
+      const ids = await readMeasurementIds(gaId);
+      if (live) setMeasurement(JSON.stringify({ ...readAttribution(), ...ids }));
+    };
+    void refresh();
+    // Accepting cookies on this page starts the tags a moment later, so ids
+    // are read again once they are running, not only when the choice is made.
+    window.addEventListener(MEASUREMENT_READY_EVENT, refresh);
+    return () => {
+      live = false;
+      window.removeEventListener(MEASUREMENT_READY_EVENT, refresh);
+    };
+  }, [gaId]);
+
+  // Once per visit to the page, when the cart is actually known.
+  const beganCheckout = React.useRef(false);
+  React.useEffect(() => {
+    if (!hydrated || beganCheckout.current || items.length === 0) return;
+    beganCheckout.current = true;
+    trackShop(
+      "begin_checkout",
+      items.map((i) => ({ slug: i.slug, name: i.name, priceCents: i.priceCents, quantity: i.quantity })),
+    );
+  }, [hydrated, items]);
+
+  // The order exists and the buyer is on their way to pay.
+  React.useEffect(() => {
+    if (state?.ok) {
+      trackShop(
+        "add_payment_info",
+        items.map((i) => ({ slug: i.slug, name: i.name, priceCents: i.priceCents, quantity: i.quantity })),
+        { payment_type: "PayFast" },
+      );
+    }
+    // Only the transition matters; items are read as they were at that moment.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
 
   // A failed submit can leave the first invalid field two screens up on a
   // phone; take keyboard and screen-reader users straight to it.
@@ -230,6 +278,7 @@ export const CheckoutForm = ({
           own and refuses to send anyone to PayFast when the two disagree, so
           nobody is ever charged a number they did not see. */}
       <input type="hidden" name="quotedTotalCents" value={totalCents} />
+      <input type="hidden" name="measurement" value={measurement} />
 
       <div className="space-y-10">
         <fieldset className="space-y-6">

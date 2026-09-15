@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 
 import { Price } from "@/components/brand/price";
 import { StockBadge } from "@/components/brand/stock-badge";
+import { TrackViewItem } from "@/components/analytics/track-view-item";
 import { JsonLd } from "@/components/json-ld";
 import { ArtPlaceholder } from "@/components/media/art-placeholder";
 import { RichText } from "@/components/rich-text";
@@ -92,6 +93,7 @@ export default async function ProductPage({ params }: Params) {
   return (
     <main className="mx-auto max-w-6xl px-6 py-12 lg:py-20">
       <JsonLd data={productLd(product, settings)} />
+      <TrackViewItem item={{ slug: product.slug, name: product.name, priceCents: product.priceCents }} />
       <JsonLd
         data={breadcrumbLd([
           { name: "Home", path: "/" },

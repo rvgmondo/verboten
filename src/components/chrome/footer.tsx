@@ -4,6 +4,7 @@ import { RESPONSIBILITY_MESSAGES } from "@/lib/compliance";
 import { BrandCrest } from "@/components/brand/brand-crest";
 import { Motto } from "@/components/brand/motto";
 import { NewsletterForm } from "@/components/chrome/newsletter-form";
+import { ConsentLink } from "@/components/compliance/consent-banner";
 import { getSiteSettings } from "@/lib/data";
 
 const SHOP_LINKS = [
@@ -123,6 +124,9 @@ export const Footer = async () => {
                   </Link>
                 </li>
               ))}
+              <li>
+                <ConsentLink className="text-xs text-parch transition-colors hover:text-bone" />
+              </li>
             </ul>
           </nav>
           <p className="text-xs leading-relaxed text-parch">

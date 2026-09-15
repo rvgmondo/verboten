@@ -215,9 +215,11 @@ npm test
 ```
 
 `node:test` via `tsx`, no framework installed: the host is shared and the
-toolchain stays small. Covers the only logic where a quiet mistake costs money
-(totals, discount arithmetic, stock and bundle availability). Add to
-`src/lib/commerce/commerce.test.ts` rather than starting a parallel setup.
+toolchain stays small. Covers the logic where a quiet mistake costs money or
+breaks a legal promise: totals, discount arithmetic, stock and bundle
+availability (`lib/commerce/*.test.ts`), the age gate's date arithmetic
+(`lib/compliance.test.ts`), and the sale reports and consent cookie
+(`lib/analytics.test.ts`).
 
 `scripts/verify-money-path.mjs` drives a real order through a forged but
 correctly signed ITN. Localhost only, and it refuses to run anywhere else.
@@ -234,9 +236,10 @@ The build is committed, so the server never builds. Order matters.
    node -v                      # must be v20.x, not the system Node 10
    node scripts/ensure-schema.mjs
    ```
-   Payload only pushes schema in development, and the live database is a single
-   SQLite file holding real orders, so new tables and columns are added by this
-   idempotent script and nothing else.
+   Schema push is off unless `PAYLOAD_PUSH=1` (`payload.config.ts`), so no
+   script can rewrite the live schema by accident, and the live database is a
+   single SQLite file holding real orders. New tables and columns are added by
+   this idempotent script and nothing else.
 4. **Restart properly.** The cPanel Restart button does not kill the running
    process, which then serves the old build from memory and makes a successful
    deploy look like a failed one:
@@ -284,8 +287,51 @@ birth.
 
 ## Compliance (non-negotiable)
 
-- Age gate (18+) on first visit, accessible, consent-cookie remembered,
-  crawler-safe. DOB check at checkout. "Drink responsibly. Not for sale to
-  persons under 18." site-wide.
-- POPIA-aware privacy handling. Legal pages: Terms, Privacy,
-  Shipping & Returns, Responsible Enjoyment.
+Checked against the DF-SA Alcohol Industry Communications Code of Conduct
+(2026 edition, enforced by the ARB against non-members too), POPIA and the
+Information Regulator's direct marketing guidance, and the CPA regulations of
+15 April 2026. The owner's side of it is in `docs/launch-checklist.md`.
+
+- **Age gate** (`components/compliance/age-gate.tsx`): full date of birth and
+  country (code 7.8.4), under-age visitors go to Aware.org, the date is thrown
+  away and only a pass flag is kept, per session unless "remember me". Client
+  only and crawler safe. DOB check again at checkout.
+- **Responsibility wording** is the code's own, from `lib/compliance.ts`, never
+  a paraphrase. It stays on screen in the sticky header (7.8.1), sits in every
+  email footer and on every share image.
+- **No alcohol strength in promotional copy** (2.6.2): not in meta
+  descriptions, share cards, emails, the feed, the hero or product stages. The
+  factual spec row on the product page and the structured data keep it.
+- **Every email names the house in full** (company, physical address, email,
+  phone) through `standardFooter` / `identityText`, reading Site Settings.
+- **Consent before measurement** (`lib/consent.ts`, `consent-banner.tsx`,
+  `components/analytics/measurement.tsx`): GA4 and the Meta Pixel load only
+  after the visitor agrees, and only once the age gate has been passed in this
+  visit, because consent lasts months and a gate pass lasts a session. Anything
+  new that talks to Google, Meta or any other tracker goes through the same
+  gate: `hasPassedAgeGate()` plus `readConsent()`, checked at the moment of
+  sending, not once at load.
+- **Paid sales are reported from the server** (`lib/analytics-server.ts`), from
+  the Orders hook, once (`analyticsReported` guard), only with the consent the
+  buyer gave at checkout. The IP, user agent and click ids saved for that are
+  deleted straight after (POPIA s14). Never add a browser purchase event: the
+  buyer pays on PayFast and the sale would be counted twice or not at all.
+- **Legal facts** in copy (brandy classes, liqueur sugar minimums) come from
+  the regulations, cited in the code comment beside them. Never state which
+  legal class a Verboten product is until the owner confirms it.
+- Legal pages: Terms, Privacy (rewritten for consent, in `src/seed/content.ts`
+  and `scripts/update-live-copy.mjs`, kept in step), Shipping & Returns,
+  Responsible Enjoyment.
+
+## Search and feeds
+
+- Every indexable page builds metadata with `pageMeta()` (`lib/metadata.ts`).
+  Setting `openGraph` directly on a page replaces the layout's whole object and
+  silently drops the share image, which is how most pages lost theirs.
+- JSON-LD builders are in `lib/seo.ts`. Shipping in them goes through
+  `orderTotals()`, like every other money figure.
+- `/feeds/products.xml` serves Google Merchant Center and Meta catalogue ads.
+  Only products with a real JPEG or PNG photograph are listed.
+- Redirects: `skipTrailingSlashRedirect` is on so every legacy WordPress URL
+  reaches its final page in one hop (`next.config.ts`). Add new legacy paths to
+  the `LEGACY` list, not as separate rules.

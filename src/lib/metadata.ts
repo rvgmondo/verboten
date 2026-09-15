@@ -22,7 +22,7 @@ import { SITE_URL } from "@/lib/seo";
 
 export const SITE_NAME = "Verboten Spirits";
 const DEFAULT_IMAGE = {
-  url: "/brand/og-default.png",
+  url: "/brand/og-share.png",
   width: 1200,
   height: 630,
   alt: "Verboten Spirits, an independent South African brandy house in Pretoria",
@@ -58,6 +58,10 @@ export const pageMeta = ({
   type = "website",
   noindex = false,
 }: PageMetaInput): Metadata => {
+  // SEO titles generated in the admin before this used to end in the brand,
+  // and the template adds it again. Strip it here so saved values still read
+  // once, whatever was stored.
+  title = title.replace(/\s*[|,-]\s*Verboten Spirits\s*$/i, "").trim() || title;
   const fullTitle = `${title} | ${SITE_NAME}`;
   // `null` means "this route has its own image file, do not name one".
   const images = image === null ? undefined : [image ?? DEFAULT_IMAGE];

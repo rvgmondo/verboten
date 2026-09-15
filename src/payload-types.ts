@@ -511,6 +511,39 @@ export interface Order {
       | null;
   };
   trackingNumber?: string | null;
+  /**
+   * Where this order came from. Filled in at checkout; the tracking ids are only kept when the buyer allowed them.
+   */
+  attribution?: {
+    /**
+     * utm_source, e.g. instagram.
+     */
+    source?: string | null;
+    /**
+     * utm_medium, e.g. paid_social.
+     */
+    medium?: string | null;
+    campaign?: string | null;
+    /**
+     * The referring site, if any.
+     */
+    referrer?: string | null;
+    landingPath?: string | null;
+    analyticsConsent?: boolean | null;
+    marketingConsent?: boolean | null;
+    gclid?: string | null;
+    fbclid?: string | null;
+    gaClientId?: string | null;
+    gaSessionId?: string | null;
+    fbp?: string | null;
+    fbc?: string | null;
+    clientIp?: string | null;
+    userAgent?: string | null;
+  };
+  /**
+   * Whether this sale has been reported to Google Analytics and Meta.
+   */
+  analyticsReported?: ('none' | 'purchase' | 'refund') | null;
   customerNote?: string | null;
   /**
    * Staff only; never shown to the customer.
@@ -1188,6 +1221,26 @@ export interface OrdersSelect<T extends boolean = true> {
         raw?: T;
       };
   trackingNumber?: T;
+  attribution?:
+    | T
+    | {
+        source?: T;
+        medium?: T;
+        campaign?: T;
+        referrer?: T;
+        landingPath?: T;
+        analyticsConsent?: T;
+        marketingConsent?: T;
+        gclid?: T;
+        fbclid?: T;
+        gaClientId?: T;
+        gaSessionId?: T;
+        fbp?: T;
+        fbc?: T;
+        clientIp?: T;
+        userAgent?: T;
+      };
+  analyticsReported?: T;
   customerNote?: T;
   internalNotes?: T;
   statusLog?:
@@ -1596,6 +1649,19 @@ export interface SiteSetting {
     instagram?: string | null;
     tiktok?: string | null;
   };
+  /**
+   * Nothing here loads for a visitor until they accept it in the cookie banner. Leave a field empty to switch that tool off.
+   */
+  measurement?: {
+    /**
+     * Starts with G-, from Admin, Data streams, in Google Analytics.
+     */
+    gaMeasurementId?: string | null;
+    /**
+     * The number from Events Manager, Data sources, in Meta Business.
+     */
+    metaPixelId?: string | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1635,6 +1701,12 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         facebook?: T;
         instagram?: T;
         tiktok?: T;
+      };
+  measurement?:
+    | T
+    | {
+        gaMeasurementId?: T;
+        metaPixelId?: T;
       };
   updatedAt?: T;
   createdAt?: T;

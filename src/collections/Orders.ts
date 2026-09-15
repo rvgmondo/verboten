@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
 import { isAdmin, isAdminOrEditor, isStaffField, serverOnly, staffOrOwnCustomer } from "../access/access";
+import { reportOrderToAnalytics } from "../lib/analytics-server";
 import { applyCancelledSideEffects, applyPaidSideEffects } from "../lib/commerce/lifecycle";
 import { sendOrderStatusEmail } from "../lib/emails";
 
@@ -273,6 +274,56 @@ export const Orders: CollectionConfig = {
       type: "text",
     },
     {
+      // Where the sale came from, and what the buyer agreed to at checkout.
+      //
+      // PayFast confirms payment from its own servers, which carry none of the
+      // buyer's cookies, so everything a sale report to Google or Meta needs
+      // has to be saved here before the buyer leaves for PayFast. The consent
+      // flags are the buyer's own choice at that moment, and the report reads
+      // them: no consent, no report, whatever else is stored.
+      name: "attribution",
+      type: "group",
+      access: { read: isStaffField },
+      admin: {
+        description:
+          "Where this order came from. Filled in at checkout; the tracking ids are only kept when the buyer allowed them.",
+      },
+      fields: [
+        { name: "source", type: "text", admin: { description: "utm_source, e.g. instagram." } },
+        { name: "medium", type: "text", admin: { description: "utm_medium, e.g. paid_social." } },
+        { name: "campaign", type: "text" },
+        { name: "referrer", type: "text", admin: { description: "The referring site, if any." } },
+        { name: "landingPath", type: "text" },
+        { name: "analyticsConsent", type: "checkbox", defaultValue: false },
+        { name: "marketingConsent", type: "checkbox", defaultValue: false },
+        { name: "gclid", type: "text" },
+        { name: "fbclid", type: "text" },
+        { name: "gaClientId", type: "text" },
+        { name: "gaSessionId", type: "text" },
+        { name: "fbp", type: "text" },
+        { name: "fbc", type: "text" },
+        { name: "clientIp", type: "text" },
+        { name: "userAgent", type: "text" },
+      ],
+    },
+    {
+      // Guard, like stockMoved: each report goes out once, however many times
+      // the order is saved in a paid state.
+      name: "analyticsReported",
+      type: "select",
+      defaultValue: "none",
+      options: [
+        { label: "Not reported", value: "none" },
+        { label: "Sale reported", value: "purchase" },
+        { label: "Refund reported", value: "refund" },
+      ],
+      admin: {
+        position: "sidebar",
+        readOnly: true,
+        description: "Whether this sale has been reported to Google Analytics and Meta.",
+      },
+    },
+    {
       name: "customerNote",
       type: "textarea",
     },
@@ -330,8 +381,16 @@ export const Orders: CollectionConfig = {
         if (statusChanged) {
           if (doc.status === "paid") {
             await applyPaidSideEffects(req.payload, doc);
+            // Not awaited. PayFast waits on this request for its notification
+            // to be acknowledged, and a slow analytics endpoint must never be
+            // the reason it decides to send the notification again.
+            void reportOrderToAnalytics(req.payload, doc, "purchase");
           } else if (doc.status === "cancelled" || doc.status === "refunded") {
             await applyCancelledSideEffects(req.payload, doc);
+            // Cancelling a paid order refunds it (the cancellation email says
+            // so), so both statuses report the refund. The guard inside sends
+            // nothing for a sale that was never reported, such as a declined card.
+            void reportOrderToAnalytics(req.payload, doc, "refund");
           }
         }
 

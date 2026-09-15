@@ -42,10 +42,13 @@ const serverURL =
     ? "https://verboten.co.za"
     : "http://localhost:3001");
 
+// The bare title. The site's title template adds "| Verboten Spirits" to every
+// page, so a generated SEO title that carried the brand as well came out with
+// it twice in search results.
 const generateTitle: GenerateTitle = ({ doc }) => {
   const title = (doc as { title?: string; name?: string })?.title
     ?? (doc as { name?: string })?.name;
-  return title ? `${title} | Verboten Spirits` : "Verboten Spirits";
+  return title ?? "Verboten Spirits";
 };
 
 export default buildConfig({
@@ -100,6 +103,14 @@ export default buildConfig({
     // collection, run scripts/ensure-schema.mjs on the server once.
     : sqliteAdapter({
         client: { url: process.env.DATABASE_URI || "file:./verboten.db" },
+        // Push is opt in. Payload's default is to push whenever NODE_ENV is not
+        // production, which includes every script run from a shell: a seed or
+        // a one-off check run on the server would rewrite the live schema on
+        // its own. It did start doing that to a local copy once, and stopped
+        // only because an index already existed. Set PAYLOAD_PUSH=1 against a
+        // scratch database to see the DDL for a new collection, then copy that
+        // into scripts/ensure-schema.mjs.
+        push: process.env.PAYLOAD_PUSH === "1",
         // Transactions are OFF, and that is deliberate. Turning them on was
         // tried: every write then fails with "database is locked", because the
         // concurrency-safe statements in lib/commerce/atomic.ts go through

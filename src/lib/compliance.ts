@@ -45,10 +45,31 @@ export const DRINKING_AGE: Record<string, { name: string; age: number }> = {
   NZ: { name: "New Zealand", age: 18 },
   CA: { name: "Canada", age: 19 },
   US: { name: "United States", age: 21 },
-  // Anywhere else, the house holds South Africa's age, which is the law the
-  // site trades under. It never sells outside South Africa in any case.
-  OTHER: { name: "Another country", age: 18 },
+  // Anywhere not listed, the gate holds the highest common drinking age rather
+  // than guessing low. Japan, Iceland and Thailand set 20 and South Korea 19,
+  // so 18 here would let in exactly the visitors the country question exists
+  // to turn away. The shop only sells inside South Africa in any case.
+  OTHER: { name: "Another country", age: 21 },
 };
+
+/** The cookie the age gate sets once a visitor has passed it. */
+export const AGE_COOKIE = "vb_age_ok";
+
+/**
+ * Has this browser passed the age gate for the current visit? Browser only.
+ *
+ * Everything that must wait for the gate asks this one function: the cookie
+ * banner and the measurement tags. Consent lasts six months but a gate pass
+ * lasts the browser session, so a stored "yes" to analytics is not enough on
+ * its own. Without this check, the next person to open the site on that device
+ * was reported to Google and Meta while the gate was still asking their age.
+ */
+export const hasPassedAgeGate = () =>
+  typeof document !== "undefined" &&
+  document.cookie.split(";").some((c) => c.trim().startsWith(`${AGE_COOKIE}=`));
+
+/** Fired on window when the gate is passed, so waiting components can start. */
+export const AGE_OK_EVENT = "vb:age-ok";
 
 /**
  * Whole years between a date of birth and today, or null if the date does not

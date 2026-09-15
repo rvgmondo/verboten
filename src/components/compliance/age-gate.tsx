@@ -8,14 +8,39 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+  AGE_COOKIE,
+  AGE_OK_EVENT,
   DRINKING_AGE,
   RESPONSIBILITY_LINE,
   UNDER_AGE_DESTINATION,
   ageFrom,
+  hasPassedAgeGate,
 } from "@/lib/compliance";
 
-const COOKIE = "vb_age_ok";
 const THIRTY_DAYS = 60 * 60 * 24 * 30;
+
+type Field = "day" | "month" | "year";
+
+/**
+ * Which part of the date is wrong, in words that say how to fix it. One
+ * message for the whole date left people guessing which box to change, and
+ * marked all three invalid when only one was.
+ */
+const checkDate = (day: string, month: string, year: string): { field: Field; message: string } | null => {
+  const d = Number(day);
+  const m = Number(month);
+  const y = Number(year);
+  const thisYear = new Date().getFullYear();
+  if (!day || d < 1 || d > 31) return { field: "day", message: "Enter the day, from 1 to 31." };
+  if (!month || m < 1 || m > 12) return { field: "month", message: "Enter the month, from 1 to 12." };
+  if (year.length !== 4 || y < 1900 || y > thisYear) {
+    return { field: "year", message: "Enter the year in full, like 1990." };
+  }
+  if (ageFrom(d, m, y) === null) {
+    return { field: "day", message: "That day does not exist in that month." };
+  }
+  return null;
+};
 
 /**
  * The age gate, first compliance layer (checkout date of birth is the second).
@@ -42,9 +67,12 @@ export const AgeGate = () => {
   const [year, setYear] = React.useState("");
   const [country, setCountry] = React.useState("ZA");
   const [remember, setRemember] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
-  const monthRef = React.useRef<HTMLInputElement>(null);
-  const yearRef = React.useRef<HTMLInputElement>(null);
+  const [error, setError] = React.useState<{ field: Field; message: string } | null>(null);
+  const refs = {
+    day: React.useRef<HTMLInputElement>(null),
+    month: React.useRef<HTMLInputElement>(null),
+    year: React.useRef<HTMLInputElement>(null),
+  };
 
   React.useEffect(() => {
     // The refusal page itself stays reachable, or a turned away visitor loops.
@@ -52,34 +80,55 @@ export const AgeGate = () => {
       setOpen(false);
       return;
     }
-    const confirmed = document.cookie
-      .split(";")
-      .some((c) => c.trim().startsWith(`${COOKIE}=`));
-    if (!confirmed) setOpen(true);
+    if (!hasPassedAgeGate()) setOpen(true);
   }, [pathname]);
 
   const digits = (value: string, max: number) => value.replace(/\D/g, "").slice(0, max);
 
+  /**
+   * A full day or month moves on to the next box, but only when that box is
+   * still empty. Jumping into a box that already holds something, or after the
+   * person has tabbed there themselves, sends their next keystrokes into the
+   * wrong field.
+   */
+  const advance = (to: "month" | "year") => {
+    const next = to === "month" ? month : year;
+    if (next === "") refs[to].current?.focus();
+  };
+
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    const age = ageFrom(Number(day), Number(month), Number(year));
-    if (age === null) {
-      setError("That date does not look right. Use the numbers, like 07 03 1990.");
+    const problem = checkDate(day, month, year);
+    if (problem) {
+      setError(problem);
+      refs[problem.field].current?.focus();
       return;
     }
+    const age = ageFrom(Number(day), Number(month), Number(year));
     const required = (DRINKING_AGE[country] ?? DRINKING_AGE.OTHER).age;
-    if (age < required) {
+    if (age === null || age < required) {
       window.location.assign(UNDER_AGE_DESTINATION);
       return;
     }
     const secure = window.location.protocol === "https:" ? "; Secure" : "";
     const lifetime = remember ? `; Max-Age=${THIRTY_DAYS}` : "";
-    document.cookie = `${COOKIE}=1${lifetime}; Path=/; SameSite=Lax${secure}`;
+    document.cookie = `${AGE_COOKIE}=1${lifetime}; Path=/; SameSite=Lax${secure}`;
     setOpen(false);
-    window.dispatchEvent(new Event("vb:age-ok"));
+    window.dispatchEvent(new Event(AGE_OK_EVENT));
   };
 
   if (!open) return null;
+
+  const fieldProps = (field: Field) => ({
+    ref: refs[field],
+    inputMode: "numeric" as const,
+    "aria-invalid": error?.field === field ? true : undefined,
+    "aria-describedby": error?.field === field ? "age-error" : undefined,
+    // Arriving in a filled box selects it, so typing replaces rather than
+    // appends to a value that is already at its full length.
+    onFocus: (e: React.FocusEvent<HTMLInputElement>) => e.currentTarget.select(),
+    className: "text-center",
+  });
 
   return (
     <DialogPrimitive.Root open={open}>
@@ -93,7 +142,7 @@ export const AgeGate = () => {
           onOpenAutoFocus={(e) => {
             // Straight into the first field, not onto the crest.
             e.preventDefault();
-            document.getElementById("age-day")?.focus();
+            refs.day.current?.focus();
           }}
         >
           <Image
@@ -123,22 +172,16 @@ export const AgeGate = () => {
                   </label>
                   <Input
                     id="age-day"
-                    inputMode="numeric"
                     autoComplete="bday-day"
                     placeholder="DD"
                     value={day}
-                    aria-invalid={error ? true : undefined}
-                    aria-describedby={error ? "age-error" : undefined}
+                    {...fieldProps("day")}
                     onChange={(e) => {
                       const v = digits(e.target.value, 2);
                       setDay(v);
                       setError(null);
-                      if (v.length === 2) monthRef.current?.focus();
+                      if (v.length === 2) advance("month");
                     }}
-                    // Arriving in a filled box selects it, so jumping in from
-                    // the previous field overwrites rather than getting stuck.
-                    onFocus={(e) => e.currentTarget.select()}
-                    className="text-center"
                   />
                 </div>
                 <div>
@@ -147,23 +190,16 @@ export const AgeGate = () => {
                   </label>
                   <Input
                     id="age-month"
-                    ref={monthRef}
-                    inputMode="numeric"
                     autoComplete="bday-month"
                     placeholder="MM"
                     value={month}
-                    aria-invalid={error ? true : undefined}
-                    aria-describedby={error ? "age-error" : undefined}
+                    {...fieldProps("month")}
                     onChange={(e) => {
                       const v = digits(e.target.value, 2);
                       setMonth(v);
                       setError(null);
-                      if (v.length === 2) yearRef.current?.focus();
+                      if (v.length === 2) advance("year");
                     }}
-                    // Arriving in a filled box selects it, so jumping in from
-                    // the previous field overwrites rather than getting stuck.
-                    onFocus={(e) => e.currentTarget.select()}
-                    className="text-center"
                   />
                 </div>
                 <div>
@@ -172,27 +208,20 @@ export const AgeGate = () => {
                   </label>
                   <Input
                     id="age-year"
-                    ref={yearRef}
-                    inputMode="numeric"
                     autoComplete="bday-year"
                     placeholder="YYYY"
                     value={year}
-                    aria-invalid={error ? true : undefined}
-                    aria-describedby={error ? "age-error" : undefined}
+                    {...fieldProps("year")}
                     onChange={(e) => {
                       setYear(digits(e.target.value, 4));
                       setError(null);
                     }}
-                    // Arriving in a filled box selects it, so jumping in from
-                    // the previous field overwrites rather than getting stuck.
-                    onFocus={(e) => e.currentTarget.select()}
-                    className="text-center"
                   />
                 </div>
               </div>
               {error && (
                 <p id="age-error" role="alert" className="mt-2 text-xs text-danger">
-                  {error}
+                  {error.message}
                 </p>
               )}
             </fieldset>

@@ -21,6 +21,7 @@ export default async function CheckoutPage() {
         <CheckoutForm
           flatRateCents={settings.shipping?.flatRateCents ?? 0}
           freeThresholdCents={settings.shipping?.freeThresholdCents ?? 0}
+          gaId={settings.measurement?.gaMeasurementId ?? null}
         />
       </div>
     </main>

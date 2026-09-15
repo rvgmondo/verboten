@@ -169,6 +169,99 @@ const COLUMNS = [
     column: "address_address_country",
     ddl: "ALTER TABLE `events` ADD COLUMN `address_address_country` text DEFAULT 'ZA'",
   },
+  // Where an order came from, what the buyer allowed at checkout, and a guard
+  // so each sale is reported to Google Analytics and Meta exactly once.
+  {
+    table: "orders",
+    column: "attribution_source",
+    ddl: "ALTER TABLE `orders` ADD COLUMN `attribution_source` text",
+  },
+  {
+    table: "orders",
+    column: "attribution_medium",
+    ddl: "ALTER TABLE `orders` ADD COLUMN `attribution_medium` text",
+  },
+  {
+    table: "orders",
+    column: "attribution_campaign",
+    ddl: "ALTER TABLE `orders` ADD COLUMN `attribution_campaign` text",
+  },
+  {
+    table: "orders",
+    column: "attribution_referrer",
+    ddl: "ALTER TABLE `orders` ADD COLUMN `attribution_referrer` text",
+  },
+  {
+    table: "orders",
+    column: "attribution_landing_path",
+    ddl: "ALTER TABLE `orders` ADD COLUMN `attribution_landing_path` text",
+  },
+  {
+    table: "orders",
+    column: "attribution_analytics_consent",
+    ddl: "ALTER TABLE `orders` ADD COLUMN `attribution_analytics_consent` integer DEFAULT false",
+  },
+  {
+    table: "orders",
+    column: "attribution_marketing_consent",
+    ddl: "ALTER TABLE `orders` ADD COLUMN `attribution_marketing_consent` integer DEFAULT false",
+  },
+  {
+    table: "orders",
+    column: "attribution_gclid",
+    ddl: "ALTER TABLE `orders` ADD COLUMN `attribution_gclid` text",
+  },
+  {
+    table: "orders",
+    column: "attribution_fbclid",
+    ddl: "ALTER TABLE `orders` ADD COLUMN `attribution_fbclid` text",
+  },
+  {
+    table: "orders",
+    column: "attribution_ga_client_id",
+    ddl: "ALTER TABLE `orders` ADD COLUMN `attribution_ga_client_id` text",
+  },
+  {
+    table: "orders",
+    column: "attribution_ga_session_id",
+    ddl: "ALTER TABLE `orders` ADD COLUMN `attribution_ga_session_id` text",
+  },
+  {
+    table: "orders",
+    column: "attribution_fbp",
+    ddl: "ALTER TABLE `orders` ADD COLUMN `attribution_fbp` text",
+  },
+  {
+    table: "orders",
+    column: "attribution_fbc",
+    ddl: "ALTER TABLE `orders` ADD COLUMN `attribution_fbc` text",
+  },
+  {
+    table: "orders",
+    column: "attribution_client_ip",
+    ddl: "ALTER TABLE `orders` ADD COLUMN `attribution_client_ip` text",
+  },
+  {
+    table: "orders",
+    column: "attribution_user_agent",
+    ddl: "ALTER TABLE `orders` ADD COLUMN `attribution_user_agent` text",
+  },
+  {
+    table: "orders",
+    column: "analytics_reported",
+    ddl: "ALTER TABLE `orders` ADD COLUMN `analytics_reported` text DEFAULT 'none'",
+  },
+  // Analytics and Pixel IDs, editable in Site Settings without a deploy.
+  {
+    table: "site_settings",
+    column: "measurement_ga_measurement_id",
+    ddl: "ALTER TABLE `site_settings` ADD COLUMN `measurement_ga_measurement_id` text",
+  },
+  {
+    table: "site_settings",
+    column: "measurement_meta_pixel_id",
+    ddl: "ALTER TABLE `site_settings` ADD COLUMN `measurement_meta_pixel_id` text",
+  },
 ];
 
 const run = async () => {

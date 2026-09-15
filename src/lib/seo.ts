@@ -1,3 +1,4 @@
+import { orderTotals } from "@/lib/commerce/totals";
 import { centsToDecimal } from "@/lib/money";
 import { getAvailability } from "@/lib/inventory";
 import { mediaSrcAt } from "@/lib/media";
@@ -46,7 +47,7 @@ export const organizationLd = (settings?: SiteSetting) => {
     legalName: "Verboten Pty Ltd",
     url: SITE_URL,
     logo: LOGO(),
-    image: abs("/brand/og-default.png"),
+    image: abs("/brand/og-share.png"),
     description:
       "An independent South African brandy house in Silverton, Pretoria, making premium brandy and delivering it anywhere in South Africa.",
     foundingDate: "2020",
@@ -119,14 +120,15 @@ export const productLd = (product: Product, settings?: SiteSetting) => {
   const s = product.specs;
 
   const flatRate = settings?.shipping?.flatRateCents;
-  const freeOver = settings?.shipping?.freeThresholdCents;
-  // A single unit's shipping, which is what a search result describes: the
-  // flat rate, or nothing when one unit on its own clears the free line.
+  // A single unit's delivery, which is what a search result describes, from
+  // the same function that prices every real order.
   const shippingCents =
     typeof flatRate === "number"
-      ? freeOver && product.priceCents >= freeOver
-        ? 0
-        : flatRate
+      ? orderTotals({
+          subtotalCents: product.priceCents,
+          flatRateCents: flatRate,
+          freeThresholdCents: settings?.shipping?.freeThresholdCents ?? 0,
+        }).shippingCents
       : null;
 
   return {
@@ -258,7 +260,7 @@ export const eventLd = (event: Event) => {
     },
     description: event.description ?? undefined,
     url: event.url ?? abs("/find-us"),
-    image: image ? [abs(image)] : [abs("/brand/og-default.png")],
+    image: image ? [abs(image)] : [abs("/brand/og-share.png")],
     organizer: { "@type": "Organization", "@id": ORG_ID(), name: "Verboten Spirits", url: SITE_URL },
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",

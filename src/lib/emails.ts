@@ -9,6 +9,7 @@ import {
   muted,
   panel,
   paragraph,
+  type HouseIdentity,
   identityText,
   rows,
   standardFooter,
@@ -100,10 +101,10 @@ type Rendered = { subject: string; body: string; html: string };
  * One entry per status the customer hears about. Each builds the text and the
  * HTML side by side so the two can never end up saying different things.
  */
-const STATUS_EMAILS: Partial<Record<Order["status"], (o: Order, dispatch: string) => Rendered>> = {
-  paid: (o, dispatch) => ({
+const STATUS_EMAILS: Partial<Record<Order["status"], (o: Order, dispatch: string, house: HouseIdentity) => Rendered>> = {
+  paid: (o, dispatch, house) => ({
     subject: `Order ${o.orderNumber} confirmed`,
-    body: `Payment received. ${o.orderNumber} is yours.\n\n${orderLines(o)}\n\n${totals(o)}\n\n${dispatch}, and you get a tracking number the moment it ships.\n\nTrack it any time at ${SITE}/track?order=${o.orderNumber}, with this email address. No account needed.\n\n${signoff}`,
+    body: `Payment received. ${o.orderNumber} is yours.\n\n${orderLines(o)}\n\n${totals(o)}\n\n${dispatch}, and you get a tracking number the moment it ships.\n\nTrack it any time at ${SITE}/track?order=${o.orderNumber}, with this email address. No account needed.\n\n${identityText(house)}`,
     html: emailLayout({
       title: "Payment received.",
       preheader: `${o.orderNumber} is confirmed. ${dispatch}.`,
@@ -116,12 +117,12 @@ const STATUS_EMAILS: Partial<Record<Order["status"], (o: Order, dispatch: string
           "Look it up any time with the order number and this email address. No account needed.",
         ),
       ].join(""),
-      footer: standardFooter(),
+      footer: standardFooter(undefined, house),
     }),
   }),
-  packed: (o) => ({
+  packed: (o, _dispatch, house) => ({
     subject: `Order ${o.orderNumber} is packed`,
-    body: `${o.orderNumber} is boxed and waiting for the courier.\n\nYou will get a tracking number when it is collected.\n\n${signoff}`,
+    body: `${o.orderNumber} is boxed and waiting for the courier.\n\nYou will get a tracking number when it is collected.\n\n${identityText(house)}`,
     html: emailLayout({
       title: "Boxed and waiting.",
       preheader: `${o.orderNumber} is packed and waiting for the courier.`,
@@ -129,12 +130,12 @@ const STATUS_EMAILS: Partial<Record<Order["status"], (o: Order, dispatch: string
         paragraph(`${esc(o.orderNumber)} is boxed and waiting for the courier.`),
         muted("You get a tracking number the moment it is collected."),
       ].join(""),
-      footer: standardFooter(),
+      footer: standardFooter(undefined, house),
     }),
   }),
-  shipped: (o) => ({
+  shipped: (o, _dispatch, house) => ({
     subject: `Order ${o.orderNumber} is on its way`,
-    body: `${o.orderNumber} has shipped.${o.trackingNumber ? `\n\nTracking number: ${o.trackingNumber}` : ""}\n\nDelivery takes 3 to 7 business days. Someone 18 or older must receive it; the courier may ask for ID.\n\n${signoff}`,
+    body: `${o.orderNumber} has shipped.${o.trackingNumber ? `\n\nTracking number: ${o.trackingNumber}` : ""}\n\nDelivery takes 3 to 7 business days. Someone 18 or older must receive it; the courier may ask for ID.\n\n${identityText(house)}`,
     html: emailLayout({
       title: "On its way.",
       preheader: o.trackingNumber
@@ -151,12 +152,12 @@ const STATUS_EMAILS: Partial<Record<Order["status"], (o: Order, dispatch: string
           "Delivery takes 3 to 7 business days. Someone 18 or older has to receive it, and the courier may ask for ID.",
         ),
       ].join(""),
-      footer: standardFooter(),
+      footer: standardFooter(undefined, house),
     }),
   }),
-  delivered: (o) => ({
+  delivered: (o, _dispatch, house) => ({
     subject: `Order ${o.orderNumber} delivered`,
-    body: `${o.orderNumber} has been delivered. Pour it properly.\n\nIf anything is wrong with the delivery, reply within 48 hours and we sort it out.\n\n${signoff}`,
+    body: `${o.orderNumber} has been delivered. Pour it properly.\n\nIf anything is wrong with the delivery, reply within 48 hours and we sort it out.\n\n${identityText(house)}`,
     html: emailLayout({
       title: "Delivered. Pour it properly.",
       preheader: `${o.orderNumber} has been delivered.`,
@@ -167,7 +168,7 @@ const STATUS_EMAILS: Partial<Record<Order["status"], (o: Order, dispatch: string
         ),
         button(`${SITE}/serves`, "How to pour it"),
       ].join(""),
-      footer: standardFooter(),
+      footer: standardFooter(undefined, house),
     }),
   }),
   // Two very different things land on "cancelled": an order we cancelled after
@@ -175,12 +176,12 @@ const STATUS_EMAILS: Partial<Record<Order["status"], (o: Order, dispatch: string
   // that "the refund is on its way" is a claim about money that was never
   // taken, and it reads as a charge they now have to chase down. The status
   // log is what says which of the two actually happened.
-  cancelled: (o) => {
+  cancelled: (o, _dispatch, house) => {
     const wasPaid = (o.statusLog ?? []).some((entry) => entry.status === "paid");
     return wasPaid
       ? {
           subject: `Order ${o.orderNumber} cancelled`,
-          body: `${o.orderNumber} has been cancelled and the refund is on its way back to the same payment method. Allow a few business days for it to reflect.\n\nQuestions: reply to this email.\n\n${signoff}`,
+          body: `${o.orderNumber} has been cancelled and the refund is on its way back to the same payment method. Allow a few business days for it to reflect.\n\nQuestions: reply to this email.\n\n${identityText(house)}`,
           html: emailLayout({
             title: "Cancelled, and refunded.",
             preheader: `${o.orderNumber} is cancelled and the refund is on its way.`,
@@ -192,12 +193,12 @@ const STATUS_EMAILS: Partial<Record<Order["status"], (o: Order, dispatch: string
                 "Allow a few business days for it to reflect. Any questions, reply to this email.",
               ),
             ].join(""),
-            footer: standardFooter(),
+            footer: standardFooter(undefined, house),
           }),
         }
       : {
           subject: `Order ${o.orderNumber} did not go through`,
-          body: `The payment for ${o.orderNumber} did not go through, so nothing was charged and the order was not placed.\n\nBanks decline for all sorts of ordinary reasons. If you still want it, it takes a minute to start again at ${SITE}/shop\n\n${orderLines(o)}\n\nIf you think something went wrong on our side, reply to this email and we will look into it.\n\n${signoff}`,
+          body: `The payment for ${o.orderNumber} did not go through, so nothing was charged and the order was not placed.\n\nBanks decline for all sorts of ordinary reasons. If you still want it, it takes a minute to start again at ${SITE}/shop\n\n${orderLines(o)}\n\nIf you think something went wrong on our side, reply to this email and we will look into it.\n\n${identityText(house)}`,
           html: emailLayout({
             title: "That payment did not go through.",
             preheader: "Nothing was charged, and the order was not placed.",
@@ -214,13 +215,13 @@ const STATUS_EMAILS: Partial<Record<Order["status"], (o: Order, dispatch: string
                 "If you think something went wrong on our side, reply to this email and we will look into it.",
               ),
             ].join(""),
-            footer: standardFooter(),
+            footer: standardFooter(undefined, house),
           }),
         };
   },
-  refunded: (o) => ({
+  refunded: (o, _dispatch, house) => ({
     subject: `Order ${o.orderNumber} refunded`,
-    body: `The refund for ${o.orderNumber} has been processed to your original payment method. Allow a few business days for it to reflect.\n\n${signoff}`,
+    body: `The refund for ${o.orderNumber} has been processed to your original payment method. Allow a few business days for it to reflect.\n\n${identityText(house)}`,
     html: emailLayout({
       title: "Refunded.",
       preheader: `The refund for ${o.orderNumber} has been processed.`,
@@ -230,7 +231,7 @@ const STATUS_EMAILS: Partial<Record<Order["status"], (o: Order, dispatch: string
         ),
         muted("Allow a few business days for it to reflect."),
       ].join(""),
-      footer: standardFooter(),
+      footer: standardFooter(undefined, house),
     }),
   }),
 };
@@ -242,7 +243,7 @@ export const sendOrderStatusEmail = async (payload: Payload, order: Order): Prom
   // so the email can never contradict the site.
   const settings = await payload.findGlobal({ slug: "site-settings", overrideAccess: true });
   const dispatch = settings.dispatchTimeText || "Ships within 1 to 2 weeks";
-  const { subject, body, html } = template(order, dispatch);
+  const { subject, body, html } = template(order, dispatch, settings.contact ?? {});
   try {
     await payload.sendEmail({
       to: order.email,
@@ -647,6 +648,8 @@ export const sendBackInStock = async (
   { to, product }: { to: string; product: { name: string; slug: string; priceCents: number } },
 ): Promise<boolean> => {
   const link = `${SITE}/shop/${product.slug}`;
+  const settings = await payload.findGlobal({ slug: "site-settings", overrideAccess: true });
+  const house = settings.contact ?? {};
   const body = [
     `${product.name} is back.`,
     "",
@@ -656,7 +659,7 @@ export const sendBackInStock = async (
     "",
     "This is the only email that request sends. You are not on any list because of it.",
     "",
-    signoff,
+    identityText(house),
   ].join("\n");
 
   const html = emailLayout({
@@ -671,7 +674,7 @@ export const sendBackInStock = async (
       muted("Stock that sold out once tends to do it again, so do not leave it long."),
       muted("This is the only email that request sends. You are not on any list because of it."),
     ].join(""),
-    footer: standardFooter(),
+    footer: standardFooter(undefined, house),
   });
 
   try {

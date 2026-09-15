@@ -2,6 +2,8 @@
 
 import * as React from "react";
 
+import { trackShop } from "@/lib/analytics";
+
 /**
  * Client cart: localStorage-backed, drawer-rendered. Quantities are clamped
  * against the availability snapshot taken when the item was added; the
@@ -81,8 +83,15 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [items, hydrated]);
 
+  // The latest items, for callbacks that report what was removed.
+  const itemsRef = React.useRef(items);
+  itemsRef.current = items;
+
   const add = React.useCallback(
     (item: Omit<CartItem, "quantity">, quantity = 1) => {
+      trackShop("add_to_cart", [
+        { slug: item.slug, name: item.name, priceCents: item.priceCents, quantity },
+      ]);
       setItems((prev) => {
         const existing = prev.find((i) => i.productId === item.productId);
         if (existing) {
@@ -101,6 +110,12 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   );
 
   const remove = React.useCallback((productId: number) => {
+    const gone = itemsRef.current.find((i) => i.productId === productId);
+    if (gone) {
+      trackShop("remove_from_cart", [
+        { slug: gone.slug, name: gone.name, priceCents: gone.priceCents, quantity: gone.quantity },
+      ]);
+    }
     setItems((prev) => prev.filter((i) => i.productId !== productId));
   }, []);
 

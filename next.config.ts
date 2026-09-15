@@ -9,14 +9,15 @@ const isDev = process.env.NODE_ENV !== "production";
 // form-action allows the PayFast checkout redirect (live + sandbox hosts).
 const csp = [
   "default-src 'self'",
-  // Analytics allowances: Cloudflare Web Analytics beacon + optional GA4.
-  `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com https://www.googletagmanager.com`,
+  // Analytics allowances: Cloudflare Web Analytics beacon, and GA4 and the
+  // Meta Pixel, which only load after a visitor accepts them.
+  `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com https://www.googletagmanager.com https://connect.facebook.net`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
   "worker-src 'self' blob:",
   "frame-src 'self'",
-  `connect-src 'self' https://cloudflareinsights.com https://*.google-analytics.com https://*.analytics.google.com${isDev ? " ws: http://localhost:*" : ""}`,
+  `connect-src 'self' https://cloudflareinsights.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://www.facebook.com https://connect.facebook.net${isDev ? " ws: http://localhost:*" : ""}`,
   "object-src 'none'",
   "base-uri 'self'",
   // form-action is enforced on the redirects a form navigation follows, not

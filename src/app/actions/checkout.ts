@@ -71,6 +71,41 @@ const schema = z.object({
   fax: z.string().max(0).optional().or(z.literal("")),
 });
 
+/**
+ * Where the visit came from and what the buyer agreed to, as the browser saw
+ * it. Untrusted like everything else from the client, so every field is
+ * clipped and optional, and a malformed blob simply means an order with no
+ * attribution rather than a failed checkout.
+ */
+const clip = (max: number) => z.string().trim().max(max).optional().catch(undefined);
+const measurementSchema = z
+  .object({
+    analytics: z.boolean().catch(false),
+    marketing: z.boolean().catch(false),
+    source: clip(120),
+    medium: clip(120),
+    campaign: clip(120),
+    referrer: clip(200),
+    landingPath: clip(200),
+    gclid: clip(200),
+    fbclid: clip(500),
+    fbclidAt: z.number().int().positive().optional().catch(undefined),
+    gaClientId: clip(100),
+    gaSessionId: clip(40),
+    fbp: clip(200),
+    fbc: clip(600),
+  })
+  .partial();
+
+const readMeasurement = (raw: FormDataEntryValue | null) => {
+  try {
+    const parsed = measurementSchema.safeParse(JSON.parse(String(raw ?? "{}")));
+    return parsed.success ? parsed.data : {};
+  } catch {
+    return {};
+  }
+};
+
 export type CheckoutResult =
   | { ok: true; orderNumber: string; redirect: { action: string; fields: Record<string, string> } }
   | {
@@ -145,6 +180,14 @@ export async function createCheckout(
   }
 
   const input = parsed.data;
+  const m = readMeasurement(formData.get("measurement"));
+  const analyticsConsent = m.analytics === true;
+  const marketingConsent = m.marketing === true;
+  // Meta's click id: the Pixel's own cookie when there is one, otherwise
+  // built from the fbclid the visit arrived with, in Meta's documented form.
+  const fbc = marketingConsent
+    ? m.fbc || (m.fbclid ? `fb.1.${m.fbclidAt ?? Date.now()}.${m.fbclid}` : undefined)
+    : undefined;
 
   // Age: the checkout-level compliance layer (the age gate is the first).
   if (yearsOld(input.dateOfBirth) < 18) {
@@ -300,6 +343,28 @@ export async function createCheckout(
       },
       customerNote: input.customerNote || undefined,
       payment: { provider: "payfast" },
+      attribution: {
+        // The source of a visit is the shop's own business and identifies no
+        // one, so it is kept whatever the cookie choice.
+        source: m.source,
+        medium: m.medium,
+        campaign: m.campaign,
+        referrer: m.referrer,
+        landingPath: m.landingPath,
+        analyticsConsent,
+        marketingConsent,
+        // Identifiers, only with the matching consent.
+        gaClientId: analyticsConsent ? m.gaClientId : undefined,
+        gaSessionId: analyticsConsent ? m.gaSessionId : undefined,
+        gclid: marketingConsent ? m.gclid : undefined,
+        fbclid: marketingConsent ? m.fbclid : undefined,
+        fbp: marketingConsent ? m.fbp : undefined,
+        fbc,
+        clientIp: marketingConsent
+          ? (hdrs.get("cf-connecting-ip") ?? hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ?? undefined)
+          : undefined,
+        userAgent: marketingConsent ? (hdrs.get("user-agent")?.slice(0, 400) ?? undefined) : undefined,
+      },
     },
     });
   } catch (err) {

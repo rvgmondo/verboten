@@ -152,8 +152,11 @@ export const emailLayout = ({ title, body, preheader, footer }: LayoutOptions): 
  * the message itself. It costs nothing to put the same block on transactional
  * mail too, and it means no template can be the one that forgot.
  *
- * Callers with Site Settings to hand pass them in, so a changed number is
- * changed here as well. The defaults are the house's current details.
+ * Callers pass Site Settings in, so a changed number or address is changed in
+ * every email at once. The defaults are the house's current details, and they
+ * hold only a suburb: until a street address is entered in Site Settings the
+ * physical address this regulation asks for is incomplete, which is on the
+ * owner's launch checklist.
  */
 export type HouseIdentity = {
   email?: string | null;

@@ -113,5 +113,36 @@ export const SiteSettings: GlobalConfig = {
         { name: "tiktok", type: "text" },
       ],
     },
+    {
+      // IDs only. They are public by nature (both end up in every visitor's
+      // browser), so they live here where the owner can paste them in without
+      // a deploy. The secrets that go with them, for reporting sales from the
+      // server, stay in the hosting environment: GA_API_SECRET and
+      // META_CAPI_TOKEN.
+      name: "measurement",
+      type: "group",
+      admin: {
+        description:
+          "Nothing here loads for a visitor until they accept it in the cookie banner. Leave a field empty to switch that tool off.",
+      },
+      fields: [
+        {
+          name: "gaMeasurementId",
+          type: "text",
+          label: "Google Analytics measurement ID",
+          admin: { description: "Starts with G-, from Admin, Data streams, in Google Analytics." },
+          validate: (value: string | null | undefined) =>
+            !value || /^G-[A-Z0-9]{4,20}$/.test(value) || "That does not look like a GA4 ID. It starts with G-.",
+        },
+        {
+          name: "metaPixelId",
+          type: "text",
+          label: "Meta Pixel ID",
+          admin: { description: "The number from Events Manager, Data sources, in Meta Business." },
+          validate: (value: string | null | undefined) =>
+            !value || /^\d{10,20}$/.test(value) || "A Pixel ID is a long number, digits only.",
+        },
+      ],
+    },
   ],
 };

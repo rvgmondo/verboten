@@ -246,6 +246,78 @@ const STORY_PAGE = {
   _status: "published",
 };
 
+// The privacy policy, rewritten for consent-gated analytics and advertising,
+// the date of birth age gate and back in stock requests. Kept in step with
+// PRIVACY_BLOCKS in src/seed/content.ts, which it is copied from.
+const PRIVACY_PAGE = {
+  intro:
+    "We collect the minimum we need to sell you a bottle and get it to your door, and we treat that information under the Protection of Personal Information Act (POPIA).",
+  updatedNote: "Last updated September 2026",
+  content: doc(
+  h2("Who is responsible"),
+  p(
+    "Verboten Pty Ltd, Silverton, Pretoria, is the responsible party for personal information processed on this site. Privacy questions and requests go to privacy@verboten.co.za.",
+  ),
+  h2("What we collect and why"),
+  ul(
+    "Orders: your name, email, phone number, delivery address, date of birth, and order history. We need these to take payment, confirm your age, deliver, and look after your order, including when you look it up on the order tracking page.",
+    "Accounts: if you open one, your email address and a password we store only in scrambled form, so your orders appear in one place.",
+    "Contact and booking enquiries: your name, contact details and message, so we can reply.",
+    "Newsletter: your email address, with your confirmed consent, to send release news. Every email includes an unsubscribe link.",
+    "Back in stock requests: your email address and the product, used for the one email that tells you it has returned, and nothing else.",
+    "Payments: handled entirely by PayFast. We receive a payment reference, never your card details.",
+  ),
+  h2("The age check"),
+  p(
+    "When you enter the site you give your date of birth and country. It is checked in your browser and then discarded. We keep only a note that the check was passed, for your visit, or for 30 days if you ask us to remember you.",
+  ),
+  h2("Where a visit came from"),
+  p(
+    "When you arrive through a link that carries a campaign name, or from another website, we note the campaign and the referring site for the length of your visit. If you place an order, that note is kept with it, so we can tell which of our posts and ads actually lead to sales. It says where the link was, not who you are.",
+  ),
+  h2("Analytics and advertising, only if you agree"),
+  p(
+    "The site asks before loading anything that sets cookies to measure visits or to advertise. You can accept, refuse, or choose, and change your mind at any time with Cookie choices at the foot of every page. Refusing changes nothing about how the shop works.",
+  ),
+  p(
+    "Our hosting network, Cloudflare, may also count page visits with its Web Analytics. It sets no cookies, does not follow you across other websites and does not identify you, so it runs without asking.",
+  ),
+  ul(
+    "Analytics: Google Analytics counts visits and the pages and products people look at, so we can see what works. It sets cookies named _ga.",
+    "Advertising: the Meta Pixel, and Google's advertising signals, record that you visited and what you looked at, so our ads can reach people who have already been here and a sale can be credited to the ad that led to it. The Pixel sets cookies named _fbp and _fbc.",
+    "Sales: when an order is paid, we tell Google Analytics about the sale if you allowed analytics when you ordered, and Meta if you allowed advertising. For Meta this includes your email, phone number, name, city and postal code in scrambled (hashed) form, and your IP address and browser details, which is how Meta matches a sale to an ad without being sent your details in the clear.",
+  ),
+  p(
+    "Google and Meta process this information on servers outside South Africa, under their own privacy terms. We only send it with your consent, and you can withdraw that consent from Cookie choices or by writing to us.",
+  ),
+  h2("What we do not do"),
+  p(
+    "We do not sell or rent personal information. We do not send marketing without consent. We do not collect information we have no use for.",
+  ),
+  h2("Sharing"),
+  p(
+    "We share what is necessary with the services that make the shop work: our payment provider (PayFast), our delivery partners, and our email service, and, only with your consent as described above, Google and Meta. Each receives only what it needs for its task.",
+  ),
+  h2("Retention"),
+  p(
+    "Order records are kept for five years to meet tax and consumer law obligations. The identifiers saved with an order for reporting a sale (IP address, browser details, ad click ids and analytics ids) are deleted as soon as the sale has been reported, or when the order is cancelled. Enquiries are kept for one year. Newsletter details are kept until you unsubscribe or ask us to delete them. Analytics data is kept by Google for the period set in our Google Analytics account.",
+  ),
+  h2("Your rights"),
+  p(
+    "Under POPIA you may ask what we hold about you, ask us to correct it, or ask us to delete it where the law allows, and you may object to direct marketing at any time. Write to privacy@verboten.co.za and we respond within a reasonable time. If you are not satisfied, you may complain to the Information Regulator of South Africa (inforegulator.org.za).",
+  ),
+  h2("Cookies and browser storage"),
+  ul(
+    "vb_age_ok: remembers that you passed the age check. Always on.",
+    "vb_consent: remembers your cookie choices, including a refusal, so we do not ask on every page. Always on.",
+    "payload-token: keeps you signed in to your account, if you have one. Always on.",
+    "Your cart and the note of where your visit came from are kept in your own browser's storage, not in cookies, and are never sent anywhere until you check out.",
+    "_ga and _ga_ cookies (Google Analytics) and _fbp and _fbc (Meta): only if you allow them.",
+  ),
+  ),
+  _status: "published",
+};
+
 // The Terms page still framed stock as limited batches; normalisation removed
 // that framing everywhere shoppers see it.
 const TERMS_STOCK_FIX = {
@@ -271,8 +343,8 @@ const SERVE_UPDATE = {
   // The industry code keeps alcohol strength out of anything that is not the
   // label (DF-SA 2026, 2.6.2), and a serve that sells the strength is exactly
   // what it has in mind.
-  methodFind: "skip it if you want the full 43%",
-  methodReplacement: "skip it if you want it exactly as it left the cask",
+  methodFind: ["skip it if you want the full 43%", "skip it if you want it exactly as it left the cask"],
+  methodReplacement: "skip it if you want every bit of the oak",
 };
 
 // The responsibility line has to be the code's own wording (DF-SA 2026, 7.8.3),
@@ -431,6 +503,13 @@ const run = async () => {
     console.log("Story page updated");
   }
 
+  // 5a. Privacy policy.
+  const privacy = await findBySlug("pages", "privacy-policy");
+  if (privacy) {
+    await api(`/api/pages/${privacy.id}`, { method: "PATCH", body: PRIVACY_PAGE });
+    console.log("Privacy policy updated");
+  }
+
   // 5b. Terms page: swap the one paragraph that still framed stock as limited
   // batches. Walks the rich text and replaces the matching text node in place,
   // so the rest of the legal copy is left exactly as it is.
@@ -472,8 +551,13 @@ const run = async () => {
       method: "PATCH",
       body: {
         description: SERVE_UPDATE.description,
-        ...(typeof serve.method === "string" && serve.method.includes(SERVE_UPDATE.methodFind)
-          ? { method: serve.method.replace(SERVE_UPDATE.methodFind, SERVE_UPDATE.methodReplacement) }
+        ...(typeof serve.method === "string" && SERVE_UPDATE.methodFind.some((f) => serve.method.includes(f))
+          ? {
+              method: SERVE_UPDATE.methodFind.reduce(
+                (text, f) => text.replace(f, SERVE_UPDATE.methodReplacement),
+                serve.method,
+              ),
+            }
           : {}),
       },
     });

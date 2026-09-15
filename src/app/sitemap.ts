@@ -48,7 +48,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/`, lastModified: newest(productsDate?.toISOString(), postsDate?.toISOString()) },
     { url: `${SITE_URL}/shop`, lastModified: productsDate },
     { url: `${SITE_URL}/book-the-bar` },
-    { url: `${SITE_URL}/story`, lastModified: pageDate("story") },
+    // /story renders from a CMS page and shows not found without one.
+    ...(pages.some((p) => p.slug === "story")
+      ? [{ url: `${SITE_URL}/story`, lastModified: pageDate("story") }]
+      : []),
     { url: `${SITE_URL}/serves` },
     { url: `${SITE_URL}/find-us`, lastModified: newest(...events.map((e) => e.updatedAt)) },
     { url: `${SITE_URL}/journal`, lastModified: postsDate },

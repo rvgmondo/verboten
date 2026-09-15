@@ -8,6 +8,75 @@ import { doc, h2, p, ul } from "./lexical";
  * stated policy on the old site.
  */
 
+/**
+ * The privacy policy's body. It says what the site actually does, so it has
+ * to change whenever measurement does: consent-gated Google Analytics and
+ * Meta Pixel, server-side sale reports for buyers who allowed them, the date
+ * of birth that the age gate checks and throws away, and every cookie by name.
+ */
+const PRIVACY_BLOCKS = [
+  h2("Who is responsible"),
+  p(
+    "Verboten Pty Ltd, Silverton, Pretoria, is the responsible party for personal information processed on this site. Privacy questions and requests go to privacy@verboten.co.za.",
+  ),
+  h2("What we collect and why"),
+  ul(
+    "Orders: your name, email, phone number, delivery address, date of birth, and order history. We need these to take payment, confirm your age, deliver, and look after your order, including when you look it up on the order tracking page.",
+    "Accounts: if you open one, your email address and a password we store only in scrambled form, so your orders appear in one place.",
+    "Contact and booking enquiries: your name, contact details and message, so we can reply.",
+    "Newsletter: your email address, with your confirmed consent, to send release news. Every email includes an unsubscribe link.",
+    "Back in stock requests: your email address and the product, used for the one email that tells you it has returned, and nothing else.",
+    "Payments: handled entirely by PayFast. We receive a payment reference, never your card details.",
+  ),
+  h2("The age check"),
+  p(
+    "When you enter the site you give your date of birth and country. It is checked in your browser and then discarded. We keep only a note that the check was passed, for your visit, or for 30 days if you ask us to remember you.",
+  ),
+  h2("Where a visit came from"),
+  p(
+    "When you arrive through a link that carries a campaign name, or from another website, we note the campaign and the referring site for the length of your visit. If you place an order, that note is kept with it, so we can tell which of our posts and ads actually lead to sales. It says where the link was, not who you are.",
+  ),
+  h2("Analytics and advertising, only if you agree"),
+  p(
+    "The site asks before loading anything that sets cookies to measure visits or to advertise. You can accept, refuse, or choose, and change your mind at any time with Cookie choices at the foot of every page. Refusing changes nothing about how the shop works.",
+  ),
+  p(
+    "Our hosting network, Cloudflare, may also count page visits with its Web Analytics. It sets no cookies, does not follow you across other websites and does not identify you, so it runs without asking.",
+  ),
+  ul(
+    "Analytics: Google Analytics counts visits and the pages and products people look at, so we can see what works. It sets cookies named _ga.",
+    "Advertising: the Meta Pixel, and Google's advertising signals, record that you visited and what you looked at, so our ads can reach people who have already been here and a sale can be credited to the ad that led to it. The Pixel sets cookies named _fbp and _fbc.",
+    "Sales: when an order is paid, we tell Google Analytics about the sale if you allowed analytics when you ordered, and Meta if you allowed advertising. For Meta this includes your email, phone number, name, city and postal code in scrambled (hashed) form, and your IP address and browser details, which is how Meta matches a sale to an ad without being sent your details in the clear.",
+  ),
+  p(
+    "Google and Meta process this information on servers outside South Africa, under their own privacy terms. We only send it with your consent, and you can withdraw that consent from Cookie choices or by writing to us.",
+  ),
+  h2("What we do not do"),
+  p(
+    "We do not sell or rent personal information. We do not send marketing without consent. We do not collect information we have no use for.",
+  ),
+  h2("Sharing"),
+  p(
+    "We share what is necessary with the services that make the shop work: our payment provider (PayFast), our delivery partners, and our email service, and, only with your consent as described above, Google and Meta. Each receives only what it needs for its task.",
+  ),
+  h2("Retention"),
+  p(
+    "Order records are kept for five years to meet tax and consumer law obligations. The identifiers saved with an order for reporting a sale (IP address, browser details, ad click ids and analytics ids) are deleted as soon as the sale has been reported, or when the order is cancelled. Enquiries are kept for one year. Newsletter details are kept until you unsubscribe or ask us to delete them. Analytics data is kept by Google for the period set in our Google Analytics account.",
+  ),
+  h2("Your rights"),
+  p(
+    "Under POPIA you may ask what we hold about you, ask us to correct it, or ask us to delete it where the law allows, and you may object to direct marketing at any time. Write to privacy@verboten.co.za and we respond within a reasonable time. If you are not satisfied, you may complain to the Information Regulator of South Africa (inforegulator.org.za).",
+  ),
+  h2("Cookies and browser storage"),
+  ul(
+    "vb_age_ok: remembers that you passed the age check. Always on.",
+    "vb_consent: remembers your cookie choices, including a refusal, so we do not ask on every page. Always on.",
+    "payload-token: keeps you signed in to your account, if you have one. Always on.",
+    "Your cart and the note of where your visit came from are kept in your own browser's storage, not in cookies, and are never sent anywhere until you check out.",
+    "_ga and _ga_ cookies (Google Analytics) and _fbp and _fbc (Meta): only if you allow them.",
+  ),
+] as const;
+
 export const PAGES = [
   {
     slug: "story",
@@ -93,40 +162,9 @@ export const PAGES = [
     title: "Privacy Policy",
     intro:
       "We collect the minimum we need to sell you a bottle and get it to your door, and we treat that information under the Protection of Personal Information Act (POPIA).",
-    updatedNote: "Last updated August 2026",
-    content: doc(
-      h2("Who is responsible"),
-      p(
-        "Verboten Pty Ltd, Silverton, Pretoria, is the responsible party for personal information processed on this site. Privacy questions and requests go to privacy@verboten.co.za.",
-      ),
-      h2("What we collect and why"),
-      ul(
-        "Orders: your name, email, phone number, delivery address, date of birth confirmation, and order history. We need these to process payment, verify age, deliver, and support your order.",
-        "Contact enquiries: your name, contact details, and message, so we can reply.",
-        "Newsletter: your email address, with your consent, to send release news. Every email includes an unsubscribe link.",
-        "Payments: handled entirely by PayFast. We receive a payment reference, never your card details.",
-      ),
-      h2("What we do not do"),
-      p(
-        "We do not sell or rent personal information. We do not send marketing without consent. We do not collect information we have no use for.",
-      ),
-      h2("Sharing"),
-      p(
-        "We share what is necessary with the services that make the shop work: our payment provider (PayFast), our delivery partners, and our email service. Each receives only what it needs for its task.",
-      ),
-      h2("Retention"),
-      p(
-        "Order records are kept for five years to meet tax and consumer law obligations. Enquiries are kept for one year. Newsletter details are kept until you unsubscribe or ask us to delete them.",
-      ),
-      h2("Your rights"),
-      p(
-        "Under POPIA you may ask what we hold about you, ask us to correct it, or ask us to delete it where the law allows. Write to privacy@verboten.co.za and we respond within a reasonable time. If you are not satisfied, you may complain to the Information Regulator of South Africa (inforegulator.org.za).",
-      ),
-      h2("Cookies"),
-      p(
-        "The site uses a small number of cookies that make it work: your age confirmation, your cart, and your session if you sign in. No advertising trackers.",
-      ),
-    ),
+    updatedNote: "Last updated September 2026",
+    // Keep in step with scripts/update-live-copy.mjs, which carries it live.
+    content: doc(...PRIVACY_BLOCKS),
   },
   {
     slug: "shipping-returns",
@@ -205,7 +243,7 @@ export const SERVES = [
       { amount: "1", item: "Large clear ice cube, optional" },
     ],
     method:
-      "Pour into a heavy tumbler. Add the cube if you want the edges rounded off, skip it if you want it exactly as it left the cask. Give it two minutes in the glass before the first sip.",
+      "Pour into a heavy tumbler. Add the cube if you want the edges rounded off, skip it if you want every bit of the oak. Give it two minutes in the glass before the first sip.",
     sortOrder: 1,
   },
   {

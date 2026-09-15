@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import React from "react";
 
 import { AnnouncementBar } from "@/components/chrome/announcement-bar";
 import { CartDrawer } from "@/components/chrome/cart-drawer";
 import { Footer } from "@/components/chrome/footer";
 import { Header } from "@/components/chrome/header";
+import { Measurement } from "@/components/analytics/measurement";
 import { AgeGate } from "@/components/compliance/age-gate";
+import { ConsentBanner } from "@/components/compliance/consent-banner";
 import { JsonLd } from "@/components/json-ld";
 import { organizationLd } from "@/lib/seo";
 import { CartProvider } from "@/lib/cart";
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
     title: "Verboten Spirits | Premium South African Brandy",
     description:
       "An independent South African brandy house in Pretoria. Premium brandy, born in South Africa and made for the world.",
-    images: [{ url: "/brand/og-default.png", width: 1200, height: 630 }],
+    images: [{ url: "/brand/og-share.png", width: 1200, height: 630 }],
   },
   twitter: { card: "summary_large_image" },
   // Search Console ownership, for when the DNS record route is not an option.
@@ -63,6 +64,10 @@ export const metadata: Metadata = {
 
 export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
   const [settings, bundleOffers] = await Promise.all([getSiteSettings(), getBundleOffers()]);
+  const measurement = {
+    gaId: settings.measurement?.gaMeasurementId || null,
+    pixelId: settings.measurement?.metaPixelId || null,
+  };
 
   return (
     <html lang="en-ZA" className={`${leagueSpartan.variable} ${lato.variable}`}>
@@ -88,25 +93,16 @@ export default async function FrontendLayout({ children }: { children: React.Rea
             offers={bundleOffers}
           />
           <AgeGate />
+          {/* Measurement is configured in Site Settings and loads nothing
+              until the visitor agrees to it. Cloudflare Web Analytics needs no
+              code: it is injected at the edge and sets no cookies. */}
+          <ConsentBanner
+            hasMarketing={Boolean(measurement.pixelId)}
+            autoOpen={Boolean(measurement.gaId || measurement.pixelId)}
+          />
+          <Measurement gaId={measurement.gaId} pixelId={measurement.pixelId} />
           <JsonLd data={organizationLd(settings)} />
         </CartProvider>
-        {/* GA4, armed only when NEXT_PUBLIC_GA_ID is set in the environment.
-            Cloudflare Web Analytics needs no code: it is injected at the edge
-            when toggled on in the Cloudflare dashboard (CSP already allows it). */}
-        {process.env.NEXT_PUBLIC_GA_ID && (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-              strategy="afterInteractive"
-            />
-            <Script id="ga4" strategy="afterInteractive">
-              {`window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');`}
-            </Script>
-          </>
-        )}
       </body>
     </html>
   );
