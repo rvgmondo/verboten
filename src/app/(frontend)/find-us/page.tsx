@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/metadata";
 import Link from "next/link";
 
 import { PageMasthead } from "@/components/brand/page-masthead";
@@ -8,12 +9,12 @@ import { Button } from "@/components/ui/button";
 import { getSiteSettings, getStockists, getUpcomingEvents } from "@/lib/data";
 import { eventLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Where to Find Us",
+export const metadata: Metadata = pageMeta({
+  title: "Stockists and Events",
   description:
-    "Stockists, bars and venues that pour Verboten, and the markets and events where the house sets up. Or order direct; we ship across South Africa.",
-  alternates: { canonical: "/find-us" },
-};
+    "Bars, venues and markets that pour Verboten, and where the house sets up next. Or order direct and have it delivered anywhere in South Africa.",
+  path: "/find-us",
+});
 
 const TYPE_LABELS: Record<string, string> = {
   bar: "Bar",
@@ -63,9 +64,10 @@ export default async function FindUsPage() {
 
   return (
     <main>
-      {events.map((event) => (
-        <JsonLd key={event.id} data={eventLd(event)} />
-      ))}
+      {events.map((event) => {
+        const ld = eventLd(event);
+        return ld ? <JsonLd key={event.id} data={ld} /> : null;
+      })}
       <PageMasthead
         eyebrow="Out in the world"
         title="Where to"

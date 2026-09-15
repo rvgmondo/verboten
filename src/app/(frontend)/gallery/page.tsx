@@ -6,17 +6,23 @@ import { ArtPlaceholder } from "@/components/media/art-placeholder";
 import { CmsImage } from "@/components/media/cms-image";
 import { Button } from "@/components/ui/button";
 import { getGalleryItems, getSiteSettings } from "@/lib/data";
+import { pageMeta } from "@/lib/metadata";
 import type { Media } from "@/payload-types";
 
-export const metadata: Metadata = {
-  title: "The Gallery",
-  description:
-    "Verboten seen up close: the bottle, the making of it, the events we pour at, and the bars that carry us. Photographs from an independent South African brandy house in Pretoria.",
-  alternates: { canonical: "/gallery" },
-  openGraph: {
-    title: "The Verboten Gallery",
-    description: "The bottle, the making of it, and the rooms it ends up in.",
-  },
+// Until a photograph is uploaded the page is four placeholder frames, which
+// Google would index as thin content under the brand's name. It stays out of
+// the index, and out of the sitemap, until there is something to see.
+export const generateMetadata = async (): Promise<Metadata> => {
+  const items = await getGalleryItems();
+  return pageMeta({
+    title: "The Gallery",
+    description:
+      "Verboten seen up close: the bottle, the making of it, the events we pour at, and the bars that carry us.",
+    path: "/gallery",
+    shareTitle: "The Verboten Gallery",
+    shareDescription: "The bottle, the making of it, and the rooms it ends up in.",
+    noindex: items.length === 0,
+  });
 };
 
 /** Category order and the words the house uses for each. */

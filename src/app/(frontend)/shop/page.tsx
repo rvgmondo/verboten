@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/metadata";
 import Link from "next/link";
 
 import { Motto } from "@/components/brand/motto";
@@ -7,16 +8,15 @@ import { Button } from "@/components/ui/button";
 import { getProducts, getSiteSettings } from "@/lib/data";
 import { formatZAR } from "@/lib/money";
 
-export const metadata: Metadata = {
-  title: "Buy Brandy Online, Shipped Across South Africa",
+// Names all five products. The old description named three while the page
+// sold five, so the snippet undersold the shop.
+export const metadata: Metadata = pageMeta({
+  title: "Buy South African Brandy Online",
   description:
-    "Verboten Premium Brandy, the two bottle set, and Brandy & Cola ready to drink. Order online, shipped anywhere in South Africa. Not for sale under 18.",
-  alternates: { canonical: "/shop" },
-  openGraph: {
-    title: "Buy Verboten Brandy Online",
-    description: "Premium South African brandy, shipped anywhere in South Africa.",
-  },
-};
+    "Verboten Premium Brandy, the two bottle set, Brandy & Cola, NYX liquorice liqueur and blood orange gin. Delivered anywhere in South Africa.",
+  path: "/shop",
+  shareTitle: "Buy Verboten Brandy Online",
+});
 
 /** What each product is, in the house's own words. Falls back sensibly. */
 const LABELS: Record<string, string> = {

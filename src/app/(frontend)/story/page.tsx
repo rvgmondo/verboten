@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/metadata";
 import Link from "next/link";
 
 import { Motto } from "@/components/brand/motto";
@@ -19,12 +20,12 @@ export const generateMetadata = async (): Promise<Metadata> => {
   return page ? STORY_METADATA : { title: "Our Story", ...NOT_FOUND_METADATA };
 };
 
-const STORY_METADATA: Metadata = {
-  title: "Our Story",
+const STORY_METADATA: Metadata = pageMeta({
+  title: "Our Story, a Pretoria Brandy House",
   description:
-    "Pretoria, 2020. A conviction that the best traditions often start with someone breaking the rules, and a spirit made to prove it. The Verboten story.",
-  alternates: { canonical: "/story" },
-};
+    "Pretoria, 2020. A conviction that the best traditions often start with someone breaking the rules, and a spirit made to prove it.",
+  path: "/story",
+});
 
 export default async function StoryPage() {
   const page = await getPageBySlug("story");

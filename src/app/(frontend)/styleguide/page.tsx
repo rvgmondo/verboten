@@ -14,7 +14,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 
 export const metadata: Metadata = {
-  title: "Styleguide | Verboten Spirits",
+  // The layout template adds the brand, so writing it here doubled it.
+  title: "Styleguide",
   robots: { index: false, follow: false },
 };
 

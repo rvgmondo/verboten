@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { pageMeta } from "@/lib/metadata";
 
 import { NOT_FOUND_METADATA, NotFoundPanel } from "@/components/brand/not-found-panel";
 import type { Metadata } from "next";
@@ -18,11 +19,11 @@ export const generateMetadata = async ({ params }: Params): Promise<Metadata> =>
   const { slug } = await params;
   const page = await getPageBySlug(slug);
   if (!page) return NOT_FOUND_METADATA;
-  return {
-    title: page.title,
-    description: page.intro ?? undefined,
-    alternates: { canonical: `/${page.slug}` },
-  };
+  return pageMeta({
+    title: page.meta?.title || page.title,
+    description: page.meta?.description || page.intro || page.title,
+    path: `/${page.slug}`,
+  });
 };
 
 export default async function CmsPage({ params }: Params) {

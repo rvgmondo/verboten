@@ -143,6 +143,23 @@ export const getPageBySlug = unstable_cache(
   { tags: ["pages"], revalidate: 3600 },
 );
 
+/** Every published flat page, for the sitemap. Slugs and dates only. */
+export const getPublishedPages = unstable_cache(
+  async () => {
+    const payload = await payloadClient();
+    const res = await payload.find({
+      collection: "pages",
+      where: { _status: { equals: "published" } },
+      depth: 0,
+      limit: 200,
+      select: { slug: true, updatedAt: true },
+    });
+    return res.docs;
+  },
+  ["pages-published"],
+  { tags: ["pages"], revalidate: 3600 },
+);
+
 export const getGalleryItems = unstable_cache(
   async () => {
     const payload = await payloadClient();

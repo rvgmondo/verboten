@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/metadata";
 import Link from "next/link";
 
 import { BookingForm } from "@/components/booking-form";
@@ -9,16 +10,13 @@ import { Button } from "@/components/ui/button";
 import { getSiteSettings } from "@/lib/data";
 import { SITE_URL } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Book the Bar, Mobile Brandy Bar Hire in Gauteng",
+export const metadata: Metadata = pageMeta({
+  title: "Mobile Brandy Bar Hire in Gauteng",
   description:
-    "Verboten brings its own bar to your event: brandy and cola on tap, gin, and the trailer that carries it. Weddings, birthdays, corporate days and markets across Gauteng. Ask for a quote.",
-  alternates: { canonical: "/book-the-bar" },
-  openGraph: {
-    title: "Book the Verboten bar",
-    description: "Brandy and cola on tap, at your event. Gauteng and beyond.",
-  },
-};
+    "Verboten brings its own bar to your event, with brandy and cola on tap and gin. Weddings, birthdays, corporate days and markets across Gauteng.",
+  path: "/book-the-bar",
+  shareTitle: "Book the Verboten bar",
+});
 
 /** What the bar actually turns up with. Facts only, no invented inclusions. */
 const WHAT_YOU_GET = [

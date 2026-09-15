@@ -5,11 +5,172 @@
   "basePath": "",
   "redirects": [
     {
-      "source": "/:path+/",
-      "destination": "/:path+",
-      "internal": true,
+      "source": "/product/verboten-premium-brandy-batch-no-01-3-year{/}?",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.verboten.co.za"
+        }
+      ],
+      "destination": "https://verboten.co.za/shop/verboten-premium-brandy",
       "statusCode": 308,
-      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+      "regex": "^(?!/_next)/product/verboten-premium-brandy-batch-no-01-3-year(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/shop/verboten-premium-brandy-batch-no-01-3-year{/}?",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.verboten.co.za"
+        }
+      ],
+      "destination": "https://verboten.co.za/shop/verboten-premium-brandy",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/shop/verboten-premium-brandy-batch-no-01-3-year(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/product/batch-no-01-premium-set-2-bottle{/}?",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.verboten.co.za"
+        }
+      ],
+      "destination": "https://verboten.co.za/shop/verboten-premium-set-2-bottle",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/product/batch-no-01-premium-set-2-bottle(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/shop/batch-no-01-premium-set-2-bottle{/}?",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.verboten.co.za"
+        }
+      ],
+      "destination": "https://verboten.co.za/shop/verboten-premium-set-2-bottle",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/shop/batch-no-01-premium-set-2-bottle(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/product/:slug{/}?",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.verboten.co.za"
+        }
+      ],
+      "destination": "https://verboten.co.za/shop/:slug",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/product(?:/([^/]+?))(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/product-category/:path*{/}?",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.verboten.co.za"
+        }
+      ],
+      "destination": "https://verboten.co.za/shop",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/product-category(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/about-us{/}?",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.verboten.co.za"
+        }
+      ],
+      "destination": "https://verboten.co.za/story",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/about-us(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/contact-us{/}?",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.verboten.co.za"
+        }
+      ],
+      "destination": "https://verboten.co.za/contact",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/contact-us(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/verboten-event-hub{/}?",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.verboten.co.za"
+        }
+      ],
+      "destination": "https://verboten.co.za/find-us",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/verboten-event-hub(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/my-account{/}?",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.verboten.co.za"
+        }
+      ],
+      "destination": "https://verboten.co.za/account",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/my-account(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/wishlist{/}?",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.verboten.co.za"
+        }
+      ],
+      "destination": "https://verboten.co.za/shop",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/wishlist(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/cart{/}?",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.verboten.co.za"
+        }
+      ],
+      "destination": "https://verboten.co.za/shop",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/cart(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/journal/batch-no-01-is-open{/}?",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.verboten.co.za"
+        }
+      ],
+      "destination": "https://verboten.co.za/journal/the-first-verboten-brandy-is-shipping",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/journal/batch-no-01-is-open(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/:path+/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.verboten.co.za"
+        }
+      ],
+      "destination": "https://verboten.co.za/:path+",
+      "statusCode": 308,
+      "regex": "^(?!/_next)(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/(?:/)?$"
     },
     {
       "source": "/:path*",
@@ -24,70 +185,88 @@
       "regex": "^(?!/_next)(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
     },
     {
-      "source": "/product/:slug",
-      "destination": "/shop/:slug",
-      "statusCode": 308,
-      "regex": "^(?!/_next)/product(?:/([^/]+?))(?:/)?$"
-    },
-    {
-      "source": "/product-category/:path*",
-      "destination": "/shop",
-      "statusCode": 308,
-      "regex": "^(?!/_next)/product-category(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?$"
-    },
-    {
-      "source": "/about-us",
-      "destination": "/story",
-      "statusCode": 308,
-      "regex": "^(?!/_next)/about-us(?:/)?$"
-    },
-    {
-      "source": "/contact-us",
-      "destination": "/contact",
-      "statusCode": 308,
-      "regex": "^(?!/_next)/contact-us(?:/)?$"
-    },
-    {
-      "source": "/verboten-event-hub",
-      "destination": "/find-us",
-      "statusCode": 308,
-      "regex": "^(?!/_next)/verboten-event-hub(?:/)?$"
-    },
-    {
-      "source": "/my-account",
-      "destination": "/account",
-      "statusCode": 308,
-      "regex": "^(?!/_next)/my-account(?:/)?$"
-    },
-    {
-      "source": "/wishlist",
-      "destination": "/shop",
-      "statusCode": 308,
-      "regex": "^(?!/_next)/wishlist(?:/)?$"
-    },
-    {
-      "source": "/cart",
-      "destination": "/shop",
-      "statusCode": 308,
-      "regex": "^(?!/_next)/cart(?:/)?$"
-    },
-    {
-      "source": "/shop/verboten-premium-brandy-batch-no-01-3-year",
+      "source": "/product/verboten-premium-brandy-batch-no-01-3-year{/}?",
       "destination": "/shop/verboten-premium-brandy",
       "statusCode": 308,
-      "regex": "^(?!/_next)/shop/verboten-premium-brandy-batch-no-01-3-year(?:/)?$"
+      "regex": "^(?!/_next)/product/verboten-premium-brandy-batch-no-01-3-year(?:/)?(?:/)?$"
     },
     {
-      "source": "/shop/batch-no-01-premium-set-2-bottle",
+      "source": "/shop/verboten-premium-brandy-batch-no-01-3-year{/}?",
+      "destination": "/shop/verboten-premium-brandy",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/shop/verboten-premium-brandy-batch-no-01-3-year(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/product/batch-no-01-premium-set-2-bottle{/}?",
       "destination": "/shop/verboten-premium-set-2-bottle",
       "statusCode": 308,
-      "regex": "^(?!/_next)/shop/batch-no-01-premium-set-2-bottle(?:/)?$"
+      "regex": "^(?!/_next)/product/batch-no-01-premium-set-2-bottle(?:/)?(?:/)?$"
     },
     {
-      "source": "/journal/batch-no-01-is-open",
+      "source": "/shop/batch-no-01-premium-set-2-bottle{/}?",
+      "destination": "/shop/verboten-premium-set-2-bottle",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/shop/batch-no-01-premium-set-2-bottle(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/product/:slug{/}?",
+      "destination": "/shop/:slug",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/product(?:/([^/]+?))(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/product-category/:path*{/}?",
+      "destination": "/shop",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/product-category(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))?(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/about-us{/}?",
+      "destination": "/story",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/about-us(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/contact-us{/}?",
+      "destination": "/contact",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/contact-us(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/verboten-event-hub{/}?",
+      "destination": "/find-us",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/verboten-event-hub(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/my-account{/}?",
+      "destination": "/account",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/my-account(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/wishlist{/}?",
+      "destination": "/shop",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/wishlist(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/cart{/}?",
+      "destination": "/shop",
+      "statusCode": 308,
+      "regex": "^(?!/_next)/cart(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/journal/batch-no-01-is-open{/}?",
       "destination": "/journal/the-first-verboten-brandy-is-shipping",
       "statusCode": 308,
-      "regex": "^(?!/_next)/journal/batch-no-01-is-open(?:/)?$"
+      "regex": "^(?!/_next)/journal/batch-no-01-is-open(?:/)?(?:/)?$"
+    },
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "statusCode": 308,
+      "regex": "^(?!/_next)(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/(?:/)?$"
     }
   ],
   "headers": [
@@ -213,6 +392,14 @@
       "namedRegex": "^/journal/(?<nxtPslug>[^/]+?)(?:/)?$"
     },
     {
+      "page": "/journal/[slug]/card.png",
+      "regex": "^/journal/([^/]+?)/card\\.png(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "namedRegex": "^/journal/(?<nxtPslug>[^/]+?)/card\\.png(?:/)?$"
+    },
+    {
       "page": "/journal/[slug]/opengraph-image-973581",
       "regex": "^/journal/([^/]+?)/opengraph\\-image\\-973581(?:/)?$",
       "routeKeys": {
@@ -227,6 +414,14 @@
         "nxtPslug": "nxtPslug"
       },
       "namedRegex": "^/shop/(?<nxtPslug>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/shop/[slug]/card.png",
+      "regex": "^/shop/([^/]+?)/card\\.png(?:/)?$",
+      "routeKeys": {
+        "nxtPslug": "nxtPslug"
+      },
+      "namedRegex": "^/shop/(?<nxtPslug>[^/]+?)/card\\.png(?:/)?$"
     },
     {
       "page": "/shop/[slug]/opengraph-image-1n96hn",

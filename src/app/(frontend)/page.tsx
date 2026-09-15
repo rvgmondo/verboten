@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/metadata";
 import Link from "next/link";
 
 import { Marquee } from "@/components/brand/marquee";
@@ -24,12 +25,17 @@ import {
 import { getAvailability } from "@/lib/inventory";
 import { mediaSrcAt, mediaSrcSet } from "@/lib/media";
 import { formatZAR } from "@/lib/money";
+import { websiteLd } from "@/lib/seo";
+import { JsonLd } from "@/components/json-ld";
 
 export const metadata: Metadata = {
-  title: "Verboten Spirits | Premium South African Brandy",
-  description:
-    "An independent South African brandy house in Pretoria. A three year premium brandy finished in French oak, 43% ABV. Born in South Africa, made for the world.",
-  alternates: { canonical: "/" },
+  ...pageMeta({
+    title: "Verboten Spirits | Premium South African Brandy",
+    shareTitle: "Verboten Spirits | Premium South African Brandy",
+    description:
+      "An independent South African brandy house in Pretoria. Three years in oak, finished in French casks, 43%. Delivered anywhere in South Africa.",
+    path: "/",
+  }),
 };
 
 export default async function HomePage() {
@@ -64,6 +70,7 @@ export default async function HomePage() {
 
   return (
     <main>
+      <JsonLd data={websiteLd()} />
       {/* Hero: three chapters of the same dark stage. */}
       <HeroCinema
         bottleSrc={heroSrc}

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/metadata";
 import Link from "next/link";
 
 import { PageMasthead } from "@/components/brand/page-masthead";
@@ -7,12 +8,12 @@ import { Badge } from "@/components/ui/badge";
 import { getJournalPosts } from "@/lib/data";
 import type { Media } from "@/payload-types";
 
-export const metadata: Metadata = {
-  title: "Journal",
+export const metadata: Metadata = pageMeta({
+  title: "The Brandy Journal",
   description:
-    "Release announcements, event recaps and stories from the Verboten house in Pretoria.",
-  alternates: { canonical: "/journal" },
-};
+    "How South African brandy is made, how to drink it properly, and news from the Verboten house in Pretoria.",
+  path: "/journal",
+});
 
 const CATEGORY_LABELS: Record<string, string> = {
   stories: "Brand stories",

@@ -88,47 +88,58 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  // Next's own trailing slash redirect runs before every custom rule, so an old
+  // WordPress URL like /about-us/ went /about-us/ to /about-us to /story, and
+  // on www it was one more hop again. Turning it off lets the rules below send
+  // each old URL, in any of its forms, to its final page in a single hop.
+  skipTrailingSlashRedirect: true,
   // 301s preserving the old WordPress site's indexed URLs.
   // The full mapping rationale lives in docs/redirect-map.md.
   async redirects() {
-    return [
-      // One canonical host. Semrush crawled www and apex as two separate sites,
-      // which splits crawl budget, caching and any link equity. Fires only when
-      // the Host header is www, so it cannot loop.
-      {
-        source: "/:path*",
-        has: [{ type: "host", value: "www.verboten.co.za" }],
-        destination: "https://verboten.co.za/:path*",
-        permanent: true,
-      },
-      { source: "/product/:slug", destination: "/shop/:slug", permanent: true },
-      { source: "/product-category/:path*", destination: "/shop", permanent: true },
-      { source: "/about-us", destination: "/story", permanent: true },
-      { source: "/contact-us", destination: "/contact", permanent: true },
-      { source: "/verboten-event-hub", destination: "/find-us", permanent: true },
-      { source: "/my-account", destination: "/account", permanent: true },
-      { source: "/wishlist", destination: "/shop", permanent: true },
-      // Old WooCommerce cart URL still in the wild; the new cart is a drawer.
-      { source: "/cart", destination: "/shop", permanent: true },
+    // Old path to final path. Specific entries sit above the pattern they would
+    // otherwise match, because the first matching rule wins.
+    const LEGACY: Array<[string, string]> = [
       // Batch-numbered product URLs, retired when the flagship was normalised.
-      {
-        source: "/shop/verboten-premium-brandy-batch-no-01-3-year",
-        destination: "/shop/verboten-premium-brandy",
-        permanent: true,
-      },
-      {
-        source: "/shop/batch-no-01-premium-set-2-bottle",
-        destination: "/shop/verboten-premium-set-2-bottle",
-        permanent: true,
-      },
+      // Listed under both the old WooCommerce prefix and the new one.
+      ["/product/verboten-premium-brandy-batch-no-01-3-year", "/shop/verboten-premium-brandy"],
+      ["/shop/verboten-premium-brandy-batch-no-01-3-year", "/shop/verboten-premium-brandy"],
+      ["/product/batch-no-01-premium-set-2-bottle", "/shop/verboten-premium-set-2-bottle"],
+      ["/shop/batch-no-01-premium-set-2-bottle", "/shop/verboten-premium-set-2-bottle"],
+      ["/product/:slug", "/shop/:slug"],
+      ["/product-category/:path*", "/shop"],
+      ["/about-us", "/story"],
+      ["/contact-us", "/contact"],
+      ["/verboten-event-hub", "/find-us"],
+      ["/my-account", "/account"],
+      ["/wishlist", "/shop"],
+      // Old WooCommerce cart URL still in the wild; the new cart is a drawer.
+      ["/cart", "/shop"],
       // The journal post's title was normalised when batch numbering was
       // retired, but its slug was not, so the batch framing stayed live in the
       // URL, the sitemap and the article's own structured data.
-      {
-        source: "/journal/batch-no-01-is-open",
-        destination: "/journal/the-first-verboten-brandy-is-shipping",
+      ["/journal/batch-no-01-is-open", "/journal/the-first-verboten-brandy-is-shipping"],
+    ];
+    const APEX = "https://verboten.co.za";
+    const www = [{ type: "host" as const, value: "www.verboten.co.za" }];
+
+    return [
+      // One canonical host. Semrush crawled www and apex as two separate sites,
+      // which splits crawl budget, caching and any link equity. These fire only
+      // when the Host header is www, so they cannot loop, and they go straight
+      // to the final apex URL rather than handing over to the rules below.
+      ...LEGACY.map(([from, to]) => ({
+        source: `${from}{/}?`,
+        has: www,
+        destination: `${APEX}${to}`,
         permanent: true,
-      },
+      })),
+      { source: "/:path+/", has: www, destination: `${APEX}/:path+`, permanent: true },
+      { source: "/:path*", has: www, destination: `${APEX}/:path*`, permanent: true },
+
+      ...LEGACY.map(([from, to]) => ({ source: `${from}{/}?`, destination: to, permanent: true })),
+
+      // Everything else loses its trailing slash, as Next did by default.
+      { source: "/:path+/", destination: "/:path+", permanent: true },
     ];
   },
 };

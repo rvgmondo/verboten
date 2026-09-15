@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/metadata";
 
 import { PageMasthead } from "@/components/brand/page-masthead";
 import { ContactForm } from "@/components/contact-form";
 import { getSiteSettings } from "@/lib/data";
 
-export const metadata: Metadata = {
-  title: "Contact",
+export const metadata: Metadata = pageMeta({
+  title: "Contact Verboten",
   description:
     "Questions about an order, stocking Verboten at your venue, or anything else. Pretoria based, replies within one business day.",
-  alternates: { canonical: "/contact" },
-};
+  path: "/contact",
+});
 
 export default async function ContactPage() {
   const settings = await getSiteSettings();

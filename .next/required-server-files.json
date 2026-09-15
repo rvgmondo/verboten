@@ -291,6 +291,7 @@
     "htmlLimitedBots": "Mediapartners-Google|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti",
     "bundlePagesRouterDependencies": false,
     "configFileName": "next.config.ts",
+    "skipTrailingSlashRedirect": true,
     "outputFileTracingExcludes": {
       "**/*": [
         "drizzle-kit",
@@ -311,6 +312,160 @@
     ],
     "_originalRedirects": [
       {
+        "source": "/product/verboten-premium-brandy-batch-no-01-3-year{/}?",
+        "has": [
+          {
+            "type": "host",
+            "value": "www.verboten.co.za"
+          }
+        ],
+        "destination": "https://verboten.co.za/shop/verboten-premium-brandy",
+        "permanent": true
+      },
+      {
+        "source": "/shop/verboten-premium-brandy-batch-no-01-3-year{/}?",
+        "has": [
+          {
+            "type": "host",
+            "value": "www.verboten.co.za"
+          }
+        ],
+        "destination": "https://verboten.co.za/shop/verboten-premium-brandy",
+        "permanent": true
+      },
+      {
+        "source": "/product/batch-no-01-premium-set-2-bottle{/}?",
+        "has": [
+          {
+            "type": "host",
+            "value": "www.verboten.co.za"
+          }
+        ],
+        "destination": "https://verboten.co.za/shop/verboten-premium-set-2-bottle",
+        "permanent": true
+      },
+      {
+        "source": "/shop/batch-no-01-premium-set-2-bottle{/}?",
+        "has": [
+          {
+            "type": "host",
+            "value": "www.verboten.co.za"
+          }
+        ],
+        "destination": "https://verboten.co.za/shop/verboten-premium-set-2-bottle",
+        "permanent": true
+      },
+      {
+        "source": "/product/:slug{/}?",
+        "has": [
+          {
+            "type": "host",
+            "value": "www.verboten.co.za"
+          }
+        ],
+        "destination": "https://verboten.co.za/shop/:slug",
+        "permanent": true
+      },
+      {
+        "source": "/product-category/:path*{/}?",
+        "has": [
+          {
+            "type": "host",
+            "value": "www.verboten.co.za"
+          }
+        ],
+        "destination": "https://verboten.co.za/shop",
+        "permanent": true
+      },
+      {
+        "source": "/about-us{/}?",
+        "has": [
+          {
+            "type": "host",
+            "value": "www.verboten.co.za"
+          }
+        ],
+        "destination": "https://verboten.co.za/story",
+        "permanent": true
+      },
+      {
+        "source": "/contact-us{/}?",
+        "has": [
+          {
+            "type": "host",
+            "value": "www.verboten.co.za"
+          }
+        ],
+        "destination": "https://verboten.co.za/contact",
+        "permanent": true
+      },
+      {
+        "source": "/verboten-event-hub{/}?",
+        "has": [
+          {
+            "type": "host",
+            "value": "www.verboten.co.za"
+          }
+        ],
+        "destination": "https://verboten.co.za/find-us",
+        "permanent": true
+      },
+      {
+        "source": "/my-account{/}?",
+        "has": [
+          {
+            "type": "host",
+            "value": "www.verboten.co.za"
+          }
+        ],
+        "destination": "https://verboten.co.za/account",
+        "permanent": true
+      },
+      {
+        "source": "/wishlist{/}?",
+        "has": [
+          {
+            "type": "host",
+            "value": "www.verboten.co.za"
+          }
+        ],
+        "destination": "https://verboten.co.za/shop",
+        "permanent": true
+      },
+      {
+        "source": "/cart{/}?",
+        "has": [
+          {
+            "type": "host",
+            "value": "www.verboten.co.za"
+          }
+        ],
+        "destination": "https://verboten.co.za/shop",
+        "permanent": true
+      },
+      {
+        "source": "/journal/batch-no-01-is-open{/}?",
+        "has": [
+          {
+            "type": "host",
+            "value": "www.verboten.co.za"
+          }
+        ],
+        "destination": "https://verboten.co.za/journal/the-first-verboten-brandy-is-shipping",
+        "permanent": true
+      },
+      {
+        "source": "/:path+/",
+        "has": [
+          {
+            "type": "host",
+            "value": "www.verboten.co.za"
+          }
+        ],
+        "destination": "https://verboten.co.za/:path+",
+        "permanent": true
+      },
+      {
         "source": "/:path*",
         "has": [
           {
@@ -322,58 +477,73 @@
         "permanent": true
       },
       {
-        "source": "/product/:slug",
-        "destination": "/shop/:slug",
-        "permanent": true
-      },
-      {
-        "source": "/product-category/:path*",
-        "destination": "/shop",
-        "permanent": true
-      },
-      {
-        "source": "/about-us",
-        "destination": "/story",
-        "permanent": true
-      },
-      {
-        "source": "/contact-us",
-        "destination": "/contact",
-        "permanent": true
-      },
-      {
-        "source": "/verboten-event-hub",
-        "destination": "/find-us",
-        "permanent": true
-      },
-      {
-        "source": "/my-account",
-        "destination": "/account",
-        "permanent": true
-      },
-      {
-        "source": "/wishlist",
-        "destination": "/shop",
-        "permanent": true
-      },
-      {
-        "source": "/cart",
-        "destination": "/shop",
-        "permanent": true
-      },
-      {
-        "source": "/shop/verboten-premium-brandy-batch-no-01-3-year",
+        "source": "/product/verboten-premium-brandy-batch-no-01-3-year{/}?",
         "destination": "/shop/verboten-premium-brandy",
         "permanent": true
       },
       {
-        "source": "/shop/batch-no-01-premium-set-2-bottle",
+        "source": "/shop/verboten-premium-brandy-batch-no-01-3-year{/}?",
+        "destination": "/shop/verboten-premium-brandy",
+        "permanent": true
+      },
+      {
+        "source": "/product/batch-no-01-premium-set-2-bottle{/}?",
         "destination": "/shop/verboten-premium-set-2-bottle",
         "permanent": true
       },
       {
-        "source": "/journal/batch-no-01-is-open",
+        "source": "/shop/batch-no-01-premium-set-2-bottle{/}?",
+        "destination": "/shop/verboten-premium-set-2-bottle",
+        "permanent": true
+      },
+      {
+        "source": "/product/:slug{/}?",
+        "destination": "/shop/:slug",
+        "permanent": true
+      },
+      {
+        "source": "/product-category/:path*{/}?",
+        "destination": "/shop",
+        "permanent": true
+      },
+      {
+        "source": "/about-us{/}?",
+        "destination": "/story",
+        "permanent": true
+      },
+      {
+        "source": "/contact-us{/}?",
+        "destination": "/contact",
+        "permanent": true
+      },
+      {
+        "source": "/verboten-event-hub{/}?",
+        "destination": "/find-us",
+        "permanent": true
+      },
+      {
+        "source": "/my-account{/}?",
+        "destination": "/account",
+        "permanent": true
+      },
+      {
+        "source": "/wishlist{/}?",
+        "destination": "/shop",
+        "permanent": true
+      },
+      {
+        "source": "/cart{/}?",
+        "destination": "/shop",
+        "permanent": true
+      },
+      {
+        "source": "/journal/batch-no-01-is-open{/}?",
         "destination": "/journal/the-first-verboten-brandy-is-shipping",
+        "permanent": true
+      },
+      {
+        "source": "/:path+/",
+        "destination": "/:path+",
         "permanent": true
       }
     ]

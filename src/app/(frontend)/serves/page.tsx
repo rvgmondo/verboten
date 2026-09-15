@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/metadata";
 
 import { PageMasthead } from "@/components/brand/page-masthead";
 import { CmsImage } from "@/components/media/cms-image";
@@ -6,12 +7,12 @@ import { PlaceholderFrame } from "@/components/media/placeholder-frame";
 import { getServes } from "@/lib/data";
 import type { Media } from "@/payload-types";
 
-export const metadata: Metadata = {
-  title: "Serves",
+export const metadata: Metadata = pageMeta({
+  title: "How to Serve Brandy",
   description:
-    "Signature serves and simple builds for Verboten brandy and Brandy & Cola. Nothing that needs a cocktail kit; everything worth doing properly.",
-  alternates: { canonical: "/serves" },
-};
+    "Three ways to pour Verboten brandy, from neat over one cube to a proper brandy and Coke. No cocktail kit needed, just the right glass and plenty of ice.",
+  path: "/serves",
+});
 
 export default async function ServesPage() {
   const serves = await getServes();

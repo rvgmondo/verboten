@@ -32,7 +32,8 @@ export const metadata: Metadata = {
   description:
     "An independent South African brandy house in Pretoria. Premium brandy, born in South Africa and made for the world. Not for sale under 18.",
   // Links get shared in WhatsApp DMs more than anywhere else in SA; give
-  // every page a real card. Page metadata overrides these per surface.
+  // every page a real card. Pages build their own through pageMeta, because a
+  // page that sets openGraph at all replaces this whole object.
   openGraph: {
     siteName: "Verboten Spirits",
     type: "website",
@@ -40,8 +41,24 @@ export const metadata: Metadata = {
     title: "Verboten Spirits | Premium South African Brandy",
     description:
       "An independent South African brandy house in Pretoria. Premium brandy, born in South Africa and made for the world.",
+    images: [{ url: "/brand/og-default.png", width: 1200, height: 630 }],
   },
   twitter: { card: "summary_large_image" },
+  // Search Console ownership, for when the DNS record route is not an option.
+  // The DNS TXT record in Cloudflare is the better proof: it covers every
+  // subdomain and protocol, and survives a rebuild of the site.
+  ...(process.env.GOOGLE_SITE_VERIFICATION || process.env.BING_SITE_VERIFICATION
+    ? {
+        verification: {
+          ...(process.env.GOOGLE_SITE_VERIFICATION
+            ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+            : {}),
+          ...(process.env.BING_SITE_VERIFICATION
+            ? { other: { "msvalidate.01": process.env.BING_SITE_VERIFICATION } }
+            : {}),
+        },
+      }
+    : {}),
 };
 
 export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
@@ -71,7 +88,7 @@ export default async function FrontendLayout({ children }: { children: React.Rea
             offers={bundleOffers}
           />
           <AgeGate />
-          <JsonLd data={organizationLd()} />
+          <JsonLd data={organizationLd(settings)} />
         </CartProvider>
         {/* GA4, armed only when NEXT_PUBLIC_GA_ID is set in the environment.
             Cloudflare Web Analytics needs no code: it is injected at the edge

@@ -1,4 +1,5 @@
 import { NOT_FOUND_METADATA, NotFoundPanel } from "@/components/brand/not-found-panel";
+import { pageMeta } from "@/lib/metadata";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -29,19 +30,17 @@ export const generateMetadata = async ({ params }: Params): Promise<Metadata> =>
   const { slug } = await params;
   const product = await getProductBySlug(slug);
   if (!product) return NOT_FOUND_METADATA;
-  // Fold the age into titles without doubling the word "brandy".
-  const title = product.specs?.ageYears
+  // Fold the age into titles without doubling the word "brandy". The SEO
+  // fields in the admin override both, and until now nothing read them.
+  const derived = product.specs?.ageYears
     ? `${product.name}, Aged ${product.specs.ageYears} Years`
     : product.name;
-  return {
-    title,
-    description: product.shortDescription ?? undefined,
-    alternates: { canonical: `/shop/${product.slug}` },
-    openGraph: {
-      title,
-      description: product.shortDescription ?? undefined,
-    },
-  };
+  return pageMeta({
+    title: product.meta?.title || derived,
+    description: product.meta?.description || product.shortDescription || product.name,
+    path: `/shop/${product.slug}`,
+    image: null,
+  });
 };
 
 const specRows = (product: Product): Array<[string, string]> => {
@@ -89,7 +88,7 @@ export default async function ProductPage({ params }: Params) {
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-12 lg:py-20">
-      <JsonLd data={productLd(product)} />
+      <JsonLd data={productLd(product, settings)} />
       <JsonLd
         data={breadcrumbLd([
           { name: "Home", path: "/" },

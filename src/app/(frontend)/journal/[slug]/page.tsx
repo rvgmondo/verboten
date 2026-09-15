@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/metadata";
 import Link from "next/link";
 
 import { PageMasthead } from "@/components/brand/page-masthead";
@@ -28,11 +29,13 @@ export const generateMetadata = async ({ params }: Params): Promise<Metadata> =>
   const { slug } = await params;
   const post = await getJournalPostBySlug(slug);
   if (!post) return NOT_FOUND_METADATA;
-  return {
-    title: post.title,
-    description: post.excerpt ?? undefined,
-    alternates: { canonical: `/journal/${post.slug}` },
-  };
+  return pageMeta({
+    title: post.meta?.title || post.title,
+    description: post.meta?.description || post.excerpt || post.title,
+    path: `/journal/${post.slug}`,
+    type: "article",
+    image: null,
+  });
 };
 
 export default async function JournalPostPage({ params }: Params) {
