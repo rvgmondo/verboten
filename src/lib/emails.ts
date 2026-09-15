@@ -102,7 +102,7 @@ type Rendered = { subject: string; body: string; html: string };
 const STATUS_EMAILS: Partial<Record<Order["status"], (o: Order, dispatch: string) => Rendered>> = {
   paid: (o, dispatch) => ({
     subject: `Order ${o.orderNumber} confirmed`,
-    body: `Payment received. ${o.orderNumber} is yours.\n\n${orderLines(o)}\n\n${totals(o)}\n\n${dispatch}, and you get a tracking number the moment it ships.\n\nYou can look this order up any time at ${SITE}/account, using this email address.\n\n${signoff}`,
+    body: `Payment received. ${o.orderNumber} is yours.\n\n${orderLines(o)}\n\n${totals(o)}\n\n${dispatch}, and you get a tracking number the moment it ships.\n\nTrack it any time at ${SITE}/track?order=${o.orderNumber}, with this email address. No account needed.\n\n${signoff}`,
     html: emailLayout({
       title: "Payment received.",
       preheader: `${o.orderNumber} is confirmed. ${dispatch}.`,
@@ -110,9 +110,9 @@ const STATUS_EMAILS: Partial<Record<Order["status"], (o: Order, dispatch: string
         paragraph(`${esc(o.orderNumber)} is yours.`),
         orderPanel(o),
         paragraph(`${esc(dispatch)}, and you get a tracking number the moment it ships.`),
-        button(`${SITE}/account`, "Track this order"),
+        button(`${SITE}/track?order=${encodeURIComponent(o.orderNumber)}`, "Track this order"),
         muted(
-          "Look it up any time with this email address. No account is needed to receive an order, only to see the ones you have placed.",
+          "Look it up any time with the order number and this email address. No account needed.",
         ),
       ].join(""),
       footer: standardFooter(),
@@ -642,4 +642,57 @@ export const sendAccountVerification = async (
 ): Promise<void> => {
   const { subject, text, html } = accountVerifyEmail(link);
   await payload.sendEmail({ to, subject, text, html });
+};
+
+/* ------------------------------------------------------------------ */
+/* Back in stock.                                                      */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The one email a back-in-stock request sends.
+ *
+ * Returns whether it went, rather than swallowing the failure like the rest of
+ * this file, because the caller has already marked the request as sent and has
+ * to hand it back if the email did not actually leave.
+ */
+export const sendBackInStock = async (
+  payload: Payload,
+  { to, product }: { to: string; product: { name: string; slug: string; priceCents: number } },
+): Promise<boolean> => {
+  const link = `${SITE}/shop/${product.slug}`;
+  const body = [
+    `${product.name} is back.`,
+    "",
+    `You asked us to tell you when it returned, so here it is: ${formatZAR(product.priceCents)}, ${link}`,
+    "",
+    "Stock that sold out once tends to do it again, so do not leave it long.",
+    "",
+    "This is the only email that request sends. You are not on any list because of it.",
+    "",
+    signoff,
+  ].join("\n");
+
+  const html = emailLayout({
+    title: `${product.name} is back.`,
+    preheader: "You asked to be told. Here it is.",
+    body: [
+      paragraph(`You asked us to tell you when it returned, so here it is.`),
+      panel(
+        `${eyebrow(product.name)}<p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:22px;color:${EMAIL_COLORS.GOLD};">${esc(formatZAR(product.priceCents))}</p>`,
+      ),
+      button(link, "Get it now"),
+      muted("Stock that sold out once tends to do it again, so do not leave it long."),
+      muted("This is the only email that request sends. You are not on any list because of it."),
+    ].join(""),
+    footer: standardFooter(),
+  });
+
+  try {
+    await payload.sendEmail({ to, subject: `${product.name} is back`, text: body, html });
+    payload.logger.info({ to, product: product.slug }, "Back-in-stock email sent");
+    return true;
+  } catch (err) {
+    payload.logger.error({ err, to, product: product.slug }, "Back-in-stock email failed");
+    return false;
+  }
 };

@@ -24,6 +24,7 @@ import { Pages } from "./collections/Pages";
 import { Products } from "./collections/Products";
 import { Serves } from "./collections/Serves";
 import { Stockists } from "./collections/Stockists";
+import { StockAlerts } from "./collections/StockAlerts";
 import { Subscribers } from "./collections/Subscribers";
 import { Users } from "./collections/Users";
 import { SiteSettings } from "./globals/SiteSettings";
@@ -75,6 +76,7 @@ export default buildConfig({
     Events,
     Pages,
     Subscribers,
+    StockAlerts,
     Media,
     Users,
     Counters,

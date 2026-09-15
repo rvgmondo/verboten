@@ -43,7 +43,10 @@ npm run seed         # first time only: real products, pages, serves, journal
 npm run dev          # Next + Payload on http://localhost:3001
 ```
 
-Dev admin login: `admin@verboten.co.za` / `ChangeMe123!` (change before deploy).
+The first admin is created from `ADMIN_EMAIL` and `ADMIN_PASSWORD` in `.env`.
+Never write a real or default password into this file or any committed file:
+this repository has been public, and a documented default is a working login
+on any database that was seeded with it.
 Env lives in `.env` (gitignored); see `.env.example`.
 
 ## Brand voice (copy rules — enforced, not aspirational)

@@ -44,13 +44,20 @@ export default async function CheckoutSuccessPage({
       <div className="w-full max-w-md border border-gold-dim/40 bg-coal p-6 text-left">
         <p className="eyebrow mb-3">Keep track of it</p>
         <p className="text-sm leading-relaxed text-parch">
-          Create an account with the same email and this order appears under
-          your name, along with anything you ordered before. No account is
-          needed to receive it, only to look it up later.
+          Check where it is any time with the order number and your email. No
+          account needed. Or create one with the same email, and this order and
+          anything you ordered before appear under your name.
         </p>
-        <Button className="mt-5" asChild>
-          <Link href="/account">Set up your account</Link>
-        </Button>
+        <div className="mt-5 flex flex-wrap gap-3">
+          <Button asChild>
+            <Link href={order ? `/track?order=${encodeURIComponent(order)}` : "/track"}>
+              Track this order
+            </Link>
+          </Button>
+          <Button variant="outline" asChild>
+            <Link href="/account">Create an account</Link>
+          </Button>
+        </div>
       </div>
 
       <div className="flex gap-4">

@@ -33,8 +33,8 @@ npm run dev           # http://localhost:3001
 ```
 
 - Public site: http://localhost:3001
-- Admin: http://localhost:3001/admin (dev login `admin@verboten.co.za` /
-  `ChangeMe123!`; change before any deployment)
+- Admin: http://localhost:3001/admin (log in with the `ADMIN_EMAIL` and
+  `ADMIN_PASSWORD` you set in `.env` before running `npm run seed:admin`)
 
 All seeds are idempotent; re-running skips existing content.
 

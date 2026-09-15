@@ -1,6 +1,7 @@
 import type { CollectionConfig } from "payload";
 
 import { anyone, isAdminOrEditor } from "../access/access";
+import { notifyRestocked } from "../lib/commerce/restock";
 import { revalidateHooks } from "../lib/revalidate";
 
 /**
@@ -91,6 +92,15 @@ export const Batches: CollectionConfig = {
   hooks: {
     // Batch stock backs product availability, so bust products too.
     ...revalidateHooks("batches", "products"),
+    afterChange: [
+      ...(revalidateHooks("batches", "products").afterChange ?? []),
+      // A save here can put a sold-out product back on sale, directly or by
+      // restocking something a bundle is made of. Anyone waiting hears about it.
+      async ({ doc, req }) => {
+        await notifyRestocked(req.payload);
+        return doc;
+      },
+    ],
     beforeChange: [
       ({ data }) => {
         // Stock can never go negative, and an empty batch flags itself sold out.

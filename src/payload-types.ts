@@ -81,6 +81,7 @@ export interface Config {
     events: Event;
     pages: Page;
     subscribers: Subscriber;
+    'stock-alerts': StockAlert;
     media: Media;
     users: User;
     counters: Counter;
@@ -104,6 +105,7 @@ export interface Config {
     events: EventsSelect<false> | EventsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     subscribers: SubscribersSelect<false> | SubscribersSelect<true>;
+    'stock-alerts': StockAlertsSelect<false> | StockAlertsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     counters: CountersSelect<false> | CountersSelect<true>;
@@ -835,6 +837,25 @@ export interface Subscriber {
   createdAt: string;
 }
 /**
+ * People waiting for a sold-out product. They get one email when it is back, then the request is closed.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "stock-alerts".
+ */
+export interface StockAlert {
+  id: number;
+  email: string;
+  product: number | Product;
+  status: 'waiting' | 'sent' | 'cancelled';
+  /**
+   * POPIA: when they asked. The request is the consent, for this one email.
+   */
+  requestedAt?: string | null;
+  sentAt?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
@@ -950,6 +971,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'subscribers';
         value: number | Subscriber;
+      } | null)
+    | ({
+        relationTo: 'stock-alerts';
+        value: number | StockAlert;
       } | null)
     | ({
         relationTo: 'media';
@@ -1361,6 +1386,19 @@ export interface SubscribersSelect<T extends boolean = true> {
   consentAt?: T;
   confirmToken?: T;
   unsubscribeToken?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "stock-alerts_select".
+ */
+export interface StockAlertsSelect<T extends boolean = true> {
+  email?: T;
+  product?: T;
+  status?: T;
+  requestedAt?: T;
+  sentAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }

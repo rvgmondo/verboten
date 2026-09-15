@@ -59,7 +59,7 @@ export const Today = async () => {
   const payload = await getPayload({ config });
 
   // Everything in parallel: this renders before the admin is usable.
-  const [attention, awaitingPayment, toPack, newEnquiries, products] = await Promise.all([
+  const [attention, awaitingPayment, toPack, newEnquiries, products, waitingAlerts] = await Promise.all([
     payload.find({
       collection: "orders",
       where: { needsAttention: { not_equals: "none" } },
@@ -90,7 +90,22 @@ export const Today = async () => {
       overrideAccess: true,
     }),
     payload.find({ collection: "products", limit: 50, depth: 2, overrideAccess: true }),
+    payload.find({
+      collection: "stock-alerts",
+      where: { status: { equals: "waiting" } },
+      limit: 500,
+      depth: 0,
+      overrideAccess: true,
+    }),
   ]);
+
+  // How many people are waiting on each sold-out product. The clearest demand
+  // signal the business has: a queue for a bottle is a reason to make more.
+  const waitingByProduct = new Map<number, number>();
+  for (const a of waitingAlerts.docs) {
+    const id = typeof a.product === "object" ? a.product.id : a.product;
+    waitingByProduct.set(id, (waitingByProduct.get(id) ?? 0) + 1);
+  }
 
   // Low stock, using the same rule the shop uses, so the admin and the storefront
   // never disagree about what "running out" means.
@@ -169,6 +184,9 @@ export const Today = async () => {
                   {availability.soldOut
                     ? ", sold out and not buyable"
                     : `, ${availability.available} left`}
+                  {waitingByProduct.get(product.id)
+                    ? `, ${waitingByProduct.get(product.id)} ${waitingByProduct.get(product.id) === 1 ? "person" : "people"} waiting for it`
+                    : ""}
                 </li>
               ))}
             </ul>

@@ -42,6 +42,30 @@ const STATEMENTS = [
   "CREATE INDEX IF NOT EXISTS `gallery_items_image_idx` ON `gallery_items` (`image_id`)",
   "CREATE INDEX IF NOT EXISTS `gallery_items_updated_at_idx` ON `gallery_items` (`updated_at`)",
   "CREATE INDEX IF NOT EXISTS `gallery_items_created_at_idx` ON `gallery_items` (`created_at`)",
+
+  // Back-in-stock requests. DDL copied from what Payload itself generates for
+  // the StockAlerts collection on an empty database, not written by hand.
+  `CREATE TABLE IF NOT EXISTS \`stock_alerts\` (
+    \`id\` integer PRIMARY KEY NOT NULL,
+    \`email\` text NOT NULL,
+    \`product_id\` integer NOT NULL,
+    \`status\` text DEFAULT 'waiting' NOT NULL,
+    \`requested_at\` text,
+    \`sent_at\` text,
+    \`updated_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+    \`created_at\` text DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) NOT NULL,
+    FOREIGN KEY (\`product_id\`) REFERENCES \`products\`(\`id\`) ON UPDATE no action ON DELETE set null
+  )`,
+  "CREATE INDEX IF NOT EXISTS `stock_alerts_email_idx` ON `stock_alerts` (`email`)",
+  "CREATE INDEX IF NOT EXISTS `stock_alerts_product_idx` ON `stock_alerts` (`product_id`)",
+  "CREATE INDEX IF NOT EXISTS `stock_alerts_status_idx` ON `stock_alerts` (`status`)",
+  "CREATE INDEX IF NOT EXISTS `stock_alerts_updated_at_idx` ON `stock_alerts` (`updated_at`)",
+  "CREATE INDEX IF NOT EXISTS `stock_alerts_created_at_idx` ON `stock_alerts` (`created_at`)",
+];
+
+/** Statements that depend on columns added below, so they run after them. */
+const AFTER_COLUMNS = [
+  "CREATE INDEX IF NOT EXISTS `payload_locked_documents_rels_stock_alerts_id_idx` ON `payload_locked_documents_rels` (`stock_alerts_id`)",
 ];
 
 /** Columns to add only when the table lacks them (SQLite has no IF NOT EXISTS for ADD COLUMN). */
@@ -82,6 +106,13 @@ const COLUMNS = [
   // has to outlive the confirmation token that is spent on signup.
   // Order lifecycle: what needs a person, and guards so a side effect runs
   // exactly once whether the webhook or a staff member got there first.
+  // Lets an admin record lock reference a stock alert, like every other
+  // collection. Without it, opening one in the admin fails.
+  {
+    table: "payload_locked_documents_rels",
+    column: "stock_alerts_id",
+    ddl: "ALTER TABLE `payload_locked_documents_rels` ADD COLUMN `stock_alerts_id` integer REFERENCES stock_alerts(id)",
+  },
   {
     table: "orders",
     column: "needs_attention",
@@ -146,7 +177,7 @@ const run = async () => {
   for (const sql of STATEMENTS) {
     await client.execute(sql);
   }
-  console.log("Gallery table and indexes are present");
+  console.log("Gallery and stock alert tables and indexes are present");
 
   for (const { table, column, ddl } of COLUMNS) {
     const info = await client.execute(`pragma table_info(${table})`);
@@ -157,6 +188,10 @@ const run = async () => {
     }
     await client.execute(ddl);
     console.log(`Added ${table}.${column}`);
+  }
+
+  for (const sql of AFTER_COLUMNS) {
+    await client.execute(sql);
   }
 
   console.log("\nSchema is up to date. Restart the app.");

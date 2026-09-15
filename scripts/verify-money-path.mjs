@@ -19,7 +19,11 @@ import { createHash } from "crypto";
 
 const BASE = process.env.BASE_URL || "http://localhost:3001";
 const EMAIL = process.env.ADMIN_EMAIL || "admin@verboten.co.za";
-const PASSWORD = process.env.ADMIN_PASSWORD || "ChangeMe123!";
+const PASSWORD = process.env.ADMIN_PASSWORD;
+if (!PASSWORD) {
+  console.error("Set ADMIN_PASSWORD (load .env first). There is deliberately no default.");
+  process.exit(1);
+}
 
 if (!/^https?:\/\/(localhost|127\.0\.0\.1)(:|$)/.test(BASE)) {
   console.error("Refusing to run against anything but localhost. This forges an ITN.");

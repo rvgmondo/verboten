@@ -6,6 +6,7 @@ import { AccountAuth, LogoutButton } from "@/components/account/account-auth";
 import { PageMasthead } from "@/components/brand/page-masthead";
 import { Badge } from "@/components/ui/badge";
 import { formatZAR } from "@/lib/money";
+import { STATUS_LABELS } from "@/lib/order-status";
 
 import config from "../../../payload.config";
 
@@ -16,15 +17,8 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-const STATUS_LABELS: Record<string, string> = {
-  pending_payment: "Awaiting payment",
-  paid: "Paid",
-  packed: "Packed",
-  shipped: "Shipped",
-  delivered: "Delivered",
-  cancelled: "Cancelled",
-  refunded: "Refunded",
-};
+// Labels shared with the order tracker, so the two never disagree.
+
 
 /**
  * Lightweight account area: sign in to see order history. Guest checkout

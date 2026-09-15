@@ -3,7 +3,7 @@
 import { Minus, Plus } from "lucide-react";
 import * as React from "react";
 
-import { NewsletterForm } from "@/components/chrome/newsletter-form";
+import { StockAlertForm } from "@/components/shop/stock-alert-form";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/cart";
 
@@ -53,17 +53,17 @@ export const AddToCart = ({
   }).format(priceCents / 100);
 
   if (soldOut) {
-    // Sold out is the warmest email moment the shop has; the signup renders
-    // right here instead of pointing somewhere else.
+    // Sold out is the warmest email moment the shop has, and it used to be
+    // spent enrolling people in the whole newsletter on a promise that "this
+    // list hears first the moment it is back", when nothing ever sent a
+    // restock notice. Now the request is for exactly this bottle, and it is
+    // actually honoured: the moment stock returns, the email goes.
     return (
-      <div className="space-y-4">
+      <div className="space-y-5">
         <Button disabled className="w-full sm:w-auto sm:min-w-56">
           Sold out
         </Button>
-        <p className="text-xs text-parch">
-          Sold out for now. This list hears first the moment it is back.
-        </p>
-        <NewsletterForm source="sold-out-product" />
+        <StockAlertForm productId={productId} productName={name} />
       </div>
     );
   }
