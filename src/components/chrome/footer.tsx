@@ -5,7 +5,7 @@ import { BrandCrest } from "@/components/brand/brand-crest";
 import { Motto } from "@/components/brand/motto";
 import { NewsletterForm } from "@/components/chrome/newsletter-form";
 import { ConsentLink } from "@/components/compliance/consent-banner";
-import { getSiteSettings } from "@/lib/data";
+import { getProducts, getSiteSettings } from "@/lib/data";
 
 const SHOP_LINKS = [
   { href: "/shop", label: "The shop" },
@@ -31,7 +31,7 @@ const LEGAL_LINKS = [
 ];
 
 export const Footer = async () => {
-  const settings = await getSiteSettings();
+  const [settings, products] = await Promise.all([getSiteSettings(), getProducts()]);
   const year = new Date().getFullYear();
 
   return (
@@ -64,6 +64,27 @@ export const Footer = async () => {
                 </li>
               ))}
             </ul>
+            {/* Every bottle, linked from every page. Two of the five were
+                reachable only from the shop page, which tells search engines
+                they matter least, and a shopper on the journal had no way to
+                them at all. */}
+            {products.length > 0 && (
+              <>
+                <p className="eyebrow mb-4 mt-8">The range</p>
+                <ul className="space-y-3">
+                  {products.map((p) => (
+                    <li key={p.id}>
+                      <Link
+                        href={`/shop/${p.slug}`}
+                        className="text-sm text-parch transition-colors hover:text-bone"
+                      >
+                        {p.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </nav>
 
           <nav aria-label="The house">

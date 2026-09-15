@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { RESPONSIBILITY_LINE } from "@/lib/compliance";
 import { pageMeta } from "@/lib/metadata";
 
@@ -52,6 +53,17 @@ export default async function ServesPage() {
               </div>
               <div className="space-y-6">
                 <h2 className="font-display text-3xl tracking-tight text-bone">{serve.name}</h2>
+                {serve.product && typeof serve.product === "object" && (
+                  <p className="text-sm text-parch">
+                    Poured with{" "}
+                    <Link
+                      href={`/shop/${serve.product.slug}`}
+                      className="text-bone underline underline-offset-4 transition-colors hover:text-gold"
+                    >
+                      {serve.product.name}
+                    </Link>
+                  </p>
+                )}
                 {serve.description && (
                   <p className="max-w-xl text-sm leading-relaxed text-parch">{serve.description}</p>
                 )}

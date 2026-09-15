@@ -151,7 +151,7 @@ export const HeroCinema = ({
                   {c.kicker}
                 </p>
                 <Heading className="font-display font-semibold leading-[0.98] tracking-tight text-[clamp(3rem,7.5vw,5.25rem)]">
-                  <span className="block text-bone">{c.titleA}</span>
+                  <span className="block text-bone">{c.titleA}</span>{" "}
                   <span className="block text-gold">{c.titleB}</span>
                 </Heading>
                 <p className="max-w-md text-base leading-relaxed text-parch">{c.body}</p>
