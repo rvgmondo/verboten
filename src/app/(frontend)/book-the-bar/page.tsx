@@ -14,7 +14,7 @@ import { SITE_URL } from "@/lib/seo";
 export const metadata: Metadata = pageMeta({
   title: "Mobile Brandy Bar Hire in Gauteng",
   description:
-    "Verboten brings its own bar to your event, with brandy and cola on tap and gin. Weddings, birthdays, corporate days and markets across Gauteng.",
+    "Mobile bar hire in Gauteng for weddings, birthdays and corporate days. Tell us the date and the crowd, and Verboten brings the bar and the brandy.",
   path: "/book-the-bar",
   shareTitle: "Book the Verboten bar",
 });
@@ -23,7 +23,7 @@ export const metadata: Metadata = pageMeta({
 const WHAT_YOU_GET = [
   {
     title: "The tap",
-    body: "Brandy and cola poured cold and fast, the way it moves at a market. Gin on tap alongside it.",
+    body: "Brandy and cola cold off the tap, and gin for anyone who would rather.",
   },
   {
     title: "The whole setup",
@@ -31,7 +31,7 @@ const WHAT_YOU_GET = [
   },
   {
     title: "People who pour",
-    body: "Our own team behind it, serving all day, packing up after.",
+    body: "Our own team behind the bar, looking after your guests and packing up after.",
   },
   {
     title: "Bottles to take home",
@@ -86,8 +86,8 @@ export default async function BookTheBarPage() {
               style={{ animationDelay: "160ms" }}
             >
               Brandy and cola on tap, gin alongside it, and the trailer that
-              carries the lot. Weddings, birthdays, corporate days, markets.
-              Wherever it is worth showing up.
+              carries the lot. Weddings, birthdays, corporate days and markets
+              across Gauteng.
             </p>
             <div
               className="animate-fade-up mt-8 flex flex-wrap gap-4"
@@ -157,7 +157,7 @@ export default async function BookTheBarPage() {
             </div>
           </div>
           <aside className="h-fit space-y-6 border border-line bg-coal p-6 lg:sticky lg:top-24">
-            <h3 className="eyebrow">Rather talk</h3>
+            <h3 className="eyebrow">Rather talk it through</h3>
             {phone && (
               <p className="text-sm text-parch">
                 <a
@@ -179,8 +179,8 @@ export default async function BookTheBarPage() {
               </p>
             )}
             <p className="text-sm leading-relaxed text-parch">
-              Based in Silverton, Pretoria. We travel for the ones worth
-              travelling for.
+              Home is Silverton, Pretoria, and the bar travels to events across
+              Gauteng.
             </p>
             <div className="border-t border-line pt-5">
               <p className="text-xs leading-relaxed text-parch">

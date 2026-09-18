@@ -54,14 +54,16 @@ export default async function ConfirmPage({
     <main className="mx-auto flex min-h-[60vh] max-w-2xl flex-col items-center justify-center gap-8 px-6 py-24 text-center">
       <BrandBadge className="h-20 w-20" />
       <div className="space-y-4">
-        <p className="eyebrow">{confirmed ? "Confirmed" : "Nothing to confirm"}</p>
+        <p className="eyebrow" lang={confirmed ? "af" : undefined}>
+          {confirmed ? "Baie dankie" : "Nothing to confirm"}
+        </p>
         <h1 className="font-display text-4xl tracking-tight text-bone">
-          {confirmed ? "You are on the list." : "That link has already been used."}
+          {confirmed ? "You are on the list." : "That link does not work any more."}
         </h1>
         <p className="mx-auto max-w-md text-sm leading-relaxed text-parch">
           {confirmed
             ? "New releases, and where the bar is pouring next. This list hears first."
-            : "It may have been used already, or it expired. Sign up again from the foot of any page and we will send a fresh one."}
+            : "It may have been used already, in which case you are on the list and there is nothing more to do. If not, get in touch through the contact page and we will sort it out."}
         </p>
       </div>
       <div className="flex flex-wrap justify-center gap-4">

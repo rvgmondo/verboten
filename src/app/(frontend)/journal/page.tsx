@@ -81,7 +81,7 @@ export default async function JournalPage() {
         </ul>
       ) : (
         <div className="border border-line bg-coal p-8">
-          <p className="text-sm text-parch">Nothing published yet. It will be worth the wait.</p>
+          <p className="text-sm text-parch">Nothing published yet. The first notes go up here, so come back soon.</p>
         </div>
       )}
       </div>

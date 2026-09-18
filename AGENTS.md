@@ -57,12 +57,17 @@ Env lives in `.env` (gitignored); see `.env.example`.
   stacked empty superlatives.
 - NO EM DASHES anywhere (copy, comments, content). Use commas, full stops, or
   restructure. Grep for `[—–…·]` before delivering.
-- Voice: confident, direct, a little dark. Short sentences. Quiet assurance,
-  never shouting. Premium without pretension. South African grounding
-  (Pretoria, braai, local pride) with international intent (NL/DE next).
-- Afrikaans brand lines, exact spelling: "VIR DIÉ WAT WEET",
-  "MEMORIES NOT REGRETS". Use as designed typographic moments only.
-- Facts from the old site only (specs, prices, contacts). Never port old copy.
+- **Voice: `docs/voice.md` is the guide** (agreed with the owner 2026-09-18).
+  Confident and dry about the drink, warm and inviting about the people,
+  Afrikaans and English the way Pretoria speaks them. "Pure Mischief" is wit,
+  not attitude. The site is the host at the door; social is the same person
+  behind the bar.
+- Afrikaans on the site is a warm aside (greetings, invitations, thanks,
+  sign-offs), never a whole paragraph, and only from the vetted phrase bank in
+  `docs/voice.md`. House lines, exact spelling: "VIR DIÉ WAT WEET",
+  "MEMORIES NOT REGRETS".
+- Facts from the old site or the owner only (specs, prices, contacts, venues).
+  Never invent a place, date, person or process. Never port old copy.
 
 ## Products (real data, seed source of truth)
 
@@ -71,7 +76,11 @@ Env lives in `.env` (gitignored); see `.env.example`.
 - Verboten Premium Set (2 bottles): R850. A bundle, first-class product.
   Slug `verboten-premium-set-2-bottle`.
 - Verboten Brandy & Cola RTD can: 440ml, 5% ABV, R45.
-- Gin and further spirits in development.
+- Verboten NYX: liquorice and anise, Greek style, 750ml, R250. Whether it is
+  legally a liqueur (75 g/l sugar) is unconfirmed, so copy does not call it one.
+- Verboten Blood Orange Gin: 750ml, R250. ABV not supplied.
+- Canned NYX & cola and a canned gin & tonic are on the way; a beer is in
+  development.
 
 NO batch numbering and NO "limited edition" framing anywhere shoppers see:
 the flagship is a permanent product. The `batches` collection is internal

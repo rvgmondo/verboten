@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
  */
 export const NotFoundPanel = ({
   title = "This page is forbidden. Or missing.",
-  lead = "Either way, there is nothing to pour here. The shop is stocked, though.",
+  lead = "Either way, there is nothing to pour here, but the shop is right this way.",
 }: {
   title?: string;
   lead?: string;

@@ -1,3 +1,7 @@
+> **Superseded for voice (18 September 2026).** Copy examples in this file use the
+> old voice and include unconfirmed places. Follow `docs/voice.md` for how Verboten
+> speaks, and never post a city, venue or date the owner has not confirmed.
+
 # Verboten Spirits: Instagram Pack
 
 One month of content a solo founder can actually run, in the house voice.

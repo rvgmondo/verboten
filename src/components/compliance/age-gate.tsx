@@ -157,7 +157,8 @@ export const AgeGate = () => {
             Some rules are meant to be questioned. This is not one of them.
           </DialogPrimitive.Title>
           <DialogPrimitive.Description className="mt-4 text-sm leading-relaxed text-parch">
-            Verboten makes and sells alcohol. Enter your date of birth to come in.
+            <span lang="af">Welkom.</span> Verboten makes and sells alcohol, so we ask for your date of birth before you
+            come in.
           </DialogPrimitive.Description>
 
           <form onSubmit={submit} noValidate className="mt-8 space-y-5 text-left">
@@ -259,7 +260,7 @@ export const AgeGate = () => {
             </label>
 
             <Button type="submit" className="w-full">
-              Enter
+              Come in
             </Button>
           </form>
 

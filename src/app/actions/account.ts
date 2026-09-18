@@ -31,7 +31,7 @@ import config from "../../payload.config";
 const schema = z.object({
   name: z.string().trim().min(2, "Enter your name.").max(120),
   email: z.string().trim().toLowerCase().email("Enter a valid email address."),
-  password: z.string().min(8, "Use at least 8 characters."),
+  password: z.string().min(8, "Use at least 8 characters for your password."),
 });
 
 export type RegisterResult = { ok: boolean; message: string };
@@ -75,7 +75,7 @@ export async function registerCustomer(input: {
       return {
         ok: true,
         message:
-          "Check your email. If that address is new here, a confirmation link is on its way.",
+          "Baie dankie. Check your email: if that address is new here, a link to open your account is on its way, and your orders appear the moment you use it.",
       };
     }
     payload.logger.error({ err, email }, "Customer create failed");
@@ -122,7 +122,7 @@ export async function registerCustomer(input: {
   return {
     ok: true,
     message:
-      "Check your email. There is a link waiting that opens your account, and your orders appear the moment you use it.",
+      "Baie dankie. Check your email: if that address is new here, a link to open your account is on its way, and your orders appear the moment you use it.",
   };
 }
 

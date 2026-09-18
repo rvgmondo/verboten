@@ -24,8 +24,8 @@ export const ResetPasswordForm = ({ token }: { token: string }) => {
     return (
       <div className="w-full space-y-6 text-center">
         <p className="text-sm leading-relaxed text-parch">
-          That link is missing its token. Reset links are single use and expire,
-          so ask for a fresh one from the sign in page.
+          That link is incomplete. Reset links work once and then expire, so
+          ask for a fresh one from the sign in page.
         </p>
         <Button variant="outline" onClick={() => router.push("/account")}>
           Back to sign in

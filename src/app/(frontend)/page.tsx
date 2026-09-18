@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     title: "Verboten Spirits | Premium South African Brandy",
     shareTitle: "Verboten Spirits | Premium South African Brandy",
     description:
-      "An independent South African brandy house in Pretoria. Three years in oak, finished in French casks. Delivered anywhere in South Africa.",
+      "Buy South African brandy online from an independent house in Pretoria. Three years in oak, French cask finish. Delivered anywhere in South Africa.",
     path: "/",
   }),
 };
@@ -58,9 +58,9 @@ export default async function HomePage() {
   const flatRateCents = settings.shipping?.flatRateCents ?? 15000;
   const commerceLine = flagship
     ? soldOut
-      ? "Sold out for now. The release list hears the moment it is back."
+      ? "Sold out for now. The rest of the range is still in the shop."
       : `${formatZAR(flagship.priceCents)} a bottle. Delivery ${formatZAR(flatRateCents)} flat, anywhere in South Africa.`
-    : "Premium South African brandy, shipped nationwide.";
+    : "Brandy from Silverton, Pretoria, delivered anywhere in South Africa.";
   const heroServes = serves.slice(0, 3);
   const SERVE_SHOTS = [
     "Heavy tumbler, one clear cube, side light",
@@ -132,7 +132,7 @@ export default async function HomePage() {
             <SectionHeading
               eyebrow="The ritual"
               title="How this house pours"
-              lead="Three ways in. Nothing here needs a cocktail kit, or an audience."
+              lead="Three ways in, for a quiet night or a full house. None of them needs a cocktail kit."
             />
             <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
               {heroServes.map((serve, i) => (
@@ -165,7 +165,7 @@ export default async function HomePage() {
               <SectionHeading
                 eyebrow="Ready to drink"
                 title="Brandy & Cola"
-                lead="The same spirit with its collar loosened. Pre-mixed, canned, and served colder than strictly necessary. The national serve, done properly."
+                lead="Already mixed, already canned. For the cooler box at the braai, and the fridge when the rugby is on."
               />
               <div className="flex flex-wrap items-center gap-5">
                 <Price cents={rtd.priceCents} className="text-2xl" />
@@ -201,7 +201,7 @@ export default async function HomePage() {
               align="center"
               eyebrow="The house"
               title="Some rules are meant to be questioned."
-              lead="Pretoria, 2020. A conviction that the best traditions often start with someone breaking the rules, and a spirit made to prove it."
+              lead="Like the one about how brandy has to taste. Silverton, Pretoria, 2020, and a name that means forbidden. The rest is in the story."
             />
             <Button variant="outline" asChild>
               <Link href="/story">The whole story</Link>
@@ -217,8 +217,8 @@ export default async function HomePage() {
             <SectionHeading eyebrow="Out in the world" title="Where to find us" />
             <p className="text-sm leading-relaxed text-parch">
               {stockists.length > 0
-                ? "Quality bars that know their stuff, restaurants that care what they serve, and events worth showing up to."
-                : "The list is short and getting longer. Until your local carries us, order direct and we ship to your door, or catch us at the next event."}
+                ? "The places that pour and sell Verboten, and where we are pouring next. Kom maak 'n draai, come by and say hello."
+                : "Until your local pours Verboten, we deliver to your door anywhere in South Africa. Planning a wedding or a birthday in Gauteng? We bring the bar."}
             </p>
             <Button variant="outline" size="sm" asChild>
               <Link href="/find-us">
@@ -268,7 +268,7 @@ export default async function HomePage() {
               align="center"
               eyebrow="First pour"
               title="Hear it before it is announced"
-              lead="New releases, and where we are pouring next. This list knows first."
+              lead="A canned NYX & cola and a canned gin & tonic are on the way. Join the list to hear first when they land."
             />
             <div className="mt-8 text-left">
               <NewsletterForm source="home" />

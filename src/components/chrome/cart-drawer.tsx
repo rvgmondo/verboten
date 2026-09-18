@@ -81,7 +81,7 @@ export const CartDrawer = ({ flatRateCents, freeThresholdCents, offers }: Props)
           </div>
         ) : items.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-4 p-6 text-center">
-            <p className="text-sm text-parch">Empty, for now.</p>
+            <p className="text-sm text-parch">Nothing in here yet. Take your time and have a look around.</p>
             <Button variant="outline" size="sm" asChild onClick={close}>
               <Link href="/shop">Browse the shop</Link>
             </Button>

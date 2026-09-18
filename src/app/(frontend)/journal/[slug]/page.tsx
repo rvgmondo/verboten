@@ -60,7 +60,7 @@ export default async function JournalPostPage({ params }: Params) {
     return (
       <NotFoundPanel
         title="That entry is not here."
-        lead="It may have been renamed since you saved the link. The journal is still worth a read."
+        lead="It may have been renamed since you saved the link, sorry about that. Every other entry is under Journal in the menu."
       />
     );
   }

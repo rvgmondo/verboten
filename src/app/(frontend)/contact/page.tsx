@@ -22,7 +22,7 @@ export default async function ContactPage() {
         eyebrow="Contact"
         title="Talk to"
         titleAccent="the house."
-        lead="Order questions, stockist enquiries, events, or anything else worth asking. We reply within one business day, and it is a person replying."
+        lead="Welkom. Order questions, stockist enquiries, booking the bar, or just saying hello. We reply within one business day, and it is a person replying."
       />
 
       <div className="mx-auto grid max-w-6xl gap-14 px-6 py-16 lg:grid-cols-[1fr_1.2fr] lg:py-20">
@@ -69,8 +69,9 @@ export default async function ContactPage() {
           </dl>
           <div className="border border-line bg-coal p-6">
             <p className="text-sm leading-relaxed text-parch">
-              Want Verboten on your back bar or shelf? Say so in the message and
-              include the venue. Trade pricing exists.
+              Want Verboten on your back bar or shelf? We would like that too.
+              Say so in the message, name the venue, and we will talk trade
+              pricing.
             </p>
           </div>
         </div>

@@ -13,7 +13,7 @@ export default function NotFound() {
           This page is forbidden. Or missing.
         </h1>
         <p className="mx-auto max-w-sm text-sm leading-relaxed text-parch">
-          Either way, there is nothing to pour here. The shop is stocked, though.
+          Either way, there is nothing to pour here, but the shop is right this way.
         </p>
       </div>
       <div className="flex gap-4">

@@ -37,7 +37,7 @@ export default async function AccountPage() {
           eyebrow="Your account"
           title="Everything you have"
           titleAccent="ordered."
-          lead="Create an account with the address you checked out with and every order you have placed appears here, including the ones you placed as a guest."
+          lead="Welkom. Sign in, or create an account with the email you checked out with, and every order you have placed shows up here, guest orders included."
         />
         <div className="mx-auto max-w-3xl px-6 py-16 lg:py-20">
           <AccountAuth />

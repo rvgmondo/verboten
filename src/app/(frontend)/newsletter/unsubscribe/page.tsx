@@ -60,14 +60,15 @@ export default async function UnsubscribePage({
     <main className="mx-auto flex min-h-[60vh] max-w-2xl flex-col items-center justify-center gap-8 px-6 py-24 text-center">
       <BrandBadge className="h-20 w-20" />
       <div className="space-y-4">
-        <p className="eyebrow">Done</p>
+        <p className="eyebrow" lang="af">Totsiens</p>
         <h1 className="font-display text-4xl tracking-tight text-bone">
           You are off the list.
         </h1>
         <p className="mx-auto max-w-md text-sm leading-relaxed text-parch">
-          No more release news from us. Nothing changes about any order you have
-          placed, and those emails carry on as normal. If you ever want back on,
-          the form is at the foot of every page.
+          Thanks for having us in your inbox. No more news from us.
+          Nothing changes about any order you have placed, and those emails carry
+          on as normal. If you ever want back on, just say so through the
+          contact page.
         </p>
       </div>
       <div className="flex flex-wrap justify-center gap-4">

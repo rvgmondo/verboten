@@ -12,7 +12,7 @@ import { eventLd } from "@/lib/seo";
 export const metadata: Metadata = pageMeta({
   title: "Stockists and Events",
   description:
-    "Bars, venues and markets that pour Verboten, and where the house sets up next. Or order direct and have it delivered anywhere in South Africa.",
+    "Where to find Verboten brandy: stockists and events, listed here as they are confirmed. Or buy brandy online and we deliver anywhere in South Africa.",
   path: "/find-us",
 });
 
@@ -72,7 +72,7 @@ export default async function FindUsPage() {
         eyebrow="Out in the world"
         title="Where to"
         titleAccent="find us."
-        lead="Quality bars that know their stuff. Restaurants that care about what they serve. Events worth showing up to. And direct to your door when you order online."
+        lead="Come and find us. We will be the ones pouring. Stockists and events go up here as they are confirmed, and the bottles ship anywhere in South Africa."
       />
 
       <div className="mx-auto max-w-6xl px-6 py-16 lg:py-20">
@@ -133,8 +133,8 @@ export default async function FindUsPage() {
         ) : (
           <div className="border border-line bg-coal p-8">
             <p className="max-w-xl text-sm leading-relaxed text-parch">
-              Nothing on the calendar right now. Markets and tastings are
-              announced on{" "}
+              Nothing on the calendar just yet. When the bar is out
+              somewhere, it goes up on{" "}
               {settings.socials?.instagram ? (
                 <a
                   href={settings.socials.instagram}
@@ -147,7 +147,8 @@ export default async function FindUsPage() {
               ) : (
                 "Instagram"
               )}{" "}
-              and the newsletter first, usually a few weeks out.
+              and in the newsletter first, then here with the date and the
+              place.
             </p>
           </div>
         )}
@@ -186,8 +187,9 @@ export default async function FindUsPage() {
         ) : (
           <div className="border border-line bg-coal p-8">
             <p className="max-w-xl text-sm leading-relaxed text-parch">
-              The stockist list is short and getting longer. Until your local
-              carries us, order direct and we ship anywhere in South Africa.
+              No stockists to list just yet. Until your local carries us, order
+              direct and we deliver anywhere in South Africa. And if the local
+              is yours, we would like to talk.
             </p>
             <div className="mt-6 flex flex-wrap gap-4">
               <Button asChild>

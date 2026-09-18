@@ -41,7 +41,7 @@ export async function subscribeToNewsletter(
 
   if (!parsed.success) {
     const honeypotTripped = parsed.error.issues.some((i) => i.path[0] === "company");
-    if (honeypotTripped) return { ok: true, message: "You are on the list." };
+    if (honeypotTripped) return { ok: true, message: "Dankie. Check your email: if that address is not on the list yet, a link to confirm is on its way." };
     return { ok: false, message: "Enter a valid email address." };
   }
 
@@ -55,9 +55,31 @@ export async function subscribeToNewsletter(
     overrideAccess: true,
   });
 
-  if (existing.docs[0]) {
-    // Do not leak whether an address is already subscribed.
-    return { ok: true, message: "You are on the list." };
+  const found = existing.docs[0];
+  if (found) {
+    // Someone who lost their confirmation email, or who unsubscribed and has
+    // changed their mind, used to get the success message and nothing else,
+    // with no way back onto the list. Both get a fresh confirmation link now.
+    // It is still double opt-in, so typing someone else's address only ever
+    // sends them a link they can ignore, and the reply is identical in every
+    // case so nobody learns whether an address is on the list.
+    if (found.status === "pending" || found.status === "unsubscribed") {
+      const confirmToken = randomBytes(24).toString("hex");
+      await payload.update({
+        collection: "subscribers",
+        id: found.id,
+        data: {
+          status: "pending",
+          confirmToken,
+          consentAt: new Date().toISOString(),
+          // Older rows may predate unsubscribe tokens; every list email needs one.
+          ...(found.unsubscribeToken ? {} : { unsubscribeToken: randomBytes(24).toString("hex") }),
+        },
+        overrideAccess: true,
+      });
+      await sendNewsletterConfirmation(payload, { to: email, token: confirmToken, siteUrl: SITE_URL });
+    }
+    return { ok: true, message: "Dankie. Check your email: if that address is not on the list yet, a link to confirm is on its way." };
   }
 
   const confirmToken = randomBytes(24).toString("hex");
@@ -82,5 +104,5 @@ export async function subscribeToNewsletter(
   // that consent trail is the difference between a list and a liability.
   await sendNewsletterConfirmation(payload, { to: email, token: confirmToken, siteUrl: SITE_URL });
 
-  return { ok: true, message: "Check your email to confirm." };
+  return { ok: true, message: "Dankie. Check your email: if that address is not on the list yet, a link to confirm is on its way." };
 }

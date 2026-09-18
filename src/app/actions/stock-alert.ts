@@ -42,7 +42,7 @@ export async function requestStockAlert(
   if (!parsed.success) {
     const honeypot = parsed.error.issues.some((i) => i.path[0] === "company");
     // A bot gets the same cheerful answer as a person, and nothing is saved.
-    if (honeypot) return { ok: true, message: "Done. One email when it is back." };
+    if (honeypot) return { ok: true, message: "Dankie. One email when it is back, and nothing else." };
     return { ok: false, message: parsed.error.issues[0]?.message ?? "Check your email address." };
   }
 
@@ -88,6 +88,6 @@ export async function requestStockAlert(
 
   return {
     ok: true,
-    message: `Done. One email to ${email} when ${product.name} is back, and that is all this sends.`,
+    message: `Dankie. We will send one email to ${email} when ${product.name} is back, and nothing else.`,
   };
 }

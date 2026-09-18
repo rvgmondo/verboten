@@ -104,14 +104,14 @@ type Rendered = { subject: string; body: string; html: string };
 const STATUS_EMAILS: Partial<Record<Order["status"], (o: Order, dispatch: string, house: HouseIdentity) => Rendered>> = {
   paid: (o, dispatch, house) => ({
     subject: `Order ${o.orderNumber} confirmed`,
-    body: `Payment received. ${o.orderNumber} is yours.\n\n${orderLines(o)}\n\n${totals(o)}\n\n${dispatch}, and you get a tracking number the moment it ships.\n\nTrack it any time at ${SITE}/track?order=${o.orderNumber}, with this email address. No account needed.\n\n${identityText(house)}`,
+    body: `Baie dankie for your order. Payment received, and ${o.orderNumber} is yours.\n\n${orderLines(o)}\n\n${totals(o)}\n\n${dispatch}, and you get a tracking number the moment it leaves us.\n\nTrack it any time at ${SITE}/track?order=${o.orderNumber}, with this email address. No account needed.\n\n${identityText(house)}`,
     html: emailLayout({
-      title: "Payment received.",
+      title: "Baie dankie for your order.",
       preheader: `${o.orderNumber} is confirmed. ${dispatch}.`,
       body: [
-        paragraph(`${esc(o.orderNumber)} is yours.`),
+        paragraph(`Payment received, and ${esc(o.orderNumber)} is yours.`),
         orderPanel(o),
-        paragraph(`${esc(dispatch)}, and you get a tracking number the moment it ships.`),
+        paragraph(`${esc(dispatch)}, and you get a tracking number the moment it leaves us.`),
         button(`${SITE}/track?order=${encodeURIComponent(o.orderNumber)}`, "Track this order"),
         muted(
           "Look it up any time with the order number and this email address. No account needed.",
@@ -122,7 +122,7 @@ const STATUS_EMAILS: Partial<Record<Order["status"], (o: Order, dispatch: string
   }),
   packed: (o, _dispatch, house) => ({
     subject: `Order ${o.orderNumber} is packed`,
-    body: `${o.orderNumber} is boxed and waiting for the courier.\n\nYou will get a tracking number when it is collected.\n\n${identityText(house)}`,
+    body: `${o.orderNumber} is boxed and waiting for the courier.\n\nYou get a tracking number the moment it is collected.\n\n${identityText(house)}`,
     html: emailLayout({
       title: "Boxed and waiting.",
       preheader: `${o.orderNumber} is packed and waiting for the courier.`,
@@ -135,7 +135,7 @@ const STATUS_EMAILS: Partial<Record<Order["status"], (o: Order, dispatch: string
   }),
   shipped: (o, _dispatch, house) => ({
     subject: `Order ${o.orderNumber} is on its way`,
-    body: `${o.orderNumber} has shipped.${o.trackingNumber ? `\n\nTracking number: ${o.trackingNumber}` : ""}\n\nDelivery takes 3 to 7 business days. Someone 18 or older must receive it; the courier may ask for ID.\n\n${identityText(house)}`,
+    body: `${o.orderNumber} has shipped.${o.trackingNumber ? `\n\nTracking number: ${o.trackingNumber}` : ""}\n\nDelivery takes 3 to 7 business days. Someone 18 or older has to receive it, and the courier may ask for ID.\n\n${identityText(house)}`,
     html: emailLayout({
       title: "On its way.",
       preheader: o.trackingNumber
@@ -157,14 +157,14 @@ const STATUS_EMAILS: Partial<Record<Order["status"], (o: Order, dispatch: string
   }),
   delivered: (o, _dispatch, house) => ({
     subject: `Order ${o.orderNumber} delivered`,
-    body: `${o.orderNumber} has been delivered. Pour it properly.\n\nIf anything is wrong with the delivery, reply within 48 hours and we sort it out.\n\n${identityText(house)}`,
+    body: `${o.orderNumber} has been delivered. Pour it properly.\n\nIf anything is wrong with it, reply to this email within 48 hours and we will sort it out.\n\nHow to pour it: ${SITE}/serves\n\n${identityText(house)}`,
     html: emailLayout({
       title: "Delivered. Pour it properly.",
       preheader: `${o.orderNumber} has been delivered.`,
       body: [
         paragraph(`${esc(o.orderNumber)} has been delivered.`),
         muted(
-          "If anything is wrong with it, reply to this email within 48 hours and we sort it out.",
+          "If anything is wrong with it, reply to this email within 48 hours and we will sort it out.",
         ),
         button(`${SITE}/serves`, "How to pour it"),
       ].join(""),
@@ -181,7 +181,7 @@ const STATUS_EMAILS: Partial<Record<Order["status"], (o: Order, dispatch: string
     return wasPaid
       ? {
           subject: `Order ${o.orderNumber} cancelled`,
-          body: `${o.orderNumber} has been cancelled and the refund is on its way back to the same payment method. Allow a few business days for it to reflect.\n\nQuestions: reply to this email.\n\n${identityText(house)}`,
+          body: `${o.orderNumber} has been cancelled and the refund is on its way back to the same payment method. Allow a few business days for it to reflect.\n\nAny questions, just reply to this email.\n\n${identityText(house)}`,
           html: emailLayout({
             title: "Cancelled, and refunded.",
             preheader: `${o.orderNumber} is cancelled and the refund is on its way.`,
@@ -190,7 +190,7 @@ const STATUS_EMAILS: Partial<Record<Order["status"], (o: Order, dispatch: string
                 `${esc(o.orderNumber)} has been cancelled and the refund is on its way back to the same payment method.`,
               ),
               muted(
-                "Allow a few business days for it to reflect. Any questions, reply to this email.",
+                "Allow a few business days for it to reflect. Any questions, just reply to this email.",
               ),
             ].join(""),
             footer: standardFooter(undefined, house),
@@ -395,7 +395,7 @@ export const sendEnquiryAcknowledgement = async (
 
   const body = booking
     ? [
-        `${name},`,
+        `Baie dankie, ${name}.`,
         "",
         "We have your booking enquiry. Someone reads every one of these, and we come back with a quote within one business day.",
         "",
@@ -403,14 +403,18 @@ export const sendEnquiryAcknowledgement = async (
         "",
         `We are here ${hours}.`,
         "",
+        `While you wait, the shop: ${SITE}/shop`,
+        "",
         ACK_SIGNOFF(settings),
       ].join("\n")
     : [
-        `${name},`,
+        `Baie dankie, ${name}.`,
         "",
-        "Thank you, we have your message. We reply within one business day, and it is a person replying, not a system.",
+        "We have your message. We reply within one business day, and it is a person replying, not a system.",
         "",
         `We are here ${hours}.`,
+        "",
+        `While you wait, the shop: ${SITE}/shop`,
         "",
         ACK_SIGNOFF(settings),
       ].join("\n");
@@ -419,7 +423,7 @@ export const sendEnquiryAcknowledgement = async (
     title: booking ? "We have your booking enquiry." : "We have your message.",
     preheader: "A person replies within one business day.",
     body: [
-      paragraph(`${esc(name)},`),
+      paragraph(`Baie dankie, ${esc(name)}.`),
       booking
         ? paragraph(
             "Someone reads every one of these. We come back with a quote within one business day.",
@@ -520,23 +524,28 @@ export const sendNewsletterWelcome = async (
     : null;
 
   const body = [
-    "You are on the list.",
+    "Welkom. You are on the list.",
     "",
-    "New releases, and where the bar is pouring next. This list hears first.",
+    "New releases, and where the bar is pouring next. This list hears first. If we are ever near you, come and say hello.",
     "",
-    "Vir die wat weet.",
+    "Vir dié wat weet.",
+    "",
+    `The shop: ${SITE}/shop`,
     "",
     ACK_SIGNOFF(settings),
-    unsubscribe ? `\nUnsubscribe: ${unsubscribe}` : "",
-  ]
-    .filter(Boolean)
-    .join("\n");
+    // Only the missing unsubscribe line is dropped. Filtering every empty
+    // string also removed the blank lines, so the plain text arrived as one
+    // unbroken block.
+    ...(unsubscribe ? ["", `Unsubscribe: ${unsubscribe}`] : []),
+  ].join("\n");
 
   const html = emailLayout({
-    title: "You are on the list.",
+    title: "Welkom. You are on the list.",
     preheader: "New releases, and where the bar is pouring next.",
     body: [
-      paragraph("New releases, and where the bar is pouring next. This list hears first."),
+      paragraph(
+        "New releases, and where the bar is pouring next. This list hears first. If we are ever near you, come and say hello.",
+      ),
       `<p style="margin:24px 0 0;font-family:Helvetica,Arial,sans-serif;font-size:13px;letter-spacing:0.24em;text-transform:uppercase;color:${EMAIL_COLORS.GOLD};">Vir di&eacute; wat weet</p>`,
       button(`${SITE}/shop`, "The shop"),
     ].join(""),
@@ -551,7 +560,7 @@ export const sendNewsletterWelcome = async (
   try {
     await payload.sendEmail({
       to,
-      subject: "You are on the list",
+      subject: "Welkom, you are on the list",
       text: body,
       html,
       ...(unsubscribe
@@ -577,9 +586,9 @@ export const sendNewsletterWelcome = async (
 
 export const accountVerifyEmail = (link: string) => ({
   subject: "Confirm your Verboten account",
-  text: `One step left.\n\nConfirm this address and your account is open. Every order you have placed with it, guest orders included, appears under your name.\n\n${link}\n\nIf you did not create this account, ignore this email. Nothing is opened and nothing is shared until the link above is used.\n\n${signoff}`,
+  text: `Welkom. One step left.\n\nConfirm this address and your account is open. Every order you have placed with it, guest orders included, appears under your name.\n\n${link}\n\nIf you did not create this account, ignore this email. Nothing is opened and nothing is shared until the link above is used.\n\n${signoff}`,
   html: emailLayout({
-    title: "One step left.",
+    title: "Welkom. One step left.",
     preheader: "Confirm this address and your account is open.",
     body: [
       paragraph(
@@ -655,7 +664,7 @@ export const sendBackInStock = async (
     "",
     `You asked us to tell you when it returned, so here it is: ${formatZAR(product.priceCents)}, ${link}`,
     "",
-    "Stock that sold out once tends to do it again, so do not leave it long.",
+    "Dankie for waiting.",
     "",
     "This is the only email that request sends. You are not on any list because of it.",
     "",
@@ -670,8 +679,8 @@ export const sendBackInStock = async (
       panel(
         `${eyebrow(product.name)}<p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:22px;color:${EMAIL_COLORS.GOLD};">${esc(formatZAR(product.priceCents))}</p>`,
       ),
-      button(link, "Get it now"),
-      muted("Stock that sold out once tends to do it again, so do not leave it long."),
+      button(link, "See it in the shop"),
+      muted("Dankie for waiting."),
       muted("This is the only email that request sends. You are not on any list because of it."),
     ].join(""),
     footer: standardFooter(undefined, house),

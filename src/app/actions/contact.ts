@@ -15,7 +15,7 @@ const schema = z.object({
   name: z.string().trim().min(2, "Tell us your name.").max(120),
   email: z.string().trim().toLowerCase().email("Enter a valid email address."),
   phone: z.string().trim().max(30).optional().or(z.literal("")),
-  message: z.string().trim().min(10, "Give us a little more to work with.").max(4000),
+  message: z.string().trim().min(10, "Tell us a little more, at least 10 characters.").max(4000),
   // Bar bookings only. Free text on purpose: a date typed as "12 Dec" or
   // "sometime in March" is more useful than an empty required field.
   eventDate: z.string().trim().max(120).optional().or(z.literal("")),
@@ -62,7 +62,7 @@ export async function submitContact(
   if (!parsed.success) {
     if (parsed.error.issues.some((i) => i.path[0] === "website")) {
       // Honeypot tripped: pretend success, learn nothing.
-      return { ok: true, message: "Thank you. We reply within one business day." };
+      return { ok: true, message: "Your message is with us. We reply within one business day." };
     }
     const fieldErrors: ContactResult["fieldErrors"] = {};
     for (const issue of parsed.error.issues) {
@@ -152,7 +152,7 @@ export async function submitContact(
     ok: true,
     message:
       topic === "booking"
-        ? "Thank you. We come back with a quote within one business day."
-        : "Thank you. We reply within one business day.",
+        ? "Your enquiry is with us. We come back with a quote within one business day."
+        : "Your message is with us. We reply within one business day.",
   };
 }

@@ -41,14 +41,16 @@ export default async function VerifyAccountPage({
     <main className="mx-auto flex min-h-[60vh] max-w-2xl flex-col items-center justify-center gap-8 px-6 py-24 text-center">
       <BrandBadge className="h-20 w-20" />
       <div className="space-y-4">
-        <p className="eyebrow">{verified ? "Confirmed" : "Nothing to confirm"}</p>
+        <p className="eyebrow" lang={verified ? "af" : undefined}>
+          {verified ? "Mooi so" : "Nothing to confirm"}
+        </p>
         <h1 className="font-display text-4xl tracking-tight text-bone">
-          {verified ? "Your account is open." : "That link has already been used."}
+          {verified ? "Your account is open." : "That link does not work any more."}
         </h1>
         <p className="mx-auto max-w-md text-sm leading-relaxed text-parch">
           {verified
             ? "Sign in and every order placed with this address is waiting for you, guest orders included."
-            : "It may have been used already, or it expired. Sign in and we will send a fresh one."}
+            : "It may have been used already, or part of it went missing on the way. If your account is already confirmed, just sign in. If not, get in touch through the contact page and we will sort it out."}
         </p>
       </div>
       <div className="flex flex-wrap justify-center gap-4">

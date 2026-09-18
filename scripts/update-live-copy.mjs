@@ -41,6 +41,7 @@ const paragraphs = (...texts) => doc(...texts.map(p));
 
 /* ---- target state ---- */
 
+// Keep in step with the announcement defaultValue in src/globals/SiteSettings.ts.
 const ANNOUNCEMENT = "Premium South African brandy | Ships nationwide in 1 to 2 weeks";
 
 const PRODUCTS = [
@@ -67,9 +68,9 @@ const PRODUCTS = [
         "The same spirit with its collar loosened, pre-mixed in a 440ml can. Cold, easy, and unmistakably South African.",
       description: paragraphs(
         "The flagship brandy, cut with cola and sealed in a 440ml can. Made to be drunk cold, straight from the can or over ice.",
-        "Brandy and Coke is South Africa's drink, and most of the time it gets poured badly. Warm glass, flat cola, brandy chosen on price alone. This is the same pour made properly and sealed, so it tastes the way it should at a braai, a market, or the back of a bakkie.",
+        "Brandy and Coke is South Africa's drink, and most of the time it gets poured badly. Warm glass, flat cola, brandy chosen on price alone. This is the same pour made properly and sealed, so it tastes the way it should at a braai, at a market, or with the rugby on.",
         "The brandy underneath is the same three year spirit, finished in French oak. Cola is loud, and a thin brandy disappears under it. This one holds its shape: caramel and dried fruit through the cola instead of just sugar.",
-        "Serve it colder than you think it needs. Over ice if the day is long.",
+        "Serve it colder than you think it needs. Over ice if the day is hot.",
       ),
       specs: { abv: 5, volumeMl: 440, origin: "South Africa" },
       _status: "published",
@@ -85,7 +86,7 @@ const PRODUCTS = [
         "Two bottles of Verboten Premium Brandy for R850, fifty rand under buying them one at a time.",
       description: paragraphs(
         "Two bottles of the same three year brandy: matured in oak, finished in French casks, bottled in Pretoria.",
-        "R850 for the pair, fifty rand under buying them one at a time. Open one now, and keep the second for the night that earns it.",
+        "R850 for the pair, fifty rand under buying them one at a time. Open one now, and keep the second for the next time you have people over.",
         "It travels well as a gift, for the kind of person who notices what is in the glass and does not need to say so.",
       ),
       _status: "published",
@@ -113,7 +114,7 @@ const NEW_PRODUCTS = [
       shortDescription:
         "Liquorice and anise in the Greek style. Very cold and neat, or long with cola.",
       description: paragraphs(
-        "A liquorice liqueur in the Greek style, made in Pretoria and bottled in 750ml.",
+        "Greek in style, made in Pretoria, bottled in 750ml.",
         "Anise up front, liquorice through the middle, and a finish that runs longer than you expect. Over ice it turns cloudy, the way it is supposed to.",
         "Serve it very cold and neat, or long with cola. A canned premix with cola is on the way.",
       ),
@@ -156,11 +157,11 @@ const JOURNAL_UPDATES = {
       "Three years in oak, finished in French casks, bottled in Pretoria. Verboten Premium Brandy is shipping now.",
     content: doc(
       p("The first release from this house is a brandy we are prepared to put our name on, which is the whole point of the name."),
-      p("Verboten Premium Brandy spends a minimum of three years in oak before a finish in French casks, and it bottles in 750ml. Made to a standard we hold without apology."),
+      p("Verboten Premium Brandy spends a minimum of three years in oak before a finish in French casks, and it comes in a 750ml bottle. It does not need a longer introduction than that."),
       h2("What it tastes like"),
       p("Warm oak, dried apricot and vanilla on the nose. Caramel, toasted nuts and a quiet spice on the palate. The finish is long and does not need help."),
       h2("How to get one"),
-      p("Order from the shop and it ships anywhere in South Africa within one to two weeks. There is also a two bottle set: one to open, one to keep."),
+      p("Order from the shop and we deliver it anywhere in South Africa. There is also a two bottle set: one to open, and one for when people come round."),
     ),
     _status: "published",
   },
@@ -172,7 +173,7 @@ const JOURNAL_NEW = [
     title: "Brandy and Coke, done properly",
     category: "stories",
     excerpt:
-      "South Africa's drink deserves better than a warm glass and a guess. The proper brandy and Coke, step by step, and why the brandy matters more than you think.",
+      "South Africa's drink deserves better than a warm glass and a guess. The proper brandy and Coke, step by step, and why the brandy matters.",
     content: doc(
       p("Brandy and Coke is South Africa's drink. It gets poured at every braai, every match, every family thing, and most of the time it gets poured badly. Warm glass, flat cola, brandy chosen by price alone. The drink deserves better, and so do you."),
       h2("The rules"),
@@ -182,6 +183,7 @@ const JOURNAL_NEW = [
       h2("Why the brandy matters"),
       p("Cola is loud. A thin brandy disappears under it, which is why so many brandy and Cokes taste like sweet nothing. A brandy with three years in oak and a French cask finish holds its shape: you taste caramel and dried fruit through the cola instead of just sugar. That is the whole argument for pouring something better into the national drink."),
       p("If the fridge is doing the work tonight, our Brandy and Cola comes pre-mixed in a can, cold and ready. Same brandy, collar loosened."),
+      p("Rather have someone else do the pouring? Book the bar and we bring it to your event, anywhere in Gauteng."),
     ),
     publishedAt: "2026-08-15T08:00:00.000Z",
     _status: "published",
@@ -216,32 +218,32 @@ const JOURNAL_NEW = [
 const STORY_PAGE = {
   title: "Some rules are meant to be questioned",
   intro:
-    "Pretoria, 2020. A conviction that the best traditions start with someone breaking the rules, and a spirit made to prove it.",
+    "Silverton, Pretoria, since 2020. An independent brandy house with a German name, a Pretoria accent, and a seat at the table for you.",
   content: doc(
     h2("The start"),
     // No lockdown framing, and no implication that the spirit was made in
     // secret: both are banned, and the second invites the very suspicion the
     // old site was defensively answering.
-    p("Verboten started in Pretoria in 2020. Technical precision, and a refusal to accept that brandy has to taste the way brandy has always tasted."),
-    p("What came out of it was a spirit smooth enough to make you question what you thought you knew about premium drinks."),
-    h2("A quiet rebellion"),
-    p("Verboten is German for forbidden. The name is a promise about restraint: nothing leaves this house unless it earns the label. South African soul, a German sounding surname, and an Afrikaans undercurrent for the ones who know."),
-    p("Today Verboten is not just a spirit. It is a quiet rebellion in a glass."),
+    p("Verboten started with one stubborn idea: brandy does not have to taste the way brandy has always tasted."),
+    p("It is still a Pretoria house, and the idea has not changed. Make it properly, pour it for people we are glad to see, and let what is in the glass do the talking."),
+    h2("The name"),
+    p("Verboten is German for forbidden, which suits a house that likes to ask why things are done the way they are. The house line is Afrikaans: vir dié wat weet, for those who know."),
     h2("What we make"),
     p("The flagship is a three year brandy, matured in oak and finished in French casks. Made to a standard, not to a schedule."),
     p("Brandy & Cola is the same spirit with its collar loosened. Pre-mixed, canned, and served colder than strictly necessary at the markets and events where we pour."),
-    p("Alongside the brandy there is NYX, a liquorice liqueur in the Greek style, and a blood orange gin. Both are bottled at 750ml and poured on tap at the markets and events where we set up."),
+    // No stockists and no named venues or cities: none are confirmed. NYX is
+    // not said to be on tap; only brandy & cola and gin are.
+    p("Alongside the brandy there is NYX, liquorice and anise in the Greek style, and a blood orange gin that travels with the bar. Both come in 750ml bottles, and a canned NYX & cola and a canned gin & tonic are on the way."),
     p("A beer is in development. It will announce itself when it is ready."),
     h2("Where to find us"),
     ul(
-      "Quality bars that know their stuff.",
-      "Restaurants that care about what they serve.",
-      "Events worth showing up to.",
-      "Direct to your door when you order online.",
+      "At your door: order from the shop and we deliver anywhere in South Africa.",
+      "At your event: we bring the bar to your wedding, birthday, corporate day or market, anywhere in Gauteng.",
+      "Out and about: when we are pouring in public, the Find Us page says where and when.",
     ),
     h2("Where this goes"),
-    p("From Johannesburg to Berlin, Amsterdam to Cape Town. Verboten is for everyone who knows that the best traditions often start with someone breaking the rules."),
-    p("Because some traditions are meant to be whispered, not shouted."),
+    p("Born in Pretoria. Made for the world. However far it goes, the welcome goes with it."),
+    p("Thanks for stopping by. Gesondheid, which is how Pretoria says cheers."),
   ),
   _status: "published",
 };
@@ -263,7 +265,7 @@ const PRIVACY_PAGE = {
     "Orders: your name, email, phone number, delivery address, date of birth, and order history. We need these to take payment, confirm your age, deliver, and look after your order, including when you look it up on the order tracking page.",
     "Accounts: if you open one, your email address and a password we store only in scrambled form, so your orders appear in one place.",
     "Contact and booking enquiries: your name, contact details and message, so we can reply.",
-    "Newsletter: your email address, with your confirmed consent, to send release news. Every email includes an unsubscribe link.",
+    "Newsletter: your email address, with your confirmed consent, to send release news and where we are pouring next. Every email includes an unsubscribe link.",
     "Back in stock requests: your email address and the product, used for the one email that tells you it has returned, and nothing else.",
     "Payments: handled entirely by PayFast. We receive a payment reference, never your card details.",
   ),
@@ -336,6 +338,13 @@ const TERMS_AGE_FIX = {
     "alcohol is only handed to a person 18 or older, and the courier may ask for identification on delivery",
 };
 
+// The Old Fashioned's description made a comparison with whisky nobody could
+// stand behind; it now says how the drink is made instead.
+const OLD_FASHIONED_UPDATE = {
+  name: "The Silverton Old Fashioned",
+  description: "The classic, moved to Silverton. Stirred properly, never rushed.",
+};
+
 const SERVE_UPDATE = {
   name: "Neat, one cube",
   description:
@@ -349,11 +358,19 @@ const SERVE_UPDATE = {
 
 // The responsibility line has to be the code's own wording (DF-SA 2026, 7.8.3),
 // not a paraphrase of it.
-const RESPONSIBLE_PAGE_FIX = {
-  find: "Drink responsibly. Not for sale to persons under 18.",
-  replacement:
-    "Not for Persons Under the Age of 18. Don't Drink and Drive. Pregnant Women Should Not Drink Alcohol.",
-};
+const RESPONSIBLE_PAGE_FIXES = [
+  {
+    find: "Drink responsibly. Not for sale to persons under 18.",
+    replacement:
+      "Not for Persons Under the Age of 18. Don't Drink and Drive. Pregnant Women Should Not Drink Alcohol.",
+  },
+  // The Terms say the courier may ask for identification, which is what
+  // happens; this page claimed the courier always checks.
+  {
+    find: "Our couriers verify age on delivery, and our staff are",
+    replacement: "The courier may ask for identification on delivery, and our staff are",
+  },
+];
 
 /* ---- REST helpers ---- */
 
@@ -564,6 +581,18 @@ const run = async () => {
     console.log("House serve description updated");
   }
 
+  // 6b. The Old Fashioned's description.
+  const oldFashioned = await api(
+    `/api/serves?where[name][equals]=${encodeURIComponent(OLD_FASHIONED_UPDATE.name)}&depth=0&limit=1`,
+  );
+  if (oldFashioned?.docs?.[0]) {
+    await api(`/api/serves/${oldFashioned.docs[0].id}`, {
+      method: "PATCH",
+      body: { description: OLD_FASHIONED_UPDATE.description },
+    });
+    console.log("Old Fashioned description updated");
+  }
+
   // 7. The responsible enjoyment page's closing line, swapped in place.
   const responsible = await findBySlug("pages", "responsible-enjoyment");
   if (responsible) {
@@ -571,9 +600,13 @@ const run = async () => {
     let changed = false;
     const walk = (node) => {
       if (!node || typeof node !== "object") return;
-      if (node.type === "text" && typeof node.text === "string" && node.text.includes(RESPONSIBLE_PAGE_FIX.find)) {
-        node.text = node.text.replace(RESPONSIBLE_PAGE_FIX.find, RESPONSIBLE_PAGE_FIX.replacement);
-        changed = true;
+      if (node.type === "text" && typeof node.text === "string") {
+        for (const fix of RESPONSIBLE_PAGE_FIXES) {
+          if (node.text.includes(fix.find)) {
+            node.text = node.text.replace(fix.find, fix.replacement);
+            changed = true;
+          }
+        }
       }
       for (const child of node.children ?? []) walk(child);
     };

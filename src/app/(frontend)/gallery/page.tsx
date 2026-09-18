@@ -17,10 +17,10 @@ export const generateMetadata = async (): Promise<Metadata> => {
   return pageMeta({
     title: "The Gallery",
     description:
-      "Verboten seen up close: the bottle, the making of it, the events we pour at, and the bars that carry us.",
+      "Verboten up close: the bottle, the casks and the bar out at events across Gauteng. South African brandy from Silverton, Pretoria.",
     path: "/gallery",
     shareTitle: "The Verboten Gallery",
-    shareDescription: "The bottle, the making of it, and the rooms it ends up in.",
+    shareDescription: "The bottle, the casks and the bar, seen up close.",
     noindex: items.length === 0,
   });
 };
@@ -42,13 +42,13 @@ const SECTIONS = [
   {
     key: "events",
     title: "Out in the world",
-    lead: "Markets, tastings and the events worth showing up to.",
+    lead: "The bar at weddings, birthdays, corporate days and markets.",
     shot: "The stand at a market, dusk, people mid-pour",
   },
   {
     key: "venues",
     title: "Where we pour",
-    lead: "The back bars and tables that carry us.",
+    lead: "The back bars and tables that carry us, as they come on board.",
     shot: "Back bar shelf, bottle among the regulars",
   },
 ] as const;
@@ -94,8 +94,8 @@ export default async function GalleryPage() {
             className="animate-fade-up mt-6 max-w-md text-base leading-relaxed text-parch"
             style={{ animationDelay: "160ms" }}
           >
-            The bottle, the making of it, and the rooms it ends up in. Some
-            traditions are meant to be whispered, not shouted.
+            The bottle, the casks and the bar out at events. New photographs
+            land here as they are taken.
           </p>
         </div>
       </section>
@@ -164,8 +164,8 @@ export default async function GalleryPage() {
           <Motto className="mx-auto" />
           <p className="mx-auto max-w-md text-sm leading-relaxed text-parch">
             {hasAny
-              ? "More of it goes up on Instagram first, usually the same night."
-              : "The photographs are being taken. Instagram gets them first, usually the same night."}
+              ? "Instagram gets the new ones first. Come and say hello there."
+              : "The photographs are on their way, and Instagram gets them first. Come and say hello there."}
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             {settings.socials?.instagram && (

@@ -244,7 +244,10 @@ export const CheckoutForm = ({
   if (items.length === 0 && !(state && state.ok)) {
     return (
       <div className="border border-line bg-coal p-10 text-center">
-        <p className="text-sm text-parch">Your cart is empty.</p>
+        <p className="text-sm text-parch">
+          Your cart is empty. Pick something out in the shop and come back
+          when you are ready.
+        </p>
         <Button variant="outline" className="mt-6" asChild>
           <Link href="/shop">Browse the shop</Link>
         </Button>
@@ -257,8 +260,8 @@ export const CheckoutForm = ({
       <div className="border border-gold-dim/40 bg-coal p-10 text-center" role="status">
         <p className="font-display text-2xl text-bone">Taking you to PayFast</p>
         <p className="mt-2 text-sm text-parch">
-          Order {state.orderNumber} is reserved. If nothing happens in a few
-          seconds, use the button below.
+          Order {state.orderNumber} is ready for payment. If nothing happens
+          in a few seconds, use the button below.
         </p>
         <PayfastRedirect redirect={state.redirect} />
         <form action={state.redirect.action} method="post" className="mt-6">
@@ -335,7 +338,7 @@ export const CheckoutForm = ({
                 }
               />
               <p id="co-dob-why" className="text-[0.6875rem] text-parch">
-                Alcohol law: we confirm you are 18 or older.
+                The law asks us to confirm you are 18 or older.
               </p>
             </Field>
           </div>

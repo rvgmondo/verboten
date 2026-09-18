@@ -23,7 +23,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
 const STORY_METADATA: Metadata = pageMeta({
   title: "Our Story, a Pretoria Brandy House",
   description:
-    "Pretoria, 2020. A conviction that the best traditions often start with someone breaking the rules, and a spirit made to prove it.",
+    "Verboten is German for forbidden. An independent South African brandy house in Silverton, Pretoria, since 2020. Some rules are meant to be questioned.",
   path: "/story",
 });
 

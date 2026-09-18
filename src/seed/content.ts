@@ -24,7 +24,7 @@ const PRIVACY_BLOCKS = [
     "Orders: your name, email, phone number, delivery address, date of birth, and order history. We need these to take payment, confirm your age, deliver, and look after your order, including when you look it up on the order tracking page.",
     "Accounts: if you open one, your email address and a password we store only in scrambled form, so your orders appear in one place.",
     "Contact and booking enquiries: your name, contact details and message, so we can reply.",
-    "Newsletter: your email address, with your confirmed consent, to send release news. Every email includes an unsubscribe link.",
+    "Newsletter: your email address, with your confirmed consent, to send release news and where we are pouring next. Every email includes an unsubscribe link.",
     "Back in stock requests: your email address and the product, used for the one email that tells you it has returned, and nothing else.",
     "Payments: handled entirely by PayFast. We receive a payment reference, never your card details.",
   ),
@@ -82,20 +82,19 @@ export const PAGES = [
     slug: "story",
     title: "Some rules are meant to be questioned",
     intro:
-      "Pretoria, 2020. A conviction that the best traditions start with someone breaking the rules, and a spirit made to prove it.",
+      "Silverton, Pretoria, since 2020. An independent brandy house with a German name, a Pretoria accent, and a seat at the table for you.",
     content: doc(
       h2("The start"),
       p(
-        "Verboten started in Pretoria in 2020. Technical precision, and a refusal to accept that brandy has to taste the way brandy has always tasted.",
+        "Verboten started with one stubborn idea: brandy does not have to taste the way brandy has always tasted.",
       ),
       p(
-        "What came out of it was a spirit smooth enough to make you question what you thought you knew about premium drinks.",
+        "It is still a Pretoria house, and the idea has not changed. Make it properly, pour it for people we are glad to see, and let what is in the glass do the talking.",
       ),
-      h2("A quiet rebellion"),
+      h2("The name"),
       p(
-        "Verboten is German for forbidden. The name is a promise about restraint: nothing leaves this house unless it earns the label. South African soul, a German sounding surname, and an Afrikaans undercurrent for the ones who know.",
+        "Verboten is German for forbidden, which suits a house that likes to ask why things are done the way they are. The house line is Afrikaans: vir dié wat weet, for those who know.",
       ),
-      p("Today Verboten is not just a spirit. It is a quiet rebellion in a glass."),
       h2("What we make"),
       p(
         "The flagship is a three year brandy, matured in oak and finished in French casks. Made to a standard, not to a schedule.",
@@ -103,20 +102,19 @@ export const PAGES = [
       p(
         "Brandy & Cola is the same spirit with its collar loosened. Pre-mixed, canned, and served colder than strictly necessary at the markets and events where we pour.",
       ),
-      p("Alongside the brandy there is NYX, a liquorice liqueur in the Greek style, and a blood orange gin. Both are bottled at 750ml and poured on tap at the markets and events where we set up."),
+      p("Alongside the brandy there is NYX, liquorice and anise in the Greek style, and a blood orange gin that travels with the bar. Both come in 750ml bottles, and a canned NYX & cola and a canned gin & tonic are on the way."),
       p("A beer is in development. It will announce itself when it is ready."),
       h2("Where to find us"),
       ul(
-        "Quality bars that know their stuff.",
-        "Restaurants that care about what they serve.",
-        "Events worth showing up to.",
-        "Direct to your door when you order online.",
+        "At your door: order from the shop and we deliver anywhere in South Africa.",
+        "At your event: we bring the bar to your wedding, birthday, corporate day or market, anywhere in Gauteng.",
+        "Out and about: when we are pouring in public, the Find Us page says where and when.",
       ),
       h2("Where this goes"),
       p(
-        "From Johannesburg to Berlin, Amsterdam to Cape Town. Verboten is for everyone who knows that the best traditions often start with someone breaking the rules.",
+        "Born in Pretoria. Made for the world. However far it goes, the welcome goes with it.",
       ),
-      p("Because some traditions are meant to be whispered, not shouted."),
+      p("Thanks for stopping by. Gesondheid, which is how Pretoria says cheers."),
     ),
   },
   {
@@ -211,7 +209,7 @@ export const PAGES = [
     content: doc(
       h2("The house position"),
       p(
-        "Verboten is enjoyed slowly and in good company. We do not sell to anyone under 18, anywhere, ever: not online, not at markets, not at events. Our couriers verify age on delivery, and our staff are instructed to refuse a sale rather than guess.",
+        "Verboten is enjoyed slowly and in good company. We do not sell to anyone under 18, anywhere, ever: not online, not at markets, not at events. The courier may ask for identification on delivery, and our staff are instructed to refuse a sale rather than guess.",
       ),
       h2("Good practice"),
       ul(
@@ -263,7 +261,7 @@ export const SERVES = [
   {
     name: "The Silverton Old Fashioned",
     description:
-      "The classic, moved to Pretoria. Brandy has been doing this job longer than most whiskies.",
+      "The classic, moved to Silverton. Stirred properly, never rushed.",
     ingredients: [
       { amount: "60ml", item: "Verboten Premium Brandy" },
       { amount: "5ml", item: "Sugar syrup" },
@@ -288,7 +286,7 @@ export const JOURNAL_POSTS = [
         "The first release from this house is a brandy we are prepared to put our name on, which is the whole point of the name.",
       ),
       p(
-        "Verboten Premium Brandy spends a minimum of three years in oak before a finish in French casks, and it bottles in 750ml. Made to a standard we hold without apology.",
+        "Verboten Premium Brandy spends a minimum of three years in oak before a finish in French casks, and it comes in a 750ml bottle. It does not need a longer introduction than that.",
       ),
       h2("What it tastes like"),
       p(
@@ -296,7 +294,7 @@ export const JOURNAL_POSTS = [
       ),
       h2("How to get one"),
       p(
-        "Order from the shop and it ships anywhere in South Africa within one to two weeks. There is also a two bottle set: one to open, one to keep.",
+        "Order from the shop and we deliver it anywhere in South Africa. There is also a two bottle set: one to open, and one for when people come round.",
       ),
     ),
     publishedAt: "2026-08-01T08:00:00.000Z",
@@ -306,7 +304,7 @@ export const JOURNAL_POSTS = [
     title: "Brandy and Coke, done properly",
     category: "stories" as const,
     excerpt:
-      "South Africa's drink deserves better than a warm glass and a guess. The proper brandy and Coke, step by step, and why the brandy matters more than you think.",
+      "South Africa's drink deserves better than a warm glass and a guess. The proper brandy and Coke, step by step, and why the brandy matters.",
     content: doc(
       p(
         "Brandy and Coke is South Africa's drink. It gets poured at every braai, every match, every family thing, and most of the time it gets poured badly. Warm glass, flat cola, brandy chosen by price alone. The drink deserves better, and so do you.",
@@ -326,6 +324,7 @@ export const JOURNAL_POSTS = [
       p(
         "If the fridge is doing the work tonight, our Brandy and Cola comes pre-mixed in a can, cold and ready. Same brandy, collar loosened.",
       ),
+      p("Rather have someone else do the pouring? Book the bar and we bring it to your event, anywhere in Gauteng."),
     ),
     publishedAt: "2026-08-15T08:00:00.000Z",
   },

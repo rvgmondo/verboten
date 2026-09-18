@@ -1,3 +1,7 @@
+> **Superseded for voice (18 September 2026).** Copy examples in this file use the
+> old voice and include unconfirmed places. Follow `docs/voice.md` for how Verboten
+> speaks, and never post a city, venue or date the owner has not confirmed.
+
 > Prepared for Verboten Spirits (Verboten Pty Ltd), Silverton, Pretoria.
 > Everything below is text you paste into an image tool. Nothing here generates an image for you.
 > Palette used throughout: champagne gold `#CDB88D`, near-black `#141414`, cream `#F5F1E6`. These are the values in your site build (`C:\CC\verboten\src\app\globals.css`), not a signed-off brand standard. If you hold real brand colour specs from whoever set the identity, check these against them before you generate a hundred images around them.

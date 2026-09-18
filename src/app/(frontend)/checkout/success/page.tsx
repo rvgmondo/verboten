@@ -29,7 +29,7 @@ export default async function CheckoutSuccessPage({
       <ClearCartOnMount />
       <BrandBadge className="h-20 w-20" />
       <div className="space-y-4">
-        <p className="eyebrow">Well chosen</p>
+        <p className="eyebrow" lang="af">Baie dankie</p>
         <h1 className="font-display text-4xl tracking-tight text-bone">
           {order ? `Order ${order} is in` : "Your order is in"}
         </h1>

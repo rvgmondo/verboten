@@ -14,7 +14,7 @@ import { formatZAR } from "@/lib/money";
 export const metadata: Metadata = pageMeta({
   title: "Buy South African Brandy Online",
   description:
-    "Verboten Premium Brandy, the two bottle set, Brandy & Cola, NYX liquorice liqueur and blood orange gin. Delivered anywhere in South Africa.",
+    "Buy South African brandy online from Pretoria: Premium Brandy, the two bottle set, Brandy & Cola, NYX and blood orange gin. Delivered nationwide.",
   path: "/shop",
   shareTitle: "Buy Verboten Brandy Online",
 });
@@ -23,7 +23,7 @@ export const metadata: Metadata = pageMeta({
 const LABELS: Record<string, string> = {
   "verboten-premium-brandy": "The flagship",
   "verboten-premium-set-2-bottle": "The set",
-  "verboten-nyx": "The liqueur",
+  "verboten-nyx": "The liquorice",
   "verboten-blood-orange-gin": "The gin",
   "verboten-brandy-cola": "Ready to drink",
 };
@@ -90,9 +90,10 @@ export default async function ShopPage() {
             className="animate-fade-up mt-6 max-w-md text-base leading-relaxed text-parch"
             style={{ animationDelay: "160ms" }}
           >
-            Everything the house currently makes, shipped anywhere in South
-            Africa. Canned NYX and cola, and a canned gin and tonic, are on the
-            way. A beer is in development and will announce itself.
+            Everything the house makes right now, delivered to your door
+            anywhere in South Africa. Canned NYX and cola, and a canned gin
+            and tonic, are on the way. A beer is in development and will
+            announce itself.
           </p>
           <dl
             className="animate-fade-up mt-10 flex flex-wrap gap-x-12 gap-y-5"
@@ -135,8 +136,9 @@ export default async function ShopPage() {
         <div className="mx-auto max-w-6xl space-y-6 px-6 py-16 text-center">
           <Motto className="mx-auto" />
           <p className="mx-auto max-w-md text-sm leading-relaxed text-parch">
-            Not sure where to start? The brandy neat, or the can cold. Both
-            come from the same place, and both were made to be shared.
+            Not sure where to start? The brandy neat, one cube. The can,
+            cold. Both come from the same house, and both are worth pouring
+            properly.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button variant="outline" asChild>

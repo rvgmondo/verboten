@@ -105,9 +105,9 @@ const run = async () => {
       "The same spirit with its collar loosened, pre-mixed in a 440ml can. Cold, easy, and unmistakably South African.",
     description: paragraphs(
       "The flagship brandy, cut with cola and sealed in a 440ml can. Made to be drunk cold, straight from the can or over ice.",
-      "Brandy and Coke is South Africa's drink, and most of the time it gets poured badly. Warm glass, flat cola, brandy chosen on price alone. This is the same pour made properly and sealed, so it tastes the way it should at a braai, a market, or the back of a bakkie.",
+      "Brandy and Coke is South Africa's drink, and most of the time it gets poured badly. Warm glass, flat cola, brandy chosen on price alone. This is the same pour made properly and sealed, so it tastes the way it should at a braai, at a market, or with the rugby on.",
       "The brandy underneath is the same three year spirit, finished in French oak. Cola is loud, and a thin brandy disappears under it. This one holds its shape: caramel and dried fruit through the cola instead of just sugar.",
-      "Serve it colder than you think it needs. Over ice if the day is long.",
+      "Serve it colder than you think it needs. Over ice if the day is hot.",
     ),
     // Confirmed from the can label: 440ml, 5% alcohol.
     specs: { abv: 5, volumeMl: 440, origin: "South Africa" },
@@ -124,7 +124,7 @@ const run = async () => {
     priceCents: 25000,
     shortDescription: "Liquorice and anise in the Greek style. Very cold and neat, or long with cola.",
     description: paragraphs(
-      "A liquorice liqueur in the Greek style, made in Pretoria and bottled in 750ml.",
+      "Greek in style, made in Pretoria, bottled in 750ml.",
       "Anise up front, liquorice through the middle, and a finish that runs longer than you expect. Over ice it turns cloudy, the way it is supposed to.",
       "Serve it very cold and neat, or long with cola. A canned premix with cola is on the way.",
     ),
@@ -164,7 +164,7 @@ const run = async () => {
       "Two bottles of Verboten Premium Brandy for R850, fifty rand under buying them one at a time.",
     description: paragraphs(
       "Two bottles of the same three year brandy: matured in oak, finished in French casks, bottled in Pretoria.",
-      "R850 for the pair, fifty rand under buying them one at a time. Open one now, and keep the second for the night that earns it.",
+      "R850 for the pair, fifty rand under buying them one at a time. Open one now, and keep the second for the next time you have people over.",
       "It travels well as a gift, for the kind of person who notices what is in the glass and does not need to say so.",
     ),
     bundleItems: [{ product: brandy.id, quantity: 2 }],

@@ -44,7 +44,7 @@ export default async function TrackPage({
           </Link>
           . Something wrong with a delivery?{" "}
           <Link href="/contact" className="text-gold underline underline-offset-4 hover:text-gold-bright">
-            Tell us
+            Tell us and we will sort it out
           </Link>
           .
         </p>

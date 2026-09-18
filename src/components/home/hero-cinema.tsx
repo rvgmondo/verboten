@@ -36,7 +36,7 @@ const CHAPTERS: Chapter[] = [
     kicker: "Pure Spirit. Pure Mischief.",
     titleA: "Born in Pretoria.",
     titleB: "Made for the world.",
-    body: "An independent South African brandy house with one rule: nothing leaves until it earns the label.",
+    body: "An independent South African brandy house, in Silverton since 2020. Glad you are here.",
     cta: { href: "/shop/verboten-premium-brandy", label: "Order the brandy" },
     ctaSecondary: { href: "/story", label: "The story" },
   },
@@ -55,7 +55,7 @@ const CHAPTERS: Chapter[] = [
     kicker: "The house",
     titleA: "Vir dié",
     titleB: "wat weet.",
-    body: "For those who know. Verboten is German for forbidden, and some traditions are meant to be whispered, not shouted.",
+    body: "For those who know. Verboten is German for forbidden. Everyone else is welcome to find out.",
     cta: { href: "/story", label: "Step inside" },
   },
 ];
@@ -106,7 +106,7 @@ export const HeroCinema = ({
       i === 0
         ? {
             ...c,
-            body: "Sold out for now. Join the list and hear the moment it lands back.",
+            body: "Every bottle has found a home. Leave your email and we will tell you the moment there are more.",
             cta: { href: "#newsletter", label: "Join the list" },
           }
         : c,

@@ -13,13 +13,13 @@ export default function AccessRestrictedPage() {
     <main className="flex min-h-[70vh] flex-col items-center justify-center gap-8 px-6 py-24 text-center">
       <BrandCrest className="h-16 w-16 text-gold-dim" />
       <div className="space-y-4">
-        <p className="eyebrow">Not yet</p>
+        <p className="eyebrow">Sorry</p>
         <h1 className="font-display text-4xl tracking-tight text-bone">
           This site is for adults
         </h1>
         <p className="mx-auto max-w-sm text-sm leading-relaxed text-parch">
-          Verboten is for people 18 and older, and that is the one rule we do
-          not bend. Come back when it is your turn. The good stuff keeps.
+          Verboten sells alcohol, so this site is only for people aged 18 and
+          older. That is one rule we never bend. Thank you for understanding.
         </p>
       </div>
     </main>

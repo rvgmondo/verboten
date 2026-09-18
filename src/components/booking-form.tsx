@@ -42,7 +42,7 @@ export const BookingForm = () => {
   if (state?.ok) {
     return (
       <div className="border border-gold-dim/40 bg-coal p-8" role="status">
-        <p className="font-display text-xl text-bone">Received.</p>
+        <p className="font-display text-xl text-bone" lang="af">Baie dankie.</p>
         <p className="mt-2 text-sm text-parch">{state.message}</p>
       </div>
     );
@@ -122,7 +122,7 @@ export const BookingForm = () => {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="bk-message">What are we walking into</Label>
+        <Label htmlFor="bk-message">What is the occasion</Label>
         <Textarea
           id="bk-message"
           name="message"

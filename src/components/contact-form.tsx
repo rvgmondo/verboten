@@ -35,7 +35,7 @@ export const ContactForm = () => {
   if (state?.ok) {
     return (
       <div className="border border-gold-dim/40 bg-coal p-8" role="status">
-        <p className="font-display text-xl text-bone">Received.</p>
+        <p className="font-display text-xl text-bone" lang="af">Baie dankie.</p>
         <p className="mt-2 text-sm text-parch">{state.message}</p>
       </div>
     );

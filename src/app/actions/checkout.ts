@@ -61,7 +61,7 @@ const schema = z.object({
   line2: z.string().trim().max(200).optional().or(z.literal("")),
   suburb: z.string().trim().max(120).optional().or(z.literal("")),
   city: z.string().trim().min(2, "Enter a city.").max(120),
-  province: z.enum(SA_PROVINCES),
+  province: z.enum(SA_PROVINCES, { error: "Choose your province." }),
   postalCode: z.string().trim().min(4, "Enter a postal code.").max(10),
   discountCode: z.string().trim().max(40).optional().or(z.literal("")),
   customerNote: z.string().trim().max(1000).optional().or(z.literal("")),
@@ -374,7 +374,7 @@ export async function createCheckout(
     payload.logger.error({ err, orderNumber }, "Order creation failed at checkout");
     return {
       ok: false,
-      message: "Your order could not be placed just then. Try again in a moment.",
+      message: "Your order could not be placed just then, and nothing was charged. Try again in a moment.",
     };
   }
 

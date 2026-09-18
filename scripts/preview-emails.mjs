@@ -101,7 +101,7 @@ const SAMPLES = {
 
   "staff-new-order": emailLayout({
     title: `New order, ${money(100050)}.`,
-    preheader: "Ruben van Greunen ordered 2 lines.",
+    preheader: "Lerato Dlamini ordered 2 lines.",
     body: [
       panel(
         eyebrow("Check stock first") +
@@ -110,7 +110,7 @@ const SAMPLES = {
       orderPanel(),
       panel(
         eyebrow("Ship to") +
-          '<p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.7;color:#f5f1e6;">Ruben van Greunen<br>12 Sample Street<br>Silverton<br>Pretoria<br>Gauteng<br>0184</p>' +
+          '<p style="margin:0;font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.7;color:#f5f1e6;">Lerato Dlamini<br>12 Sample Street<br>Silverton<br>Pretoria<br>Gauteng<br>0184</p>' +
           '<p style="margin:14px 0 0;font-family:Helvetica,Arial,sans-serif;font-size:13px;color:#b0a891;">buyer@example.com<br>072 123 4567</p>',
       ),
       button("https://verboten.co.za/admin/collections/orders", "Open in the admin"),

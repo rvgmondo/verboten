@@ -33,7 +33,8 @@ export default function ErrorPage({
           That was not supposed to happen
         </h1>
         <p className="mx-auto max-w-sm text-sm leading-relaxed text-parch">
-          Try again; if it keeps happening, tell us and we will fix it properly.
+          Sorry about that. Try again, and if it keeps happening, let us know
+          through the contact page and we will fix it properly.
         </p>
       </div>
       <div className="flex gap-4">

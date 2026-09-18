@@ -114,7 +114,7 @@ export const TrackOrderForm = ({ initialOrderNumber = "" }: { initialOrderNumber
             {state.order.cancelled ? (
               <p className="text-sm leading-relaxed text-parch">
                 This order was {state.order.status === "refunded" ? "refunded" : "cancelled"}.
-                If that is a surprise, reply to your confirmation email and we will look.
+                If that is a surprise, reply to your confirmation email and we will look into it.
               </p>
             ) : (
               state.order.status !== "pending_payment" && (

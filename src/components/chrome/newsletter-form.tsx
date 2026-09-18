@@ -55,7 +55,7 @@ export const NewsletterForm = ({ source = "footer" }: { source?: string }) => {
         {state?.message ?? ""}
       </p>
       <p className="text-[0.6875rem] leading-relaxed text-parch">
-        Release news only. No noise, unsubscribe any time.
+        Release news and where we are pouring next. Unsubscribe any time.
       </p>
     </form>
   );
